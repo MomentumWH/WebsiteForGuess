@@ -1,0 +1,115 @@
+.matchday-app {
+  button,
+  input,
+  textarea {
+    font-family: inherit;
+  }
+  button {
+    cursor: pointer;
+    transition:
+      background-color 0.18s,
+      color 0.18s,
+      box-shadow 0.18s;
+  }
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid #7d9b5d;
+    outline-offset: 3px;
+  }
+  button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+  .panel {
+    border: 1px solid #e8ede5;
+    background: #fff;
+    border-radius: 12px;
+  }
+  .primary-button {
+    display: inline-flex;
+    align-items: center;
+    background: #315e42;
+    color: #f1f7e9;
+    border: 1px solid #315e42;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .primary-button:hover {
+    background: #244c33;
+    box-shadow: 0 3px 10px #315e4218;
+  }
+  .icon-button {
+    border: 0;
+    background: transparent;
+    border-radius: 5px;
+    padding: 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #9aab87;
+  }
+  .icon-button:hover {
+    background: #f0f5e9;
+  }
+  .league-pill {
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 9px;
+    font-weight: 400;
+    background: #f3eff5;
+    color: #86748a;
+  }
+  .muted {
+    color: #9ca695;
+  }
+  .tiny {
+    font-size: 9px;
+  }
+  .sr-only {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+  .hero-grid,
+  .summary-grid,
+  .content-columns,
+  .review-panel {
+    animation: arrive 0.45s ease-out both;
+  }
+  .summary-grid {
+    animation-delay: 0.06s;
+  }
+  .content-columns {
+    animation-delay: 0.12s;
+  }
+  .review-panel {
+    animation-delay: 0.18s;
+  }
+}
+@keyframes arrive {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .matchday-app *,
+  .matchday-app *::before {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

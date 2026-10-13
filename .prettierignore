@@ -1,0 +1,10 @@
+node_modules/
+.pnpm-store/
+.cache/
+dist/
+dist-ssr/
+coverage/
+.idea/
+pnpm-lock.yaml
+src/types/auto-imports.d.ts
+src/types/components.d.ts
