@@ -179,7 +179,7 @@ function submit() {
 .remove-actions button {
   background: transparent;
   border: 0;
-  font-size: 10px;
+  font-size: 14px;
   color: #9c786d;
   padding: 4px;
 }
@@ -206,19 +206,19 @@ function submit() {
   align-items: center;
 }
 .dialog-eyebrow {
-  font-size: 8px;
+  font-size: 12px;
   letter-spacing: 2px;
   color: #94a086;
 }
 .dialog-header h2 {
-  font-size: 22px;
+  font-size: 26px;
   letter-spacing: 0.5px;
   margin-top: 8px;
 }
 .dialog-meta {
   display: flex;
   justify-content: space-between;
-  font-size: 10px;
+  font-size: 14px;
   color: #95a18c;
   margin-top: 15px;
   padding-bottom: 18px;
@@ -238,25 +238,25 @@ function submit() {
   width: 105px;
 }
 .score-team strong {
-  font-size: 13px;
+  font-size: 17px;
 }
 .score-team small {
   color: #96a28d;
-  font-size: 10px;
+  font-size: 14px;
 }
 .score-inputs {
   display: flex;
   align-items: center;
   gap: 10px;
   color: #8b9a83;
-  font-size: 25px;
+  font-size: 29px;
 }
 .score-inputs input {
   font-family: Bahnschrift, sans-serif;
   width: 62px;
   height: 70px;
   text-align: center;
-  font-size: 31px;
+  font-size: 35px;
   color: #275337;
   background: #f4f8f0;
   border: 1px solid #dce6d4;
@@ -264,7 +264,7 @@ function submit() {
   padding-left: 9px;
 }
 .score-inputs b {
-  font-size: 35px;
+  font-size: 39px;
   font-family: Bahnschrift, sans-serif;
   font-weight: 500;
   color: #275337;
@@ -273,11 +273,11 @@ function submit() {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 12px;
+  font-size: 16px;
   margin-bottom: 15px;
 }
 .field-label b {
-  font-size: 13px;
+  font-size: 17px;
   color: #4c7c36;
 }
 .confidence-range {
@@ -287,12 +287,12 @@ function submit() {
 .range-labels {
   display: flex;
   justify-content: space-between;
-  font-size: 9px;
+  font-size: 13px;
   color: #a0aa96;
   margin: 6px 0 23px;
 }
 .note-label > span {
-  font-size: 9px;
+  font-size: 13px;
   color: #9fa991;
 }
 .note-label {
@@ -305,7 +305,7 @@ textarea {
   border-radius: 7px;
   padding: 12px;
   font: inherit;
-  font-size: 11px;
+  font-size: 15px;
   line-height: 1.8;
   color: #4c6043;
   background: #fcfdfb;
@@ -314,7 +314,7 @@ textarea {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 10px;
+  font-size: 14px;
   color: #9ca58f;
   margin: 17px 0;
 }
@@ -325,7 +325,7 @@ textarea {
   padding: 13px;
 }
 .form-error {
-  font-size: 12px;
+  font-size: 16px;
   color: #bd4941;
   margin-top: 10px;
 }
@@ -337,11 +337,11 @@ textarea {
   border-radius: 8px;
   padding: 14px;
   margin-bottom: 25px;
-  font-size: 10px;
+  font-size: 14px;
   color: #8b9a7f;
 }
 .actual-result strong {
-  font-size: 24px;
+  font-size: 28px;
   color: #2a4930;
   font-family: Bahnschrift, sans-serif;
 }
@@ -350,7 +350,7 @@ textarea {
   border-radius: 8px;
   background: #f8faf5;
   line-height: 1.8;
-  font-size: 12px;
+  font-size: 16px;
   color: #78896a;
 }
 @media (max-width: 450px) {

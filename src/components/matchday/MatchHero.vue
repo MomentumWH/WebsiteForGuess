@@ -118,7 +118,7 @@ function setInert(element: unknown, inert: boolean) {
   padding: 30px 32px 44px;
 }
 .eyebrow {
-  font-size: 9px;
+  font-size: 13px;
   font-weight: 600;
   letter-spacing: 1.8px;
   color: #c6dcd0;
@@ -133,7 +133,7 @@ function setInert(element: unknown, inert: boolean) {
   background: #b5ef6d;
 }
 h2 {
-  font-size: 34px;
+  font-size: 38px;
   line-height: 1.5;
   letter-spacing: 1px;
   margin: 14px 0 10px;
@@ -143,7 +143,7 @@ h2 span {
   color: #b5ef6d;
 }
 .hero-content p {
-  font-size: 11px;
+  font-size: 15px;
   line-height: 1.9;
   color: #cedbd3;
   letter-spacing: 0.4px;
@@ -157,7 +157,7 @@ h2 span {
   align-items: center;
   gap: 24px;
   color: #173e2c;
-  font-size: 11px;
+  font-size: 15px;
   font-weight: 650;
   margin-top: 21px;
 }
@@ -171,7 +171,7 @@ h2 span {
   font-family: 'Arial Narrow', Impact, sans-serif;
   letter-spacing: 2px;
   line-height: 1.15;
-  font-size: 20px;
+  font-size: 24px;
   color: #fff8;
   text-align: right;
   font-weight: 700;
@@ -184,7 +184,7 @@ h2 span {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 8px;
+  font-size: 12px;
   letter-spacing: 1px;
   color: #c8dbce;
 }
@@ -210,7 +210,7 @@ h2 span {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 650;
 }
 .next-title > span:first-child {
@@ -239,15 +239,15 @@ h2 span {
   width: 90px;
 }
 .next-teams strong {
-  font-size: 13px;
+  font-size: 17px;
 }
 .next-teams small {
-  font-size: 10px;
+  font-size: 14px;
   color: #9ca59f;
 }
 .versus {
   font-family: Georgia, serif;
-  font-size: 20px;
+  font-size: 24px;
   color: #adb4ae;
   font-style: italic;
 }
@@ -256,21 +256,21 @@ h2 span {
   align-items: center;
   justify-content: center;
   gap: 7px;
-  font-size: 10px;
+  font-size: 14px;
   color: #5f6d64;
 }
 .next-time b {
   color: #34483d;
-  font-size: 12px;
+  font-size: 16px;
 }
 .next-time > span {
-  font-size: 9px;
+  font-size: 13px;
   color: #9aa39d;
 }
 .next-venue {
   text-align: center;
   color: #969f98;
-  font-size: 10px;
+  font-size: 14px;
   margin: 8px 0 19px;
 }
 .next-venue span {
@@ -280,7 +280,7 @@ h2 span {
   width: 100%;
   justify-content: center;
   gap: 16px;
-  font-size: 11px;
+  font-size: 15px;
   padding: 11px;
 }
 @media (min-width: 1500px) {
@@ -291,10 +291,10 @@ h2 span {
     padding: 36px 38px;
   }
   h2 {
-    font-size: 39px;
+    font-size: 43px;
   }
   .hero-content p {
-    font-size: 12px;
+    font-size: 16px;
   }
 }
 @media (max-width: 1050px) {
@@ -305,7 +305,7 @@ h2 span {
     padding: 25px;
   }
   h2 {
-    font-size: 28px;
+    font-size: 32px;
   }
   .next-match {
     padding: 20px 15px;
@@ -328,7 +328,7 @@ h2 span {
     margin: 20px 0;
   }
   .next-title {
-    font-size: 14px;
+    font-size: 18px;
   }
 }
 </style>

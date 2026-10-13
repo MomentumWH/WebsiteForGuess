@@ -62,12 +62,12 @@ defineEmits<{ navigate: [] }>()
   align-items: center;
 }
 .stats-heading h3 {
-  font-size: 15px;
+  font-size: 19px;
   font-weight: 700;
 }
 .stats-heading > span {
   color: #9aa298;
-  font-size: 9px;
+  font-size: 13px;
 }
 .donut-area {
   display: flex;
@@ -96,23 +96,23 @@ defineEmits<{ navigate: [] }>()
   transform: rotate(90deg);
 }
 .donut strong {
-  font-size: 34px;
+  font-size: 38px;
   letter-spacing: -1.5px;
   font-family: 'Bahnschrift', 'DIN Alternate', sans-serif;
   font-weight: 500;
   line-height: 1.2;
 }
 .donut strong small {
-  font-size: 16px;
+  font-size: 20px;
   margin-left: 2px;
 }
 .donut div > span {
-  font-size: 9px;
+  font-size: 13px;
   color: #8c978c;
   margin-top: 4px;
 }
 .donut-caption {
-  font-size: 9px;
+  font-size: 13px;
   color: #9ca49b;
   margin-top: 12px;
 }
@@ -120,7 +120,7 @@ defineEmits<{ navigate: [] }>()
   display: flex;
   justify-content: space-between;
   gap: 4px;
-  font-size: 8px;
+  font-size: 12px;
   padding-bottom: 18px;
   border-bottom: 1px solid #eff1eb;
 }
@@ -152,7 +152,7 @@ defineEmits<{ navigate: [] }>()
   align-items: center;
   gap: 12px;
   margin-top: 15px;
-  font-size: 9px;
+  font-size: 13px;
 }
 .league-stat > span {
   display: flex;
@@ -184,7 +184,7 @@ defineEmits<{ navigate: [] }>()
   border-radius: 4px;
 }
 .league-stat > b {
-  font-size: 9px;
+  font-size: 13px;
   font-weight: 500;
   color: #6b796b;
   width: 29px;
@@ -201,7 +201,7 @@ defineEmits<{ navigate: [] }>()
   border: 0;
   border-top: 1px solid #eff1eb;
   background: transparent;
-  font-size: 10px;
+  font-size: 14px;
   color: #6d806b;
 }
 .stats-link:hover {
@@ -209,7 +209,7 @@ defineEmits<{ navigate: [] }>()
 }
 .calculation-note {
   color: #7f8f7d;
-  font-size: 12px;
+  font-size: 16px;
   line-height: 1.8;
   padding: 24px 0;
 }
@@ -227,13 +227,13 @@ defineEmits<{ navigate: [] }>()
   height: 165px;
 }
 .expanded .donut strong {
-  font-size: 48px;
+  font-size: 52px;
 }
 .expanded .stats-legend {
-  font-size: 12px;
+  font-size: 16px;
 }
 .expanded .league-stat {
-  font-size: 12px;
+  font-size: 16px;
   margin-top: 22px;
 }
 </style>

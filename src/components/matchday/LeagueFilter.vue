@@ -54,7 +54,7 @@ const filters: { value: League; label: string }[] = [
   background: transparent;
   padding: 6px 13px;
   border-radius: 4px;
-  font-size: 10px;
+  font-size: 14px;
   color: #89928b;
   white-space: nowrap;
   transition: color 180ms ease;
@@ -72,7 +72,7 @@ const filters: { value: League; label: string }[] = [
 }
 .toolbar button {
   padding: 8px 16px;
-  font-size: 11px;
+  font-size: 15px;
 }
 @media (max-width: 420px) {
   .league-filter button {

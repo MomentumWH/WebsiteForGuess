@@ -180,7 +180,7 @@ function sourceLabel(league: 'pl' | 'ucl') {
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 9px;
+  font-size: 13px;
   font-weight: 600;
   letter-spacing: 1px;
   color: #809174;
@@ -275,7 +275,7 @@ function sourceLabel(league: 'pl' | 'ucl') {
 }
 .overlay-copy h2 {
   margin: 0;
-  font-size: 19px;
+  font-size: 23px;
   font-weight: 650;
   letter-spacing: -0.3px;
   color: #284f36;
@@ -283,7 +283,7 @@ function sourceLabel(league: 'pl' | 'ucl') {
 .overlay-copy p {
   max-width: 290px;
   margin: 10px auto 0;
-  font-size: 12px;
+  font-size: 16px;
   line-height: 1.9;
   color: #83917c;
 }
@@ -301,14 +301,14 @@ function sourceLabel(league: 'pl' | 'ucl') {
   border: 1px solid #e4ebdd;
   border-radius: 8px;
   background: #ffffffa6;
-  font-size: 11px;
+  font-size: 15px;
 }
 .competition > svg {
   color: #91a77d;
 }
 .competition small {
   margin-left: auto;
-  font-size: 9px;
+  font-size: 13px;
   color: #95a08c;
   white-space: nowrap;
 }
@@ -332,7 +332,7 @@ function sourceLabel(league: 'pl' | 'ucl') {
 }
 .overlay-footnote {
   margin: 12px 0 0;
-  font-size: 10px;
+  font-size: 14px;
   color: #a0ab96;
 }
 .success .emblem svg {
@@ -375,7 +375,7 @@ function sourceLabel(league: 'pl' | 'ucl') {
     margin-top: 18px;
   }
   .overlay-copy h2 {
-    font-size: 18px;
+    font-size: 22px;
   }
   .competition {
     gap: 5px;

@@ -123,7 +123,7 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
   border-radius: 6px;
   padding: 10px;
   margin: 16px 0;
-  font-size: 11px;
+  font-size: 15px;
   cursor: pointer;
 }
 .matches-section {
@@ -136,14 +136,14 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
   gap: 10px;
 }
 .section-heading h3 {
-  font-size: 15px;
+  font-size: 19px;
   font-weight: 700;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 .count-label {
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 500;
   color: #6f7c73;
   background: #f0f3ef;
@@ -151,7 +151,7 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
   padding: 2px 6px;
 }
 .section-heading p {
-  font-size: 10px;
+  font-size: 14px;
   color: #98a099;
   margin-top: 6px;
 }
@@ -163,7 +163,7 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
   gap: 10px;
 }
 .arsenal-toggle {
-  font-size: 10px;
+  font-size: 14px;
   display: flex;
   align-items: center;
   gap: 7px;
@@ -267,7 +267,7 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: 9px;
+  font-size: 13px;
   color: #76667c;
   white-space: nowrap;
 }
@@ -279,7 +279,7 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
   color: #b0b6b0;
 }
 .fixture-date {
-  font-size: 9px;
+  font-size: 13px;
   color: #9ba39b;
   display: flex;
   gap: 7px;
@@ -302,18 +302,18 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
   min-width: 50px;
 }
 .fixture-teams > div > span:nth-child(2) {
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 600;
   white-space: nowrap;
 }
 .fixture-teams small {
   color: #a4aaa4;
-  font-size: 8px;
+  font-size: 12px;
   margin-top: -4px;
 }
 .fixture-vs {
   color: #b4bbb3;
-  font-size: 12px;
+  font-size: 16px;
   font-family: Georgia, serif;
   font-style: italic;
   align-self: flex-start;
@@ -331,14 +331,14 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: 8px;
+  font-size: 12px;
   color: #9aa299;
 }
 .card-bottom > span.predicted {
   color: #39825e;
 }
 .card-bottom > button {
-  font-size: 9px;
+  font-size: 13px;
   display: flex;
   align-items: center;
   gap: 2px;
@@ -359,7 +359,7 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
   gap: 5px;
   align-items: center;
   color: #9aa199;
-  font-size: 9px;
+  font-size: 13px;
 }
 .demo-note {
   margin-left: auto;
@@ -375,11 +375,11 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
   margin-bottom: 10px;
 }
 .empty-state h4 {
-  font-size: 14px;
+  font-size: 18px;
   color: #596b5a;
 }
 .empty-state p {
-  font-size: 12px;
+  font-size: 16px;
   margin-top: 8px;
 }
 @media (max-width: 1050px) {
@@ -396,7 +396,7 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
     padding: 12px 8px 0;
   }
   .competition {
-    font-size: 8px;
+    font-size: 12px;
   }
 }
 @media (max-width: 800px) {
@@ -420,10 +420,10 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
   }
   .card-bottom > span,
   .card-bottom > button {
-    font-size: 11px;
+    font-size: 15px;
   }
   .fixture-teams > div > span:nth-child(2) {
-    font-size: 13px;
+    font-size: 17px;
   }
   .fixture-vs {
     align-self: center;
@@ -434,7 +434,7 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
   }
   .competition,
   .fixture-date {
-    font-size: 10px;
+    font-size: 14px;
   }
 }
 @media (max-width: 420px) {
@@ -442,7 +442,7 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
     display: none;
   }
   .arsenal-toggle {
-    font-size: 9px;
+    font-size: 13px;
   }
 }
 @media (prefers-reduced-motion: reduce) {

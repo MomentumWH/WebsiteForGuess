@@ -9,8 +9,10 @@
     "pnpm": ">=10"
   },
   "scripts": {
+    "test:lineup": "node --test tests/lineup.test.ts",
     "test:matchday": "node --test tests/matchday.test.ts",
     "test:football": "node --test tests/football.test.ts",
+    "test:squad": "node --test tests/squad.test.ts",
     "start": "node --env-file=.env --env-file-if-exists=.env.local server/start.ts",
     "perf:dev": "node scripts/measure-dev.mjs",
     "dev": "vite",

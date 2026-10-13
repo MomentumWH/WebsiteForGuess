@@ -165,7 +165,7 @@ function updatedLabel(value: string | null) {
   align-items: center;
   justify-content: space-between;
   margin: 16px 0 20px;
-  font-size: 11px;
+  font-size: 15px;
   color: #6d7e6f;
 }
 .sync-sources {
@@ -194,7 +194,7 @@ function updatedLabel(value: string | null) {
 }
 .sync-source small {
   color: #929d91;
-  font-size: 10px;
+  font-size: 14px;
 }
 .sync-button {
   position: relative;

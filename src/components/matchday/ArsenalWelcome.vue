@@ -137,7 +137,7 @@ onUnmounted(cleanup)
   top: 35px;
   left: 42px;
   color: #d8dfcb;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 2.5px;
 }
@@ -157,7 +157,7 @@ onUnmounted(cleanup)
   color: #a3b09a;
   background: #dbe6ca05;
   font-family: inherit;
-  font-size: 11px;
+  font-size: 15px;
   cursor: pointer;
   transition:
     color 180ms,
@@ -172,7 +172,7 @@ onUnmounted(cleanup)
   outline-offset: 4px;
 }
 .welcome-skip > span {
-  font-size: 15px;
+  font-size: 19px;
 }
 .welcome-stage {
   position: relative;
@@ -186,7 +186,7 @@ onUnmounted(cleanup)
 }
 .welcome-eyebrow {
   color: #a2af90;
-  font-size: 9px;
+  font-size: 13px;
   font-weight: 500;
   letter-spacing: 4px;
   animation: welcome-copy 650ms 180ms both;
@@ -278,7 +278,7 @@ onUnmounted(cleanup)
   background: #bd1832;
   color: #fff4d8;
   font:
-    36px Georgia,
+    40px Georgia,
     serif;
   border: 4px solid #c7a85e;
 }
@@ -289,12 +289,12 @@ onUnmounted(cleanup)
   margin: 0;
   color: #f3edd8;
   font-family: Georgia, 'Times New Roman', serif;
-  font-size: 35px;
+  font-size: 39px;
   font-weight: 400;
   letter-spacing: 7px;
 }
 .welcome-copy h1 > span {
-  font-size: 22px;
+  font-size: 26px;
   color: #c9bb91;
   letter-spacing: 3px;
 }
@@ -305,12 +305,12 @@ onUnmounted(cleanup)
   margin-top: 13px;
   color: #c0c7af;
   font:
-    italic 16px Georgia,
+    italic 20px Georgia,
     serif;
 }
 .welcome-message {
   margin-top: 14px;
-  font-size: 11px;
+  font-size: 15px;
   letter-spacing: 2px;
   color: #8e9d84;
 }
@@ -332,7 +332,7 @@ onUnmounted(cleanup)
 }
 .welcome-caption {
   margin-top: 12px;
-  font-size: 9px;
+  font-size: 13px;
   letter-spacing: 1.5px;
   color: #778870;
   animation: welcome-copy 650ms 650ms both;
@@ -343,7 +343,7 @@ onUnmounted(cleanup)
   right: 42px;
   display: flex;
   justify-content: space-between;
-  font-size: 8px;
+  font-size: 12px;
   letter-spacing: 1.5px;
   color: #6c7f65;
 }
@@ -431,7 +431,7 @@ onUnmounted(cleanup)
   .welcome-brand {
     top: 29px;
     left: 22px;
-    font-size: 9px;
+    font-size: 13px;
     letter-spacing: 1.5px;
   }
   .welcome-brand > span {
@@ -441,7 +441,7 @@ onUnmounted(cleanup)
     top: 20px;
     right: 18px;
     gap: 8px;
-    font-size: 10px;
+    font-size: 14px;
   }
   .welcome-stage {
     padding: 85px 22px 95px;
@@ -455,17 +455,17 @@ onUnmounted(cleanup)
     height: 141px;
   }
   .welcome-copy h1 {
-    font-size: 30px;
+    font-size: 34px;
     letter-spacing: 5px;
   }
   .welcome-motto {
-    font-size: 14px;
+    font-size: 18px;
   }
   .welcome-footer {
     bottom: 24px;
     left: 22px;
     right: 22px;
-    font-size: 7px;
+    font-size: 11px;
     letter-spacing: 1px;
   }
 }
@@ -483,7 +483,7 @@ onUnmounted(cleanup)
     height: 114px;
   }
   .welcome-copy h1 {
-    font-size: 27px;
+    font-size: 31px;
   }
   .welcome-progress {
     margin-top: 18px;

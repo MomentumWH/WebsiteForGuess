@@ -12,8 +12,10 @@ export function setupRouterGuard(router: Router): void {
   router.afterEach((to, _from, failure) => {
     if (!failure) {
       document.title =
-        to.name === 'Matchday'
-          ? 'MATCHDAY · 赛事预测'
+        to.name === 'Matchday' || to.name === 'ArsenalSquad'
+          ? to.path === '/squad'
+            ? 'MATCHDAY · 球队阵容'
+            : 'MATCHDAY · 赛事预测'
           : to.meta.title
             ? `${to.meta.title} - ${appConfig.title}`
             : appConfig.title

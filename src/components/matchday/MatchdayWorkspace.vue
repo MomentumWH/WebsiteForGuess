@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, shallowRef, useTemplateRef } from 'vue'
+import { computed, defineAsyncComponent, shallowRef, useTemplateRef, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import {
   teams,
   summarize,
@@ -20,8 +21,18 @@ import ReviewTable from './ReviewTable.vue'
 import PredictionDialog from './PredictionDialog.vue'
 import LeagueFilter from './LeagueFilter.vue'
 
-type Section = 'overview' | 'predict' | 'review' | 'stats'
-const section = shallowRef<Section>('overview')
+const SquadWorkspace = defineAsyncComponent(() => import('@/components/squad/SquadWorkspace.vue'))
+type Section = 'overview' | 'predict' | 'review' | 'stats' | 'squad'
+const route = useRoute()
+const router = useRouter()
+const section = shallowRef<Section>(route.path === '/squad' ? 'squad' : 'overview')
+watch(
+  () => route.path,
+  (path) => {
+    if (path === '/squad') section.value = 'squad'
+    else if (section.value === 'squad') section.value = 'overview'
+  },
+)
 const league = shallowRef<League>('all')
 const onlyArsenal = shallowRef(true)
 const query = shallowRef('')
@@ -48,6 +59,7 @@ const selectedMatch = computed(() =>
 const navigation: { id: Section; name: string; icon: string }[] = [
   { id: 'overview', name: '赛事总览', icon: 'grid' },
   { id: 'predict', name: '比分预测', icon: 'target' },
+  { id: 'squad', name: '球队阵容', icon: 'squad' },
   { id: 'review', name: '预测复盘', icon: 'history' },
   { id: 'stats', name: '数据统计', icon: 'chart' },
 ]
@@ -56,6 +68,7 @@ const titles = {
   predict: ['比分预测', '在哨声响起前，把你的直觉变成答案。'],
   review: ['预测复盘', '回看当时的判断，发现下一次的可能。'],
   stats: ['数据统计', '用比赛的答案，看见自己的判断力。'],
+  squad: ['球队阵容', '认识每一位枪手，读懂每一场表现。'],
 }
 const scopedMatches = computed(() =>
   matches.value.filter(
@@ -144,7 +157,10 @@ const statCards = computed(() => [
   },
 ])
 function navigate(id: Section) {
+  if (section.value !== id && (id === 'squad' || section.value === 'squad')) query.value = ''
   section.value = id
+  const path = id === 'squad' ? '/squad' : '/'
+  if (route.path !== path) void router.push(path)
   window.scrollTo({
     top: 0,
     behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
@@ -278,8 +294,8 @@ function download() {
             ><AppIcon name="search" :size="16" /><input
               v-model="query"
               type="search"
-              placeholder="搜索球队、比赛…"
-              aria-label="搜索球队或比赛"
+              :placeholder="section === 'squad' ? '搜索球员、号码…' : '搜索球队、比赛…'"
+              :aria-label="section === 'squad' ? '搜索球员姓名或号码' : '搜索球队或比赛'"
             /><span>/</span></label
           ><span class="header-divider"></span
           ><button
@@ -305,11 +321,13 @@ function download() {
           <div class="page-date"><AppIcon name="calendar" :size="15" />{{ date }}</div>
         </div>
         <FixtureSyncStatus
+          v-if="section !== 'squad'"
           :sources="sources"
           :loading="syncing"
           :error="syncError"
           @refresh="refresh"
         />
+        <SquadWorkspace v-if="section === 'squad'" :query="query" />
         <p v-if="storageMessage" class="storage-warning" role="alert">{{ storageMessage }}</p>
         <MatchHero
           v-if="section === 'overview' && focusMatch"
@@ -396,8 +414,9 @@ function download() {
         <footer class="page-footer">
           <span><span class="footer-brand">MATCHDAY</span>记录判断，也记录热爱。</span
           ><span
-            >官网数据 · 常规时间赛果 <i>·</i> 北京时间 <i>·</i
-            ><button @click="openInfo('guide')">
+            >{{ section === 'squad' ? '官方球员数据 · 球队近五场' : '官网数据 · 常规时间赛果' }}
+            <i>·</i> 北京时间 <i v-if="section !== 'squad'">·</i
+            ><button v-if="section !== 'squad'" @click="openInfo('guide')">
               关于预测规则<AppIcon name="arrow" :size="11" /></button
           ></span>
         </footer>
@@ -508,7 +527,7 @@ function download() {
   color: var(--ink);
   background: var(--canvas);
   font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  font-size: 13px;
+  font-size: 17px;
   line-height: 1.5;
 }
 .sidebar {
@@ -545,7 +564,7 @@ function download() {
 .brand > span:last-child {
   font-family: Bahnschrift, 'Arial Narrow', sans-serif;
   letter-spacing: 1.7px;
-  font-size: 19px;
+  font-size: 23px;
   line-height: 1.1;
   font-weight: 650;
 }
@@ -553,7 +572,7 @@ function download() {
   display: block;
   font-family: 'Microsoft YaHei', sans-serif;
   font-weight: 400;
-  font-size: 8px;
+  font-size: 12px;
   letter-spacing: 2.5px;
   margin-top: 7px;
   color: #a0a79b;
@@ -562,13 +581,13 @@ function download() {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 9px;
+  font-size: 13px;
   color: #a4ada0;
   padding: 0 12px;
   margin-bottom: 15px;
 }
 .workspace-label > span {
-  font-size: 7px;
+  font-size: 11px;
   letter-spacing: 1px;
   color: #b5bcb1;
 }
@@ -588,7 +607,7 @@ function download() {
   padding: 0 13px;
   color: #87917f;
   font-family: inherit;
-  font-size: 12px;
+  font-size: 16px;
   text-align: left;
   position: relative;
 }
@@ -610,7 +629,7 @@ function download() {
 }
 .nav-count {
   margin-left: auto;
-  font-size: 9px;
+  font-size: 13px;
   background: #f0f3eb;
   padding: 1px 6px;
   border-radius: 4px;
@@ -627,12 +646,12 @@ function download() {
 .following-label {
   display: flex;
   justify-content: space-between;
-  font-size: 9px;
+  font-size: 13px;
   color: #a6ae9d;
   padding: 0 12px;
 }
 .following-label > span {
-  font-size: 8px;
+  font-size: 12px;
 }
 .followed-team {
   display: flex;
@@ -646,12 +665,12 @@ function download() {
 }
 .followed-team > span:nth-child(2) {
   color: #5c6b51;
-  font-size: 11px;
+  font-size: 15px;
   line-height: 1.4;
 }
 .followed-team small {
   display: block;
-  font-size: 8px;
+  font-size: 12px;
   color: #a8af9d;
   margin-top: 3px;
   letter-spacing: 0.3px;
@@ -673,7 +692,7 @@ function download() {
   display: flex;
   align-items: center;
   gap: 9px;
-  font-size: 9px;
+  font-size: 13px;
   color: #98a18c;
   border: 0;
   background: transparent;
@@ -714,18 +733,18 @@ function download() {
 }
 .fan-card strong {
   font-family: Georgia, serif;
-  font-size: 15px;
+  font-size: 19px;
   line-height: 1.45;
   color: #5d7950;
   font-weight: 400;
 }
 .fan-card p {
-  font-size: 8px;
+  font-size: 12px;
   color: #a1ac91;
   margin: 7px 0 15px;
 }
 .fan-card-tag {
-  font-size: 6px;
+  font-size: 10px;
   color: #b0ba9e;
   letter-spacing: 1px;
 }
@@ -746,7 +765,7 @@ function download() {
   border: 0;
   background: transparent;
   color: #9aa58d;
-  font-size: 10px;
+  font-size: 14px;
   width: 100%;
 }
 .sidebar-help > svg:last-child {
@@ -773,7 +792,7 @@ function download() {
   color: #65814d;
   border-radius: 50%;
   font-family: Georgia, serif;
-  font-size: 16px;
+  font-size: 20px;
   position: relative;
 }
 .avatar > span {
@@ -787,13 +806,13 @@ function download() {
   border-radius: 50%;
 }
 .profile-button strong {
-  font-size: 10px;
+  font-size: 14px;
   color: #647158;
   font-weight: 500;
 }
 .profile-button small {
   display: block;
-  font-size: 8px;
+  font-size: 12px;
   color: #a7af9b;
   margin-top: 2px;
 }
@@ -819,7 +838,7 @@ function download() {
   display: flex;
   align-items: center;
   gap: 12px;
-  font-size: 10px;
+  font-size: 14px;
   color: #a8b09e;
   white-space: nowrap;
 }
@@ -843,7 +862,7 @@ function download() {
   outline: 0;
   background: transparent;
   width: 148px;
-  font-size: 10px;
+  font-size: 14px;
   color: #5a7150;
   font-family: inherit;
 }
@@ -853,7 +872,7 @@ function download() {
 .search-box > span {
   border: 1px solid #e8ede0;
   border-radius: 3px;
-  font-size: 9px;
+  font-size: 13px;
   padding: 0 5px;
   color: #bdc4b3;
 }
@@ -880,7 +899,7 @@ function download() {
   background: #edf1e2;
   color: #7c8f60;
   font-family: Georgia, serif;
-  font-size: 15px;
+  font-size: 19px;
 }
 .main-content {
   max-width: 1510px;
@@ -900,14 +919,14 @@ function download() {
   gap: 13px;
 }
 .title-line h1 {
-  font-size: 25px;
+  font-size: 29px;
   letter-spacing: 1px;
   font-weight: 650;
   line-height: 1.4;
 }
 .season-pill {
   font-family: Bahnschrift, sans-serif;
-  font-size: 9px;
+  font-size: 13px;
   letter-spacing: 0.3px;
   border: 1px solid #e1e7da;
   padding: 3px 8px;
@@ -916,13 +935,13 @@ function download() {
   background: #fcfdf9;
 }
 .page-heading p {
-  font-size: 10px;
+  font-size: 14px;
   color: #a0aa96;
   margin-top: 6px;
   letter-spacing: 0.3px;
 }
 .page-date {
-  font-size: 9px;
+  font-size: 13px;
   display: flex;
   gap: 7px;
   align-items: center;
@@ -933,7 +952,7 @@ function download() {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 8px;
+  font-size: 12px;
   color: #9aa58f;
   margin-bottom: 17px;
 }
@@ -959,7 +978,7 @@ function download() {
   align-items: center;
   gap: 6px;
   color: #8a9d7b;
-  font-size: 9px;
+  font-size: 13px;
   padding: 2px 0;
 }
 .summary-grid {
@@ -976,7 +995,7 @@ function download() {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 10px;
+  font-size: 14px;
   color: #8c9a81;
 }
 .summary-icon {
@@ -1005,7 +1024,7 @@ function download() {
 }
 .summary-value {
   font-family: Bahnschrift, 'DIN Alternate', sans-serif;
-  font-size: 30px;
+  font-size: 34px;
   font-weight: 500;
   line-height: 1.4;
   margin: 5px 0 4px;
@@ -1013,7 +1032,7 @@ function download() {
 }
 .summary-value small {
   font-family: inherit;
-  font-size: 12px;
+  font-size: 16px;
   margin-left: 5px;
   font-weight: 400;
   color: #8e9a83;
@@ -1023,12 +1042,12 @@ function download() {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 8px;
+  font-size: 12px;
   color: #a4ad9b;
   gap: 4px;
 }
 .sample-indicator {
-  font-size: 7px;
+  font-size: 11px;
   color: #b4bca9;
 }
 .content-columns {
@@ -1045,7 +1064,7 @@ function download() {
   justify-content: space-between;
   align-items: center;
   color: #b0baa1;
-  font-size: 8px;
+  font-size: 12px;
   padding-top: 23px;
   gap: 15px;
 }
@@ -1058,7 +1077,7 @@ function download() {
   font-family: Bahnschrift, sans-serif;
   font-weight: 600;
   letter-spacing: 1px;
-  font-size: 9px;
+  font-size: 13px;
   color: #9eac8f;
 }
 .page-footer i {
@@ -1068,7 +1087,7 @@ function download() {
 .page-footer button {
   background: transparent;
   border: 0;
-  font-size: 8px;
+  font-size: 12px;
   color: #9eae8b;
   display: flex;
   align-items: center;
@@ -1089,7 +1108,7 @@ function download() {
   gap: 7px;
   padding: 8px 12px;
   color: #6f875a;
-  font-size: 10px;
+  font-size: 14px;
 }
 .prediction-explainer {
   display: flex;
@@ -1105,12 +1124,12 @@ function download() {
   margin-top: 2px;
 }
 .prediction-explainer h3 {
-  font-size: 13px;
+  font-size: 17px;
   font-weight: 500;
   margin-bottom: 8px;
 }
 .prediction-explainer p {
-  font-size: 11px;
+  font-size: 15px;
   line-height: 1.9;
   color: #8f9f7e;
   max-width: 700px;
@@ -1129,7 +1148,7 @@ function download() {
   border-radius: 9px;
   padding: 14px 20px;
   box-shadow: 0 8px 35px #1a382e30;
-  font-size: 12px;
+  font-size: 16px;
   max-width: calc(100vw - 30px);
 }
 .toast button {
@@ -1161,11 +1180,11 @@ function download() {
   gap: 10px;
 }
 .info-heading h2 {
-  font-size: 19px;
+  font-size: 23px;
   font-weight: 600;
 }
 .info-intro {
-  font-size: 12px;
+  font-size: 16px;
   color: #91a17f;
   margin-top: 18px;
   line-height: 1.8;
@@ -1178,14 +1197,14 @@ function download() {
 .guide-steps li {
   padding-left: 8px;
   margin-bottom: 19px;
-  font-size: 12px;
+  font-size: 16px;
 }
 .guide-steps b {
   font-weight: 550;
   color: #536c43;
 }
 .guide-steps p {
-  font-size: 11px;
+  font-size: 15px;
   line-height: 1.8;
   color: #99a789;
   margin-top: 6px;
@@ -1194,7 +1213,7 @@ function download() {
   padding: 14px;
   background: #f5f8ef;
   border-radius: 7px;
-  font-size: 10px;
+  font-size: 14px;
   color: #a2ae94;
   line-height: 1.8;
   margin-top: 20px;
@@ -1208,13 +1227,13 @@ function download() {
 .settings-profile .avatar {
   width: 48px;
   height: 48px;
-  font-size: 24px;
+  font-size: 28px;
 }
 .settings-profile strong {
-  font-size: 16px;
+  font-size: 20px;
 }
 .settings-profile p {
-  font-size: 11px;
+  font-size: 15px;
   color: #9ca98f;
   margin-top: 4px;
 }
@@ -1227,11 +1246,11 @@ function download() {
   gap: 15px;
 }
 .settings-row b {
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 500;
 }
 .settings-row small {
-  font-size: 10px;
+  font-size: 14px;
   color: #a5b197;
   display: block;
   margin-top: 5px;
@@ -1249,24 +1268,24 @@ function download() {
   color: #a2b38e;
 }
 .notification-empty h3 {
-  font-size: 15px;
+  font-size: 19px;
   color: #6f885c;
   margin-top: 20px;
 }
 .notification-empty p {
-  font-size: 11px;
+  font-size: 15px;
   margin: 12px 0 25px;
 }
 .notification-empty .primary-button {
   gap: 15px;
-  font-size: 11px;
+  font-size: 15px;
 }
 .storage-warning {
   padding: 10px;
   border-radius: 6px;
   background: #fff2de;
   color: #9e7432;
-  font-size: 12px;
+  font-size: 16px;
   margin-bottom: 15px;
 }
 @media (min-width: 1500px) {
@@ -1287,16 +1306,16 @@ function download() {
     padding: 19px 23px;
   }
   .summary-value {
-    font-size: 34px;
+    font-size: 38px;
   }
   .summary-label {
-    font-size: 11px;
+    font-size: 15px;
   }
   .summary-caption {
-    font-size: 9px;
+    font-size: 13px;
   }
   .page-heading h1 {
-    font-size: 28px;
+    font-size: 32px;
   }
   .summary-grid {
     margin: 25px 0;
@@ -1315,7 +1334,7 @@ function download() {
     gap: 8px;
   }
   .brand > span:last-child {
-    font-size: 17px;
+    font-size: 21px;
   }
   .main-content {
     padding: 25px 24px 18px;
@@ -1339,11 +1358,11 @@ function download() {
     height: 25px;
   }
   .page-date {
-    font-size: 8px;
+    font-size: 12px;
   }
   .following-label,
   .workspace-label {
-    font-size: 8px;
+    font-size: 12px;
   }
 }
 @media (max-width: 1050px) {
@@ -1372,13 +1391,13 @@ function download() {
     top: 13px;
   }
   .summary-label {
-    font-size: 9px;
+    font-size: 13px;
   }
   .summary-value {
-    font-size: 27px;
+    font-size: 31px;
   }
   .summary-caption {
-    font-size: 7px;
+    font-size: 11px;
   }
 }
 @media (max-width: 800px) {
@@ -1449,13 +1468,13 @@ function download() {
     padding: 17px 20px;
   }
   .summary-label {
-    font-size: 11px;
+    font-size: 15px;
   }
   .summary-value {
-    font-size: 31px;
+    font-size: 35px;
   }
   .summary-caption {
-    font-size: 9px;
+    font-size: 13px;
   }
   .summary-icon {
     width: 27px;
@@ -1464,13 +1483,13 @@ function download() {
     top: 17px;
   }
   .page-footer {
-    font-size: 7px;
+    font-size: 11px;
   }
   .page-footer > span {
     gap: 6px;
   }
   .footer-brand {
-    font-size: 8px;
+    font-size: 12px;
   }
 }
 @media (max-width: 550px) {
@@ -1502,12 +1521,12 @@ function download() {
     flex-direction: column;
     gap: 4px;
     background: transparent !important;
-    font-size: 9px;
+    font-size: 13px;
     color: #9ca98b;
   }
   .nav-list > button > span:nth-child(2) {
     display: block;
-    font-size: 8px;
+    font-size: 12px;
   }
   .nav-list > button.active {
     color: #315b3a;
@@ -1520,7 +1539,7 @@ function download() {
     padding: 0 19px;
   }
   .breadcrumb {
-    font-size: 9px;
+    font-size: 13px;
     gap: 6px;
   }
   .header-actions {
@@ -1528,7 +1547,7 @@ function download() {
   }
   .search-box input {
     width: 95px;
-    font-size: 9px;
+    font-size: 13px;
   }
   .search-box > span,
   .header-divider,
@@ -1542,36 +1561,36 @@ function download() {
     margin-bottom: 14px;
   }
   .title-line h1 {
-    font-size: 23px;
+    font-size: 27px;
   }
   .title-line {
     gap: 9px;
   }
   .season-pill {
-    font-size: 8px;
+    font-size: 12px;
   }
   .page-heading p {
-    font-size: 9px;
+    font-size: 13px;
   }
   .data-status {
-    font-size: 7px;
+    font-size: 11px;
     gap: 10px;
   }
   .data-status > span {
     gap: 4px;
   }
   .data-status > button {
-    font-size: 8px;
+    font-size: 12px;
     white-space: nowrap;
   }
   .summary-card {
     padding: 15px 17px;
   }
   .summary-label {
-    font-size: 10px;
+    font-size: 14px;
   }
   .summary-caption {
-    font-size: 8px;
+    font-size: 12px;
   }
   .page-footer {
     align-items: flex-start;
@@ -1582,7 +1601,7 @@ function download() {
   .toast {
     left: 50%;
     bottom: 80px;
-    font-size: 10px;
+    font-size: 14px;
     padding: 12px 15px;
     white-space: nowrap;
   }
@@ -1591,13 +1610,13 @@ function download() {
   }
   .export-button {
     padding: 7px 9px;
-    font-size: 9px;
+    font-size: 13px;
   }
   .info-dialog {
     padding: 23px;
   }
   .info-heading h2 {
-    font-size: 17px;
+    font-size: 21px;
   }
 }
 </style>

@@ -45,7 +45,7 @@ const localBadges = [
   width: 100%;
   height: 100%;
   color: white;
-  font-size: 11px;
+  font-size: 15px;
   font-weight: 800;
   clip-path: polygon(10% 0, 90% 0, 95% 65%, 50% 100%, 5% 65%);
 }

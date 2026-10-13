@@ -120,7 +120,7 @@ defineEmits<{ detail: [match: Match]; navigate: [] }>()
   margin-bottom: 20px;
 }
 .review-heading h3 {
-  font-size: 15px;
+  font-size: 19px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -133,7 +133,7 @@ defineEmits<{ detail: [match: Match]; navigate: [] }>()
   border-radius: 50%;
 }
 .review-heading p {
-  font-size: 10px;
+  font-size: 14px;
   color: #98a097;
   margin-top: 6px;
 }
@@ -144,7 +144,7 @@ defineEmits<{ detail: [match: Match]; navigate: [] }>()
   align-items: center;
   gap: 6px;
   color: #8a9688;
-  font-size: 10px;
+  font-size: 14px;
 }
 .text-button:hover {
   color: #276043;
@@ -188,7 +188,7 @@ table {
   white-space: nowrap;
 }
 th {
-  font-size: 9px;
+  font-size: 13px;
   color: #98a096;
   font-weight: 400;
   padding: 10px 10px;
@@ -204,7 +204,7 @@ th:last-child {
 td {
   padding: 14px 10px;
   border-bottom: 1px solid #f0f2eb;
-  font-size: 10px;
+  font-size: 14px;
 }
 tr:last-child td {
   border-bottom: 0;
@@ -213,10 +213,10 @@ tr:last-child td {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 10px;
+  font-size: 14px;
 }
 .table-teams small {
-  font-size: 9px;
+  font-size: 13px;
   color: #b0b7ac;
   margin: 0 5px;
 }
@@ -225,7 +225,7 @@ tr:last-child td {
   margin-right: 7px;
 }
 .table-league {
-  font-size: 8px;
+  font-size: 12px;
   color: #9ca492;
   padding: 2px 5px;
   background: #f1f4ec;
@@ -239,13 +239,13 @@ tr:last-child td {
 .table-prediction b,
 .actual-score {
   font-family: 'Bahnschrift', sans-serif;
-  font-size: 13px;
+  font-size: 17px;
   letter-spacing: 1px;
   font-weight: 500;
   color: #52624f;
 }
 .table-prediction small {
-  font-size: 7px;
+  font-size: 11px;
   color: #adb5a6;
 }
 .actual-score {
@@ -254,7 +254,7 @@ tr:last-child td {
 .result-pill {
   background: #f4f2ed;
   color: #a29782;
-  font-size: 8px;
+  font-size: 12px;
   padding: 4px 7px;
   border-radius: 4px;
   display: inline-flex;
@@ -284,7 +284,7 @@ tr:last-child td {
 .review-empty {
   text-align: center;
   padding: 35px;
-  font-size: 12px;
+  font-size: 16px;
   color: #8c9987;
 }
 @media (max-width: 700px) {

@@ -2,6 +2,8 @@
 withDefaults(defineProps<{ name: string; size?: number }>(), { size: 20 })
 const paths: Record<string, string> = {
   grid: 'M3 3h7v7H3z M14 3h7v7h-7z M3 14h7v7H3z M14 14h7v7h-7z',
+  squad:
+    'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M13 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z M18 3a4 4 0 0 1 0 8 M22 21v-2a4 4 0 0 0-3-3.87',
   ball: 'M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z M9 9l6 0 2 5-5 4-5-4 2-5Z M9 9 7 5 M15 9l2-4 M17 14l4 1 M12 18v3 M7 14l-4 1',
   target: 'M21 12a9 9 0 1 1-9-9 M17 12a5 5 0 1 1-5-5 M12 12l9-9 M16 3h5v5',
   history: 'M3 11a9 9 0 1 1 2.6 7.4 M3 4v7h7 M12 7v5l3 2',
