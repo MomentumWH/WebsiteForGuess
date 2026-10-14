@@ -36,7 +36,7 @@ const filters: { value: League; label: string }[] = [
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   padding: 3px;
-  background: #f3f5f2;
+  background: var(--md-soft, #f3f5f2);
   border-radius: 7px;
 }
 .selection-track {
@@ -45,7 +45,7 @@ const filters: { value: League; label: string }[] = [
   inset: 3px auto 3px 3px;
   width: calc((100% - 6px) / 3);
   border-radius: 5px;
-  background: #fff;
+  background: var(--md-surface, #fff);
   box-shadow: 0 1px 5px #233a1912;
   transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -55,19 +55,19 @@ const filters: { value: League; label: string }[] = [
   padding: 6px 13px;
   border-radius: 4px;
   font-size: 14px;
-  color: #89928b;
+  color: var(--md-secondary, #89928b);
   white-space: nowrap;
   transition: color 180ms ease;
 }
 .league-filter button[aria-pressed='true'] {
-  color: #2c5741;
+  color: var(--md-text, #2c5741);
   font-weight: 650;
 }
 .toolbar {
-  background: #f0f4ec;
+  background: var(--md-soft, #f0f4ec);
 }
 .toolbar .selection-track {
-  background: #e1ecd7;
+  background: var(--md-soft, #e1ecd7);
   box-shadow: 0 1px 4px #315e4210;
 }
 .toolbar button {

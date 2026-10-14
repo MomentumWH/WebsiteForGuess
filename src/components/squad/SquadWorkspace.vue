@@ -238,7 +238,7 @@ function selectFromTable(id: string) {
 </template>
 <style scoped>
 .squad-workspace {
-  color: #566c49;
+  color: var(--md-text, #566c49);
 }
 .squad-toolbar {
   display: flex;
@@ -250,11 +250,11 @@ function selectFromTable(id: string) {
 .squad-kicker {
   font-size: 12px;
   letter-spacing: 1.8px;
-  color: #8d9b79;
+  color: var(--md-secondary, #8d9b79);
 }
 .squad-toolbar > div > p {
   font-size: 14px;
-  color: #9fa78f;
+  color: var(--md-muted, #9fa78f);
   margin: 6px 0 0;
 }
 .squad-actions {
@@ -266,7 +266,7 @@ function selectFromTable(id: string) {
 .squad-leagues {
   display: flex;
   gap: 3px;
-  background: #edf2e5;
+  background: var(--md-soft, #edf2e5);
   padding: 4px;
   border-radius: 6px;
 }
@@ -274,33 +274,33 @@ function selectFromTable(id: string) {
   font-size: 14px;
   border: 0;
   background: transparent;
-  color: #8c997d;
+  color: var(--md-secondary, #8c997d);
   padding: 7px 11px;
   border-radius: 4px;
 }
 .squad-leagues button[aria-pressed='true'] {
-  color: #456b38;
-  background: #fff;
+  color: var(--md-text, #456b38);
+  background: var(--md-surface, #fff);
   box-shadow: 0 2px 4px #233f1810;
 }
 .squad-refresh {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  border: 1px solid #dce5d1;
+  border: 1px solid var(--md-border, #dce5d1);
   border-radius: 6px;
-  background: #fff;
+  background: var(--md-surface, #fff);
   padding: 10px 12px;
-  color: #70875d;
+  color: var(--md-secondary, #70875d);
   font-size: 14px;
 }
 .squad-warning {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #a27749;
-  background: #fbf5e9;
-  border: 1px solid #ede0bd;
+  color: var(--md-warning, #a27749);
+  background: var(--md-warning-soft, #fbf5e9);
+  border: 1px solid var(--md-border, #ede0bd);
   padding: 12px;
   border-radius: 7px;
   font-size: 15px;
@@ -314,7 +314,7 @@ function selectFromTable(id: string) {
   margin-left: auto;
 }
 .squad-sources {
-  border-bottom: 1px solid #e5ebda;
+  border-bottom: 1px solid var(--md-border, #e5ebda);
   margin: 0 0 19px;
   padding-bottom: 12px;
 }
@@ -324,7 +324,7 @@ function selectFromTable(id: string) {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #99a489;
+  color: var(--md-muted, #99a489);
   font-size: 13px;
 }
 .squad-sources summary::-webkit-details-marker {
@@ -346,7 +346,7 @@ function selectFromTable(id: string) {
 }
 .source-summary small {
   font-size: 12px;
-  color: #aab29b;
+  color: var(--md-muted, #aab29b);
   margin-left: 6px;
 }
 .source-grid {
@@ -356,12 +356,12 @@ function selectFromTable(id: string) {
   padding-top: 15px;
 }
 .source-grid a {
-  background: #fff;
-  border: 1px solid #e5ebdc;
+  background: var(--md-surface, #fff);
+  border: 1px solid var(--md-border, #e5ebdc);
   border-radius: 6px;
   padding: 10px;
   text-decoration: none;
-  color: #7d8b6e;
+  color: var(--md-secondary, #7d8b6e);
   min-width: 0;
 }
 .source-grid strong {
@@ -372,29 +372,29 @@ function selectFromTable(id: string) {
 .source-grid strong span {
   font-size: 11px;
   margin-left: 6px;
-  color: #83a46b;
+  color: var(--md-secondary, #83a46b);
 }
 .source-grid strong .stale {
-  color: #b7995f;
+  color: var(--md-warning, #b7995f);
 }
 .source-grid strong .error {
-  color: #b17b6b;
+  color: var(--md-danger, #b17b6b);
 }
 .source-grid small {
   font-size: 12px;
-  color: #a0aa90;
+  color: var(--md-muted, #a0aa90);
   display: block;
   margin-top: 6px;
 }
 .source-grid p {
   font-size: 13px;
-  color: #ac8661;
+  color: var(--md-warning, #ac8661);
   margin-bottom: 0;
   line-height: 1.5;
 }
 .source-explanation {
   font-size: 13px;
-  color: #95a083;
+  color: var(--md-muted, #95a083);
   line-height: 1.8;
   margin: 12px 0 0;
 }
@@ -414,20 +414,20 @@ function selectFromTable(id: string) {
 .window-label {
   font-size: 12px;
   letter-spacing: 1.5px;
-  color: #99a982;
+  color: var(--md-muted, #99a982);
 }
 .squad-window strong {
   font-size: 15px;
   font-weight: 500;
-  color: #647e50;
+  color: var(--md-secondary, #647e50);
 }
 .squad-window > div > span:not(.window-label) {
   font-size: 13px;
-  color: #a4ae96;
+  color: var(--md-muted, #a4ae96);
 }
 .squad-window small {
   font-size: 12px;
-  color: #b29869;
+  color: var(--md-warning, #b29869);
 }
 .position-counts {
   display: flex;
@@ -436,12 +436,12 @@ function selectFromTable(id: string) {
 }
 .position-counts > span {
   font-size: 13px !important;
-  color: #9ba78a !important;
+  color: var(--md-muted, #9ba78a) !important;
 }
 .position-counts b {
   font-family: Bahnschrift, sans-serif;
   font-size: 21px;
-  color: #738c5d;
+  color: var(--md-secondary, #738c5d);
   font-weight: 400;
   margin-left: 5px;
 }
@@ -460,7 +460,7 @@ function selectFromTable(id: string) {
   display: flex;
   gap: 9px;
   margin: 18px 0;
-  color: #97a285;
+  color: var(--md-muted, #97a285);
 }
 .squad-method > svg {
   flex-shrink: 0;
@@ -473,8 +473,8 @@ function selectFromTable(id: string) {
 }
 .squad-loading,
 .squad-empty {
-  border: 1px solid #e4ebd9;
-  background: #fff;
+  border: 1px solid var(--md-border, #e4ebd9);
+  background: var(--md-surface, #fff);
   border-radius: 13px;
   min-height: 470px;
   display: flex;
@@ -487,13 +487,13 @@ function selectFromTable(id: string) {
 .squad-loading strong {
   font-weight: 500;
   font-size: 20px;
-  color: #5b7850;
+  color: var(--md-secondary, #5b7850);
   margin-top: 18px;
 }
 .squad-loading p,
 .squad-empty p {
   font-size: 15px;
-  color: #9da98c;
+  color: var(--md-muted, #9da98c);
   line-height: 1.8;
   max-width: 350px;
 }
@@ -508,8 +508,8 @@ function selectFromTable(id: string) {
 .squad-loading-badge span {
   position: absolute;
   inset: 0;
-  border: 1px solid #dce6ce;
-  border-top-color: #849c62;
+  border: 1px solid var(--md-border, #dce6ce);
+  border-top-color: var(--md-accent, #849c62);
   border-radius: 50%;
   animation: squad-spin 1.6s linear infinite;
 }
@@ -522,7 +522,12 @@ function selectFromTable(id: string) {
 }
 .skeleton-lines span {
   height: 23px;
-  background: linear-gradient(90deg, #f1f5e9, #e7efdb, #f1f5e9);
+  background: linear-gradient(
+    90deg,
+    var(--md-soft, #f1f5e9),
+    var(--md-soft, #e7efdb),
+    var(--md-soft, #f1f5e9)
+  );
   background-size: 200% 100%;
   border-radius: 5px;
   animation: skeleton-shimmer 1.7s ease infinite;

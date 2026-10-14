@@ -243,12 +243,12 @@ h2 span {
 }
 .next-teams small {
   font-size: 14px;
-  color: #9ca59f;
+  color: var(--md-muted, #9ca59f);
 }
 .versus {
   font-family: Georgia, serif;
   font-size: 24px;
-  color: #adb4ae;
+  color: var(--md-muted, #adb4ae);
   font-style: italic;
 }
 .next-time {
@@ -257,19 +257,19 @@ h2 span {
   justify-content: center;
   gap: 7px;
   font-size: 14px;
-  color: #5f6d64;
+  color: var(--md-secondary, #5f6d64);
 }
 .next-time b {
-  color: #34483d;
+  color: var(--md-text, #34483d);
   font-size: 16px;
 }
 .next-time > span {
   font-size: 13px;
-  color: #9aa39d;
+  color: var(--md-muted, #9aa39d);
 }
 .next-venue {
   text-align: center;
-  color: #969f98;
+  color: var(--md-muted, #969f98);
   font-size: 14px;
   margin: 8px 0 19px;
 }

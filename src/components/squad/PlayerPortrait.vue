@@ -33,7 +33,7 @@ watch(
   justify-content: center;
   overflow: hidden;
   flex-shrink: 0;
-  background: linear-gradient(145deg, #eef1e5, #dbe5d2);
+  background: linear-gradient(145deg, var(--md-soft, #eef1e5), var(--md-soft, #dbe5d2));
   border-radius: 50%;
   aspect-ratio: 1;
 }
@@ -50,6 +50,6 @@ watch(
   height: 100%;
   font-family: Georgia, serif;
   font-size: calc(1.1em - 0.4px);
-  color: #416045;
+  color: var(--md-text, #416045);
 }
 </style>

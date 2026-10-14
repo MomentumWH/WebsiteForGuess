@@ -182,8 +182,8 @@ function cancelSelection() {
 .personal-lineup {
   margin: 23px 0;
   padding: 25px;
-  background: #fff;
-  border: 1px solid #e2e9d7;
+  background: var(--md-surface, #fff);
+  border: 1px solid var(--md-border, #e2e9d7);
   border-radius: 13px;
 }
 .lineup-heading {
@@ -195,32 +195,32 @@ function cancelSelection() {
 .lineup-kicker {
   font-size: 12px;
   letter-spacing: 1.8px;
-  color: #a0ac8c;
+  color: var(--md-muted, #a0ac8c);
 }
 .lineup-heading h2 {
   font-size: 26px;
   font-weight: 500;
-  color: #47633b;
+  color: var(--md-text, #47633b);
   letter-spacing: 0.6px;
   margin: 9px 0 8px;
 }
 .lineup-heading p {
   font-size: 15px;
-  color: #99a58a;
+  color: var(--md-muted, #99a58a);
   margin: 0;
 }
 .lineup-count {
   display: flex;
   align-items: center;
   gap: 7px;
-  color: #8f9f79;
+  color: var(--md-secondary, #8f9f79);
   flex-shrink: 0;
 }
 .lineup-count b {
   font-family: Bahnschrift, sans-serif;
   font-size: 40px;
   font-weight: 400;
-  color: #66864d;
+  color: var(--md-secondary, #66864d);
 }
 .lineup-count > span {
   font-size: 15px;
@@ -242,15 +242,15 @@ function cancelSelection() {
   flex-wrap: wrap;
   gap: 4px;
   padding: 4px;
-  background: #eff3e8;
-  border: 1px solid #e5eadc;
+  background: var(--md-soft, #eff3e8);
+  border: 1px solid var(--md-border, #e5eadc);
   border-radius: 7px;
 }
 .lineup-templates button {
   border: 0;
   border-radius: 4px;
   background: transparent;
-  color: #8b9b76;
+  color: var(--md-secondary, #8b9b76);
   font-size: 15px;
   padding: 8px 14px;
   font-variant-numeric: tabular-nums;
@@ -259,8 +259,8 @@ function cancelSelection() {
     color 0.2s;
 }
 .lineup-templates button[aria-pressed='true'] {
-  color: #476637;
-  background: #fff;
+  color: var(--md-text, #476637);
+  background: var(--md-surface, #fff);
   box-shadow: 0 1px 4px #30451d0e;
 }
 .lineup-clear {
@@ -269,7 +269,7 @@ function cancelSelection() {
   gap: 5px;
   border: 0;
   background: transparent;
-  color: #9ba98b;
+  color: var(--md-muted, #9ba98b);
   font-size: 14px;
   flex-shrink: 0;
   padding: 9px 0;
@@ -282,8 +282,8 @@ function cancelSelection() {
   margin-top: 12px;
   padding: 10px 12px;
   border-radius: 6px;
-  background: #f8f4e9;
-  color: #a08355;
+  background: var(--md-warning-soft, #f8f4e9);
+  color: var(--md-warning, #a08355);
   font-size: 15px;
   display: flex;
   gap: 10px;
@@ -291,9 +291,9 @@ function cancelSelection() {
   flex-wrap: wrap;
 }
 .lineup-confirm button {
-  border: 1px solid #ded2b6;
-  background: #fff;
-  color: #957546;
+  border: 1px solid var(--md-border, #ded2b6);
+  background: var(--md-surface, #fff);
+  color: var(--md-warning, #957546);
   border-radius: 4px;
   padding: 5px 9px;
   font-size: 14px;
@@ -304,14 +304,14 @@ function cancelSelection() {
   gap: 12px;
   flex-wrap: wrap;
   font-size: 13px;
-  color: #9ba789;
+  color: var(--md-muted, #9ba789);
   margin: 13px 1px 15px;
 }
 .lineup-description > span:last-child {
   display: flex;
   gap: 4px;
   align-items: center;
-  color: #839965;
+  color: var(--md-secondary, #839965);
 }
 .lineup-content {
   display: grid;
@@ -325,7 +325,7 @@ function cancelSelection() {
   flex-wrap: wrap;
   gap: 7px;
   font-size: 14px;
-  color: #849570;
+  color: var(--md-secondary, #849570);
   padding-top: 14px;
   min-height: 31px;
 }
@@ -334,8 +334,8 @@ function cancelSelection() {
 }
 .lineup-status button {
   border: 0;
-  color: #6c8751;
-  background: #eff4e6;
+  color: var(--md-secondary, #6c8751);
+  background: var(--md-soft, #eff4e6);
   padding: 5px 8px;
   font-size: 13px;
   border-radius: 4px;
@@ -344,12 +344,12 @@ function cancelSelection() {
   margin: 9px 0 0;
   font-size: 13px;
   line-height: 1.8;
-  color: #a2ad92;
+  color: var(--md-muted, #a2ad92);
 }
 .lineup-missing {
   font-size: 14px;
   line-height: 1.7;
-  color: #a38358;
+  color: var(--md-warning, #a38358);
 }
 .lineup-ghost {
   position: fixed;
@@ -360,12 +360,12 @@ function cancelSelection() {
   align-items: center;
   flex-direction: column;
   padding: 9px 12px;
-  background: #f7f9eeed;
-  border: 1px solid #a0b67a;
+  background: var(--md-soft, #f7f9eeed);
+  border: 1px solid var(--md-accent, #a0b67a);
   border-radius: 9px;
   box-shadow: 0 8px 25px #0b302938;
   min-width: 80px;
-  color: #45643a;
+  color: var(--md-text, #45643a);
 }
 .lineup-ghost :deep(.player-portrait) {
   width: 41px;
@@ -377,7 +377,7 @@ function cancelSelection() {
 }
 .lineup-ghost small {
   font-size: 12px;
-  color: #92a279;
+  color: var(--md-secondary, #92a279);
   margin-top: 4px;
 }
 @media (max-width: 1100px) {

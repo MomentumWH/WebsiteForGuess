@@ -129,10 +129,12 @@ function sourceLabel(league: 'pl' | 'ucl') {
   margin: auto;
   padding: 22px 30px 23px;
   overflow: auto;
-  border: 1px solid #e3ebdc;
+  border: 1px solid var(--md-border, #e3ebdc);
   border-radius: 20px;
-  color: #315e42;
-  background: radial-gradient(ellipse at 50% 27%, #edf4e5, transparent 62%), #fcfdf9;
+  color: var(--md-text, #315e42);
+  background:
+    radial-gradient(ellipse at 50% 27%, var(--md-soft, #edf4e5), transparent 62%),
+    var(--md-soft, #fcfdf9);
   box-shadow:
     0 28px 100px #0f291d33,
     0 4px 16px #152e1912;
@@ -183,7 +185,7 @@ function sourceLabel(league: 'pl' | 'ucl') {
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 1px;
-  color: #809174;
+  color: var(--md-secondary, #809174);
 }
 .overlay-brand i {
   width: 5px;
@@ -192,7 +194,7 @@ function sourceLabel(league: 'pl' | 'ucl') {
   background: #7da15d;
 }
 .overlay-brand > span {
-  color: #c3ccbc;
+  color: var(--md-muted, #c3ccbc);
 }
 .overlay-close {
   display: grid;
@@ -203,15 +205,15 @@ function sourceLabel(league: 'pl' | 'ucl') {
   border: 0;
   border-radius: 50%;
   background: transparent;
-  color: #8a9882;
+  color: var(--md-secondary, #8a9882);
   cursor: pointer;
 }
 .overlay-close:hover {
-  color: #315e42;
-  background: #eaf1e3;
+  color: var(--md-text, #315e42);
+  background: var(--md-soft, #eaf1e3);
 }
 .overlay-close:focus-visible {
-  outline: 2px solid #7d9b5d;
+  outline: 2px solid var(--md-accent, #7d9b5d);
   outline-offset: 3px;
 }
 .sync-illustration {
@@ -226,8 +228,8 @@ function sourceLabel(league: 'pl' | 'ucl') {
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  border: 1px solid #dce8d1;
-  background: #e9f2e088;
+  border: 1px solid var(--md-border, #dce8d1);
+  background: var(--md-soft, #e9f2e088);
 }
 .emblem {
   display: grid;
@@ -235,8 +237,8 @@ function sourceLabel(league: 'pl' | 'ucl') {
   width: 72px;
   height: 72px;
   border-radius: 50%;
-  border: 1px solid #deead3;
-  background: #fcfdf9;
+  border: 1px solid var(--md-border, #deead3);
+  background: var(--md-soft, #fcfdf9);
   box-shadow: 0 4px 18px #5673390a;
 }
 .orbit {
@@ -246,13 +248,13 @@ function sourceLabel(league: 'pl' | 'ucl') {
 }
 .orbit-outer {
   inset: 0;
-  border-top-color: #759e55;
-  border-right-color: #b9d299;
+  border-top-color: var(--md-accent, #759e55);
+  border-right-color: var(--md-accent, #b9d299);
   animation: sync-orbit 2.5s linear infinite;
 }
 .orbit-inner {
   inset: 12px;
-  border-bottom-color: #9bbd7f;
+  border-bottom-color: var(--md-accent, #9bbd7f);
   animation: sync-orbit 3.2s linear infinite reverse;
 }
 .illustration-dot {
@@ -271,21 +273,21 @@ function sourceLabel(league: 'pl' | 'ucl') {
   bottom: 23px;
   width: 3px;
   height: 3px;
-  background: #bfd1ac;
+  background: var(--md-selected, #bfd1ac);
 }
 .overlay-copy h2 {
   margin: 0;
   font-size: 23px;
   font-weight: 650;
   letter-spacing: -0.3px;
-  color: #284f36;
+  color: var(--md-text, #284f36);
 }
 .overlay-copy p {
   max-width: 290px;
   margin: 10px auto 0;
   font-size: 16px;
   line-height: 1.9;
-  color: #83917c;
+  color: var(--md-secondary, #83917c);
 }
 .competition-status {
   display: flex;
@@ -298,24 +300,24 @@ function sourceLabel(league: 'pl' | 'ucl') {
   gap: 7px;
   flex: 1;
   padding: 11px 12px;
-  border: 1px solid #e4ebdd;
+  border: 1px solid var(--md-border, #e4ebdd);
   border-radius: 8px;
-  background: #ffffffa6;
+  background: var(--md-glass, #ffffffa6);
   font-size: 15px;
 }
 .competition > svg {
-  color: #91a77d;
+  color: var(--md-muted, #91a77d);
 }
 .competition small {
   margin-left: auto;
   font-size: 13px;
-  color: #95a08c;
+  color: var(--md-muted, #95a08c);
   white-space: nowrap;
 }
 .progress-track {
   height: 3px;
   border-radius: 3px;
-  background: #e8eedf;
+  background: var(--md-soft, #e8eedf);
   overflow: hidden;
 }
 .progress-track span {
@@ -333,7 +335,7 @@ function sourceLabel(league: 'pl' | 'ucl') {
 .overlay-footnote {
   margin: 12px 0 0;
   font-size: 14px;
-  color: #a0ab96;
+  color: var(--md-muted, #a0ab96);
 }
 .success .emblem svg {
   stroke-dasharray: 30;
@@ -341,9 +343,9 @@ function sourceLabel(league: 'pl' | 'ucl') {
 }
 .warning .emblem,
 .error .emblem {
-  color: #ac8749;
-  border-color: #eadfc7;
-  background: #fffcf5;
+  color: var(--md-warning, #ac8749);
+  border-color: var(--md-border, #eadfc7);
+  background: var(--md-soft, #fffcf5);
 }
 @keyframes sync-orbit {
   to {

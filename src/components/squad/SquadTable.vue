@@ -144,7 +144,7 @@ const columns: { key: Metric; label: string }[] = [
 }
 .table-heading h2 {
   font-size: 19px;
-  color: #3f5b35;
+  color: var(--md-text, #3f5b35);
   font-weight: 500;
   margin: 0;
 }
@@ -153,26 +153,26 @@ const columns: { key: Metric; label: string }[] = [
   vertical-align: middle;
   margin-left: 9px;
   padding: 3px 7px;
-  background: #f0f4e7;
-  color: #869477;
+  background: var(--md-soft, #f0f4e7);
+  color: var(--md-secondary, #869477);
   font-size: 13px;
   border-radius: 4px;
 }
 .table-heading p {
   font-size: 13px;
-  color: #9fa791;
+  color: var(--md-muted, #9fa791);
   margin: 8px 0 0;
 }
 .sort-control {
   display: flex;
   align-items: center;
   gap: 5px;
-  color: #8b9d78;
+  color: var(--md-secondary, #8b9d78);
 }
 .sort-control select {
-  border: 1px solid #e5eadc;
-  background: #fff;
-  color: #7c8d6c;
+  border: 1px solid var(--md-border, #e5eadc);
+  background: var(--md-surface, #fff);
+  color: var(--md-secondary, #7c8d6c);
   font-size: 13px;
   padding: 8px 5px;
   border-radius: 5px;
@@ -187,7 +187,7 @@ const columns: { key: Metric; label: string }[] = [
 .position-filters {
   display: flex;
   gap: 5px;
-  background: #f5f7f0;
+  background: var(--md-soft, #f5f7f0);
   padding: 4px;
   border-radius: 6px;
 }
@@ -197,23 +197,23 @@ const columns: { key: Metric; label: string }[] = [
   padding: 6px 12px;
   border-radius: 4px;
   font-size: 14px;
-  color: #9aa28b;
+  color: var(--md-muted, #9aa28b);
 }
 .position-filters button[aria-pressed='true'] {
-  color: #46683a;
-  background: #fff;
+  color: var(--md-text, #46683a);
+  background: var(--md-surface, #fff);
   box-shadow: 0 1px 4px #263f1810;
 }
 .first-team-filter {
   display: flex;
   align-items: center;
   gap: 5px;
-  color: #9ba58c;
+  color: var(--md-muted, #9ba58c);
   font-size: 13px;
   white-space: nowrap;
 }
 .first-team-filter input {
-  accent-color: #426538;
+  accent-color: var(--md-accent, #426538);
   width: 12px;
   height: 12px;
 }
@@ -228,13 +228,13 @@ const columns: { key: Metric; label: string }[] = [
   table-layout: fixed;
 }
 .table-scroll thead th {
-  background: #f8faf4;
-  color: #9ba68b;
+  background: var(--md-soft, #f8faf4);
+  color: var(--md-muted, #9ba68b);
   font-size: 13px;
   font-weight: 400;
   padding: 11px 4px;
   text-align: center;
-  border-bottom: 1px solid #e9eee0;
+  border-bottom: 1px solid var(--md-border, #e9eee0);
 }
 .table-scroll thead th:first-child {
   text-align: left;
@@ -249,31 +249,31 @@ const columns: { key: Metric; label: string }[] = [
 }
 .position-divider th {
   padding: 13px 11px 6px;
-  color: #a5ae95;
+  color: var(--md-muted, #a5ae95);
   font-size: 11px;
   letter-spacing: 1.4px;
   font-weight: 400;
 }
 .position-divider span {
   font-size: 13px;
-  color: #7f906c;
+  color: var(--md-secondary, #7f906c);
   margin-right: 9px;
   letter-spacing: 0;
 }
 .position-divider i {
   font-style: normal;
   margin-left: 8px;
-  color: #b6beab;
+  color: var(--md-muted, #b6beab);
 }
 .player-row {
-  border-bottom: 1px solid #f0f3eb;
+  border-bottom: 1px solid var(--md-border, #f0f3eb);
   animation: row-in 0.35s calc(var(--index) * 30ms) both;
 }
 .player-row:hover {
-  background: #fafcf6;
+  background: var(--md-soft, #fafcf6);
 }
 .player-row.selected {
-  background: #f3f7ea;
+  background: var(--md-soft, #f3f7ea);
 }
 .player-name-button {
   display: flex;
@@ -298,13 +298,13 @@ const columns: { key: Metric; label: string }[] = [
   text-overflow: ellipsis;
   white-space: nowrap;
   font-family: Bahnschrift, sans-serif;
-  color: #546448;
+  color: var(--md-text, #546448);
   font-size: 15px;
   font-weight: 500;
 }
 .player-name-button small {
   display: block;
-  color: #a7af99;
+  color: var(--md-muted, #a7af99);
   font-size: 11px;
   margin-top: 4px;
 }
@@ -312,26 +312,26 @@ const columns: { key: Metric; label: string }[] = [
   font-style: normal;
   margin-left: 5px;
   font-size: 16px;
-  color: #b59356;
+  color: var(--md-warning, #b59356);
 }
 .player-row td {
   font-family: Bahnschrift, sans-serif;
   font-size: 16px;
-  color: #718263;
+  color: var(--md-secondary, #718263);
   text-align: center;
   font-variant-numeric: tabular-nums;
 }
 .player-row td.missing {
-  color: #c3cbb6;
+  color: var(--md-muted, #c3cbb6);
 }
 .player-row td.highlight {
-  color: #ad6250;
+  color: var(--md-danger, #ad6250);
   font-weight: 600;
 }
 .detail-button {
   border: 0;
   background: transparent;
-  color: #a6b298;
+  color: var(--md-muted, #a6b298);
   border-radius: 5px;
   padding: 5px;
   display: inline-flex;
@@ -343,7 +343,7 @@ const columns: { key: Metric; label: string }[] = [
   gap: 10px;
   padding: 15px 0;
   font-size: 12px;
-  color: #a4ad96;
+  color: var(--md-muted, #a4ad96);
 }
 .table-empty {
   display: flex;
@@ -351,7 +351,7 @@ const columns: { key: Metric; label: string }[] = [
   align-items: center;
   gap: 9px;
   padding: 40px 15px;
-  color: #a0ad8d;
+  color: var(--md-muted, #a0ad8d);
 }
 .table-empty strong {
   font-size: 17px;

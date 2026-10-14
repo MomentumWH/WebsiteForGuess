@@ -166,7 +166,7 @@ function updatedLabel(value: string | null) {
   justify-content: space-between;
   margin: 16px 0 20px;
   font-size: 15px;
-  color: #6d7e6f;
+  color: var(--md-secondary, #6d7e6f);
 }
 .sync-sources {
   display: flex;
@@ -193,16 +193,16 @@ function updatedLabel(value: string | null) {
   text-underline-offset: 3px;
 }
 .sync-source small {
-  color: #929d91;
+  color: var(--md-muted, #929d91);
   font-size: 14px;
 }
 .sync-button {
   position: relative;
   overflow: hidden;
   min-width: 108px;
-  border: 1px solid #d9e4d4;
-  color: #315f49;
-  background: #fff;
+  border: 1px solid var(--md-border, #d9e4d4);
+  color: var(--md-text, #315f49);
+  background: var(--md-surface, #fff);
   padding: 7px 12px;
   border-radius: 6px;
   cursor: pointer;
@@ -212,18 +212,18 @@ function updatedLabel(value: string | null) {
   cursor: wait;
 }
 .sync-button:hover:not(:disabled) {
-  background: #f0f5eb;
-  border-color: #b3c9a8;
+  background: var(--md-soft, #f0f5eb);
+  border-color: var(--md-accent, #b3c9a8);
 }
 .sync-button.is-loading {
   color: #f4f9ec;
   background: #315e42;
-  border-color: #315e42;
+  border-color: var(--md-accent, #315e42);
   box-shadow: 0 3px 10px #315e4214;
 }
 .sync-button.is-success {
-  background: #eaf2e3;
-  border-color: #d1e1c6;
+  background: var(--md-soft, #eaf2e3);
+  border-color: var(--md-border, #d1e1c6);
 }
 .button-content {
   position: relative;
@@ -253,7 +253,7 @@ function updatedLabel(value: string | null) {
 }
 .sync-message {
   flex-basis: 100%;
-  color: #98713c;
+  color: var(--md-warning, #98713c);
   margin: 0;
   line-height: 1.6;
 }

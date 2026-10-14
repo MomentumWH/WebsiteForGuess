@@ -118,8 +118,8 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
   gap: 8px;
   width: 100%;
   border: 0;
-  background: #f1f6ed;
-  color: #315f49;
+  background: var(--md-soft, #f1f6ed);
+  color: var(--md-text, #315f49);
   border-radius: 6px;
   padding: 10px;
   margin: 16px 0;
@@ -145,14 +145,14 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
 .count-label {
   font-size: 14px;
   font-weight: 500;
-  color: #6f7c73;
-  background: #f0f3ef;
+  color: var(--md-secondary, #6f7c73);
+  background: var(--md-soft, #f0f3ef);
   border-radius: 5px;
   padding: 2px 6px;
 }
 .section-heading p {
   font-size: 14px;
-  color: #98a099;
+  color: var(--md-muted, #98a099);
   margin-top: 6px;
 }
 .match-filters {
@@ -169,7 +169,7 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
   gap: 7px;
   white-space: nowrap;
   cursor: pointer;
-  color: #748077;
+  color: var(--md-secondary, #748077);
   position: relative;
 }
 .arsenal-toggle input {
@@ -183,7 +183,7 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
   width: 25px;
   height: 14px;
   border-radius: 10px;
-  background: #d5dcd5;
+  background: var(--md-soft, #d5dcd5);
   padding: 2px;
   display: inline-flex;
   transition: background 0.2s;
@@ -193,7 +193,7 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: #fff;
+  background: var(--md-surface, #fff);
   transition: transform 0.2s;
 }
 .arsenal-toggle input:checked + .toggle-track {
@@ -203,7 +203,7 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
   transform: translateX(11px);
 }
 .arsenal-toggle input:focus-visible + .toggle-track {
-  outline: 2px solid #327557;
+  outline: 2px solid var(--md-accent, #327557);
   outline-offset: 3px;
 }
 .match-cards {
@@ -213,17 +213,17 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
   gap: 12px;
 }
 .match-card {
-  border: 1px solid #e9ede6;
+  border: 1px solid var(--md-border, #e9ede6);
   border-radius: 9px;
   overflow: hidden;
   transition:
     border-color 0.2s,
     box-shadow 0.2s,
     translate 0.2s;
-  background: white;
+  background: var(--md-surface, white);
 }
 .match-card:hover {
-  border-color: #a3bcaa;
+  border-color: var(--md-accent, #a3bcaa);
   translate: 0 -2px;
   box-shadow: 0 5px 16px #315e420b;
 }
@@ -268,25 +268,25 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
   align-items: center;
   gap: 4px;
   font-size: 13px;
-  color: #76667c;
+  color: var(--md-purple, #76667c);
   white-space: nowrap;
 }
 .competition.ucl {
-  color: #53648e;
+  color: var(--md-blue, #53648e);
 }
 .competition i {
   font-style: normal;
-  color: #b0b6b0;
+  color: var(--md-muted, #b0b6b0);
 }
 .fixture-date {
   font-size: 13px;
-  color: #9ba39b;
+  color: var(--md-muted, #9ba39b);
   display: flex;
   gap: 7px;
 }
 .fixture-date b {
   font-weight: 500;
-  color: #69766c;
+  color: var(--md-secondary, #69766c);
 }
 .fixture-teams {
   display: flex;
@@ -307,12 +307,12 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
   white-space: nowrap;
 }
 .fixture-teams small {
-  color: #a4aaa4;
+  color: var(--md-muted, #a4aaa4);
   font-size: 12px;
   margin-top: -4px;
 }
 .fixture-vs {
-  color: #b4bbb3;
+  color: var(--md-muted, #b4bbb3);
   font-size: 16px;
   font-family: Georgia, serif;
   font-style: italic;
@@ -320,7 +320,7 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
   margin-top: 12px;
 }
 .card-bottom {
-  border-top: 1px solid #f0f2ed;
+  border-top: 1px solid var(--md-border, #f0f2ed);
   padding: 9px 10px;
   display: flex;
   align-items: center;
@@ -332,33 +332,33 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
   align-items: center;
   gap: 4px;
   font-size: 12px;
-  color: #9aa299;
+  color: var(--md-muted, #9aa299);
 }
 .card-bottom > span.predicted {
-  color: #39825e;
+  color: var(--md-secondary, #39825e);
 }
 .card-bottom > button {
   font-size: 13px;
   display: flex;
   align-items: center;
   gap: 2px;
-  color: #276043;
-  background: #edf5e9;
+  color: var(--md-text, #276043);
+  background: var(--md-soft, #edf5e9);
   border: 0;
   border-radius: 4px;
   padding: 4px 6px;
 }
 .card-bottom > button:hover {
-  background: #dcecd4;
+  background: var(--md-soft, #dcecd4);
 }
 .schedule-note {
-  border-top: 1px solid #eff1ec;
+  border-top: 1px solid var(--md-border, #eff1ec);
   margin-top: 19px;
   padding: 13px 0;
   display: flex;
   gap: 5px;
   align-items: center;
-  color: #9aa199;
+  color: var(--md-muted, #9aa199);
   font-size: 13px;
 }
 .demo-note {
@@ -369,14 +369,14 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
   grid-column: 1/-1;
   text-align: center;
   padding: 44px 15px;
-  color: #95a194;
+  color: var(--md-muted, #95a194);
 }
 .empty-state svg {
   margin-bottom: 10px;
 }
 .empty-state h4 {
   font-size: 18px;
-  color: #596b5a;
+  color: var(--md-secondary, #596b5a);
 }
 .empty-state p {
   font-size: 16px;

@@ -180,20 +180,20 @@ function submit() {
   background: transparent;
   border: 0;
   font-size: 14px;
-  color: #9c786d;
+  color: var(--md-warning, #9c786d);
   padding: 4px;
 }
 .remove-actions button:hover {
-  color: #bd4941;
+  color: var(--md-secondary, #bd4941);
 }
 .prediction-dialog {
-  border: 1px solid #e3e9de;
+  border: 1px solid var(--md-border, #e3e9de);
   border-radius: 18px;
   width: min(520px, calc(100% - 28px));
   padding: 30px;
   margin: auto;
-  color: #263c2d;
-  background: #fff;
+  color: var(--md-text, #263c2d);
+  background: var(--md-surface, #fff);
   box-shadow: 0 25px 100px #12271835;
 }
 .prediction-dialog::backdrop {
@@ -208,7 +208,7 @@ function submit() {
 .dialog-eyebrow {
   font-size: 12px;
   letter-spacing: 2px;
-  color: #94a086;
+  color: var(--md-muted, #94a086);
 }
 .dialog-header h2 {
   font-size: 26px;
@@ -219,10 +219,10 @@ function submit() {
   display: flex;
   justify-content: space-between;
   font-size: 14px;
-  color: #95a18c;
+  color: var(--md-muted, #95a18c);
   margin-top: 15px;
   padding-bottom: 18px;
-  border-bottom: 1px solid #edf1e8;
+  border-bottom: 1px solid var(--md-border, #edf1e8);
 }
 .score-entry {
   display: flex;
@@ -241,14 +241,14 @@ function submit() {
   font-size: 17px;
 }
 .score-team small {
-  color: #96a28d;
+  color: var(--md-muted, #96a28d);
   font-size: 14px;
 }
 .score-inputs {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #8b9a83;
+  color: var(--md-secondary, #8b9a83);
   font-size: 29px;
 }
 .score-inputs input {
@@ -257,9 +257,9 @@ function submit() {
   height: 70px;
   text-align: center;
   font-size: 35px;
-  color: #275337;
-  background: #f4f8f0;
-  border: 1px solid #dce6d4;
+  color: var(--md-text, #275337);
+  background: var(--md-soft, #f4f8f0);
+  border: 1px solid var(--md-border, #dce6d4);
   border-radius: 9px;
   padding-left: 9px;
 }
@@ -267,7 +267,7 @@ function submit() {
   font-size: 39px;
   font-family: Bahnschrift, sans-serif;
   font-weight: 500;
-  color: #275337;
+  color: var(--md-text, #275337);
 }
 .field-label {
   display: flex;
@@ -278,22 +278,22 @@ function submit() {
 }
 .field-label b {
   font-size: 17px;
-  color: #4c7c36;
+  color: var(--md-text, #4c7c36);
 }
 .confidence-range {
   width: 100%;
-  accent-color: #39764c;
+  accent-color: var(--md-accent, #39764c);
 }
 .range-labels {
   display: flex;
   justify-content: space-between;
   font-size: 13px;
-  color: #a0aa96;
+  color: var(--md-muted, #a0aa96);
   margin: 6px 0 23px;
 }
 .note-label > span {
   font-size: 13px;
-  color: #9fa991;
+  color: var(--md-muted, #9fa991);
 }
 .note-label {
   margin-bottom: 10px;
@@ -301,21 +301,21 @@ function submit() {
 textarea {
   width: 100%;
   resize: vertical;
-  border: 1px solid #e2e8db;
+  border: 1px solid var(--md-border, #e2e8db);
   border-radius: 7px;
   padding: 12px;
   font: inherit;
   font-size: 15px;
   line-height: 1.8;
-  color: #4c6043;
-  background: #fcfdfb;
+  color: var(--md-text, #4c6043);
+  background: var(--md-surface, #fcfdfb);
 }
 .dialog-footnote {
   display: flex;
   align-items: center;
   gap: 6px;
   font-size: 14px;
-  color: #9ca58f;
+  color: var(--md-muted, #9ca58f);
   margin: 17px 0;
 }
 .save-button {
@@ -326,32 +326,32 @@ textarea {
 }
 .form-error {
   font-size: 16px;
-  color: #bd4941;
+  color: var(--md-secondary, #bd4941);
   margin-top: 10px;
 }
 .actual-result {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #f2f6ed;
+  background: var(--md-soft, #f2f6ed);
   border-radius: 8px;
   padding: 14px;
   margin-bottom: 25px;
   font-size: 14px;
-  color: #8b9a7f;
+  color: var(--md-secondary, #8b9a7f);
 }
 .actual-result strong {
   font-size: 28px;
-  color: #2a4930;
+  color: var(--md-text, #2a4930);
   font-family: Bahnschrift, sans-serif;
 }
 .readonly-note {
   padding: 15px;
   border-radius: 8px;
-  background: #f8faf5;
+  background: var(--md-soft, #f8faf5);
   line-height: 1.8;
   font-size: 16px;
-  color: #78896a;
+  color: var(--md-secondary, #78896a);
 }
 @media (max-width: 450px) {
   .prediction-dialog {

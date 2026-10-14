@@ -120,17 +120,17 @@ function start(event: PointerEvent, id: string) {
   display: flex;
   flex-direction: column;
   min-width: 0;
-  border: 1px solid #e2e9d7;
+  border: 1px solid var(--md-border, #e2e9d7);
   border-radius: 10px;
-  background: #fbfcf7;
+  background: var(--md-soft, #fbfcf7);
   padding: 19px 17px 13px;
   transition:
     border-color 0.2s,
     background 0.2s;
 }
 .lineup-bench.targeted {
-  border-color: #829c5e;
-  background: #eef4e4;
+  border-color: var(--md-accent, #829c5e);
+  background: var(--md-soft, #eef4e4);
 }
 .bench-heading {
   display: flex;
@@ -139,20 +139,20 @@ function start(event: PointerEvent, id: string) {
   margin-bottom: 15px;
 }
 .bench-heading span {
-  color: #a0ad8c;
+  color: var(--md-muted, #a0ad8c);
   font-size: 12px;
   letter-spacing: 1.6px;
 }
 .bench-heading h3 {
   margin: 6px 0 0;
-  color: #49663d;
+  color: var(--md-text, #49663d);
   font-size: 21px;
   font-weight: 500;
 }
 .bench-heading b {
   font-family: Bahnschrift, sans-serif;
   font-size: 30px;
-  color: #7c9362;
+  color: var(--md-secondary, #7c9362);
   font-weight: 400;
 }
 .bench-heading b small {
@@ -164,14 +164,14 @@ function start(event: PointerEvent, id: string) {
   display: flex;
   align-items: center;
   gap: 7px;
-  border: 1px solid #e1e8d5;
+  border: 1px solid var(--md-border, #e1e8d5);
   padding: 10px;
   border-radius: 6px;
-  color: #9ca989;
-  background: #fff;
+  color: var(--md-muted, #9ca989);
+  background: var(--md-surface, #fff);
 }
 .bench-search:focus-within {
-  border-color: #809861;
+  border-color: var(--md-accent, #809861);
 }
 .bench-search input {
   width: 100%;
@@ -179,10 +179,10 @@ function start(event: PointerEvent, id: string) {
   outline: none;
   background: transparent;
   font-size: 15px;
-  color: #527445;
+  color: var(--md-text, #527445);
 }
 .bench-search input::placeholder {
-  color: #a2ac91;
+  color: var(--md-muted, #a2ac91);
 }
 .bench-filters {
   display: flex;
@@ -194,24 +194,24 @@ function start(event: PointerEvent, id: string) {
   border: 0;
   padding: 6px 2px;
   font-size: 14px;
-  color: #94a07f;
+  color: var(--md-muted, #94a07f);
   border-radius: 4px;
   background: transparent;
 }
 .bench-filters button[aria-pressed='true'] {
-  color: #506d3b;
-  background: #e9f0dc;
+  color: var(--md-text, #506d3b);
+  background: var(--md-soft, #e9f0dc);
 }
 .bench-first-team {
   font-size: 13px;
-  color: #8d9a7a;
+  color: var(--md-secondary, #8d9a7a);
   display: flex;
   align-items: center;
   gap: 5px;
   margin-bottom: 13px;
 }
 .bench-first-team input {
-  accent-color: #64874e;
+  accent-color: var(--md-accent, #64874e);
   margin: 0;
 }
 .bench-list {
@@ -219,21 +219,21 @@ function start(event: PointerEvent, id: string) {
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: thin;
-  scrollbar-color: #cfdac0 transparent;
+  scrollbar-color: var(--md-border, #cfdac0) transparent;
   padding-right: 3px;
 }
 .bench-card {
   display: flex;
-  border: 1px solid #e4eadb;
-  background: #fff;
+  border: 1px solid var(--md-border, #e4eadb);
+  background: var(--md-surface, #fff);
   border-radius: 7px;
   margin-bottom: 7px;
   min-height: 53px;
   overflow: hidden;
 }
 .bench-card.picked {
-  border-color: #8da666;
-  background: #eff4e5;
+  border-color: var(--md-accent, #8da666);
+  background: var(--md-soft, #eff4e5);
 }
 .bench-player {
   display: flex;
@@ -263,7 +263,7 @@ function start(event: PointerEvent, id: string) {
   display: block;
   font-size: 15px;
   font-weight: 500;
-  color: #5b7348;
+  color: var(--md-secondary, #5b7348);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -272,18 +272,18 @@ function start(event: PointerEvent, id: string) {
   display: block;
   font-size: 12px;
   margin-top: 5px;
-  color: #9ea98f;
+  color: var(--md-muted, #9ea98f);
 }
 .bench-name i {
   font-style: normal;
-  color: #a2855d;
+  color: var(--md-warning, #a2855d);
   margin-left: 5px;
 }
 .on-pitch {
   font-size: 12px;
-  color: #8c9d73;
+  color: var(--md-secondary, #8c9d73);
   padding: 3px 5px;
-  background: #edf2e5;
+  background: var(--md-soft, #edf2e5);
   border-radius: 3px;
 }
 .bench-drag {
@@ -293,24 +293,24 @@ function start(event: PointerEvent, id: string) {
   touch-action: none;
   background: transparent;
   border: 0;
-  border-left: 1px solid #ecf0e5;
-  color: #a5b28f;
+  border-left: 1px solid var(--md-border, #ecf0e5);
+  color: var(--md-muted, #a5b28f);
   font-size: 26px;
   cursor: grab;
 }
 .bench-drag:hover {
-  color: #506f3d;
-  background: #edf3e3;
+  color: var(--md-text, #506f3d);
+  background: var(--md-soft, #edf3e3);
 }
 .bench-player:focus-visible,
 .bench-drag:focus-visible {
-  outline: 2px solid #849e5e;
+  outline: 2px solid var(--md-accent, #849e5e);
   outline-offset: -3px;
 }
 .bench-empty {
   text-align: center;
   padding: 35px 8px;
-  color: #a1ac92;
+  color: var(--md-muted, #a1ac92);
   font-size: 15px;
 }
 .bench-tip {
@@ -318,8 +318,8 @@ function start(event: PointerEvent, id: string) {
   gap: 7px;
   align-items: flex-start;
   padding: 13px 0 0;
-  border-top: 1px solid #e4eadb;
-  color: #9ba88a;
+  border-top: 1px solid var(--md-border, #e4eadb);
+  color: var(--md-muted, #9ba88a);
   font-size: 13px;
 }
 .bench-tip svg {

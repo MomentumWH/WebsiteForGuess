@@ -134,7 +134,7 @@ defineEmits<{ detail: [match: Match]; navigate: [] }>()
 }
 .review-heading p {
   font-size: 14px;
-  color: #98a097;
+  color: var(--md-muted, #98a097);
   margin-top: 6px;
 }
 .text-button {
@@ -143,11 +143,11 @@ defineEmits<{ detail: [match: Match]; navigate: [] }>()
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #8a9688;
+  color: var(--md-secondary, #8a9688);
   font-size: 14px;
 }
 .text-button:hover {
-  color: #276043;
+  color: var(--md-text, #276043);
 }
 .table-scroll {
   overflow-x: auto;
@@ -189,10 +189,10 @@ table {
 }
 th {
   font-size: 13px;
-  color: #98a096;
+  color: var(--md-muted, #98a096);
   font-weight: 400;
   padding: 10px 10px;
-  background: #f7f9f5;
+  background: var(--md-soft, #f7f9f5);
 }
 th:first-child {
   border-radius: 5px 0 0 5px;
@@ -203,7 +203,7 @@ th:last-child {
 }
 td {
   padding: 14px 10px;
-  border-bottom: 1px solid #f0f2eb;
+  border-bottom: 1px solid var(--md-border, #f0f2eb);
   font-size: 14px;
 }
 tr:last-child td {
@@ -217,18 +217,18 @@ tr:last-child td {
 }
 .table-teams small {
   font-size: 13px;
-  color: #b0b7ac;
+  color: var(--md-muted, #b0b7ac);
   margin: 0 5px;
 }
 .table-date {
-  color: #768571;
+  color: var(--md-secondary, #768571);
   margin-right: 7px;
 }
 .table-league {
   font-size: 12px;
-  color: #9ca492;
+  color: var(--md-muted, #9ca492);
   padding: 2px 5px;
-  background: #f1f4ec;
+  background: var(--md-soft, #f1f4ec);
   border-radius: 3px;
 }
 .table-prediction {
@@ -242,18 +242,18 @@ tr:last-child td {
   font-size: 17px;
   letter-spacing: 1px;
   font-weight: 500;
-  color: #52624f;
+  color: var(--md-text, #52624f);
 }
 .table-prediction small {
   font-size: 11px;
-  color: #adb5a6;
+  color: var(--md-muted, #adb5a6);
 }
 .actual-score {
-  color: #253e2b;
+  color: var(--md-text, #253e2b);
 }
 .result-pill {
-  background: #f4f2ed;
-  color: #a29782;
+  background: var(--md-soft, #f4f2ed);
+  color: var(--md-warning, #a29782);
   font-size: 12px;
   padding: 4px 7px;
   border-radius: 4px;
@@ -262,30 +262,30 @@ tr:last-child td {
   gap: 3px;
 }
 .result-pill.exact {
-  background: #eaf3e4;
-  color: #528343;
+  background: var(--md-soft, #eaf3e4);
+  color: var(--md-secondary, #528343);
 }
 .result-pill.direction {
-  background: #edf2e6;
-  color: #849260;
+  background: var(--md-soft, #edf2e6);
+  color: var(--md-secondary, #849260);
 }
 .detail-button {
   border: 0;
   background: transparent;
   display: flex;
-  color: #9ca996;
+  color: var(--md-muted, #9ca996);
   padding: 5px;
   border-radius: 4px;
 }
 .detail-button:hover {
-  background: #edf4e8;
-  color: #276043;
+  background: var(--md-soft, #edf4e8);
+  color: var(--md-text, #276043);
 }
 .review-empty {
   text-align: center;
   padding: 35px;
   font-size: 16px;
-  color: #8c9987;
+  color: var(--md-secondary, #8c9987);
 }
 @media (max-width: 700px) {
   .review-panel {

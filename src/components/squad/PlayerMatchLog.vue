@@ -120,33 +120,33 @@ const date = (value: string) =>
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #889e75;
+  color: var(--md-secondary, #889e75);
 }
 .match-log summary strong {
   font-family: Bahnschrift, sans-serif;
   font-size: 17px;
   font-weight: 500;
-  color: #516d42;
+  color: var(--md-text, #516d42);
 }
 .match-log summary small {
   font:
     14px 'Microsoft YaHei',
     sans-serif;
   font-weight: 400;
-  color: #9aa58a;
+  color: var(--md-muted, #9aa58a);
   margin-left: 5px;
 }
 .match-log summary i {
   font-style: normal;
-  color: #97a582;
-  background: #f1f5e8;
+  color: var(--md-muted, #97a582);
+  background: var(--md-soft, #f1f5e8);
   border-radius: 4px;
   padding: 3px 7px;
   font-size: 12px;
 }
 .log-hint {
   font-size: 13px;
-  color: #a4ad96 !important;
+  color: var(--md-muted, #a4ad96) !important;
   flex-shrink: 0;
 }
 .match-log[open] .log-hint > svg {
@@ -165,16 +165,16 @@ const date = (value: string) =>
 .log-scroll th,
 .log-scroll td {
   text-align: center;
-  border-bottom: 1px solid #edf1e6;
+  border-bottom: 1px solid var(--md-border, #edf1e6);
   padding: 12px 5px;
   font-size: 15px;
   font-weight: 400;
-  color: #6c815d;
+  color: var(--md-secondary, #6c815d);
   font-variant-numeric: tabular-nums;
 }
 .log-scroll thead th {
-  background: #f7faf1;
-  color: #96a684;
+  background: var(--md-soft, #f7faf1);
+  color: var(--md-muted, #96a684);
   font-size: 13px;
 }
 .log-scroll th:first-child {
@@ -187,26 +187,26 @@ const date = (value: string) =>
 }
 .log-scroll a {
   text-decoration: none;
-  color: #577144;
+  color: var(--md-text, #577144);
   font-size: 14px;
 }
 .log-scroll a:hover {
-  color: #345929;
+  color: var(--md-text, #345929);
 }
 .log-scroll a > small {
   display: block;
-  color: #a7b197;
+  color: var(--md-muted, #a7b197);
   font-size: 11px;
   margin-top: 4px;
 }
 .log-scroll td.missing {
-  color: #c2cbb5;
+  color: var(--md-muted, #c2cbb5);
 }
 .match-log > p {
   padding: 10px 23px;
   margin: 0;
   font-size: 12px;
-  color: #a2ae92;
+  color: var(--md-muted, #a2ae92);
   line-height: 1.7;
 }
 @media (max-width: 600px) {

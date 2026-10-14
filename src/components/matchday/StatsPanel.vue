@@ -66,7 +66,7 @@ defineEmits<{ navigate: [] }>()
   font-weight: 700;
 }
 .stats-heading > span {
-  color: #9aa298;
+  color: var(--md-muted, #9aa298);
   font-size: 13px;
 }
 .donut-area {
@@ -79,7 +79,7 @@ defineEmits<{ navigate: [] }>()
   width: 133px;
   height: 133px;
   border-radius: 50%;
-  background: conic-gradient(#367958 0 var(--rate), #eef1e8 var(--rate) 100%);
+  background: conic-gradient(#367958 0 var(--rate), var(--md-soft, #eef1e8) var(--rate) 100%);
   display: grid;
   place-items: center;
   transform: rotate(-90deg);
@@ -88,7 +88,7 @@ defineEmits<{ navigate: [] }>()
   width: 108px;
   height: 108px;
   border-radius: 50%;
-  background: #fff;
+  background: var(--md-surface, #fff);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -108,12 +108,12 @@ defineEmits<{ navigate: [] }>()
 }
 .donut div > span {
   font-size: 13px;
-  color: #8c978c;
+  color: var(--md-secondary, #8c978c);
   margin-top: 4px;
 }
 .donut-caption {
   font-size: 13px;
-  color: #9ca49b;
+  color: var(--md-muted, #9ca49b);
   margin-top: 12px;
 }
 .stats-legend {
@@ -122,20 +122,20 @@ defineEmits<{ navigate: [] }>()
   gap: 4px;
   font-size: 12px;
   padding-bottom: 18px;
-  border-bottom: 1px solid #eff1eb;
+  border-bottom: 1px solid var(--md-border, #eff1eb);
 }
 .stats-legend span {
   display: flex;
   align-items: center;
   gap: 4px;
-  color: #8c978b;
+  color: var(--md-secondary, #8c978b);
   white-space: nowrap;
 }
 .stats-legend i {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: #e4e9dd;
+  background: var(--md-soft, #e4e9dd);
 }
 .stats-legend i.green {
   background: #367958;
@@ -145,7 +145,7 @@ defineEmits<{ navigate: [] }>()
 }
 .stats-legend b {
   font-weight: 600;
-  color: #5d6b5e;
+  color: var(--md-secondary, #5d6b5e);
 }
 .league-stat {
   display: flex;
@@ -159,7 +159,7 @@ defineEmits<{ navigate: [] }>()
   align-items: center;
   gap: 6px;
   width: 40px;
-  color: #687669;
+  color: var(--md-secondary, #687669);
 }
 .league-dot {
   height: 5px;
@@ -174,7 +174,7 @@ defineEmits<{ navigate: [] }>()
   flex: 1;
   height: 5px;
   border-radius: 4px;
-  background: #f0f2eb;
+  background: var(--md-soft, #f0f2eb);
   overflow: hidden;
 }
 .stat-bar i {
@@ -186,7 +186,7 @@ defineEmits<{ navigate: [] }>()
 .league-stat > b {
   font-size: 13px;
   font-weight: 500;
-  color: #6b796b;
+  color: var(--md-secondary, #6b796b);
   width: 29px;
   text-align: right;
 }
@@ -199,16 +199,16 @@ defineEmits<{ navigate: [] }>()
   margin-top: 19px;
   padding: 14px 0;
   border: 0;
-  border-top: 1px solid #eff1eb;
+  border-top: 1px solid var(--md-border, #eff1eb);
   background: transparent;
   font-size: 14px;
-  color: #6d806b;
+  color: var(--md-secondary, #6d806b);
 }
 .stats-link:hover {
-  color: #225a3c;
+  color: var(--md-text, #225a3c);
 }
 .calculation-note {
-  color: #7f8f7d;
+  color: var(--md-secondary, #7f8f7d);
   font-size: 16px;
   line-height: 1.8;
   padding: 24px 0;

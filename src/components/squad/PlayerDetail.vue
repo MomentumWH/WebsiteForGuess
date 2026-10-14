@@ -170,11 +170,11 @@ const date = (value: string) =>
   gap: 7px;
   font-size: 12px;
   letter-spacing: 1.5px;
-  color: #8b9b80;
+  color: var(--md-secondary, #8b9b80);
 }
 .detail-topline > span:last-child {
   letter-spacing: 0;
-  color: #9ba393;
+  color: var(--md-muted, #9ba393);
 }
 .player-profile {
   display: flex;
@@ -193,25 +193,25 @@ const date = (value: string) =>
 }
 .position-tag {
   font-size: 13px;
-  color: #8c966c;
+  color: var(--md-secondary, #8c966c);
 }
 .player-identity h2 {
   font-family: Bahnschrift, 'Arial Narrow', sans-serif;
   font-size: 29px;
   line-height: 1.15;
   letter-spacing: -0.5px;
-  color: #263e2c;
+  color: var(--md-text, #263e2c);
   margin: 8px 0;
   max-width: 220px;
 }
 .player-identity > p {
   font-size: 11px;
   letter-spacing: 1.7px;
-  color: #a5ad9b;
+  color: var(--md-muted, #a5ad9b);
 }
 .player-status {
   font-size: 13px;
-  color: #618252;
+  color: var(--md-secondary, #618252);
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -225,10 +225,10 @@ const date = (value: string) =>
 }
 .player-status.injured,
 .player-status.unavailable {
-  color: #b77060;
+  color: var(--md-danger, #b77060);
 }
 .player-status.doubtful {
-  color: #b08c41;
+  color: var(--md-warning, #b08c41);
 }
 .profile-photo {
   position: absolute;
@@ -244,7 +244,7 @@ const date = (value: string) =>
   font-family: Georgia, serif;
   font-size: 129px;
   line-height: 1;
-  color: #edf1e7;
+  color: var(--md-border, #edf1e7);
   letter-spacing: -10px;
 }
 .profile-photo .player-portrait {
@@ -258,9 +258,9 @@ const date = (value: string) =>
 }
 .player-news {
   font-size: 14px;
-  color: #9b7450;
+  color: var(--md-warning, #9b7450);
   padding: 9px 11px;
-  background: #faf6ed;
+  background: var(--md-warning-soft, #faf6ed);
   border-radius: 5px;
   margin: 0 0 12px;
   line-height: 1.5;
@@ -268,14 +268,14 @@ const date = (value: string) =>
 .detail-metrics {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  border-top: 1px solid #edf0e8;
-  border-bottom: 1px solid #edf0e8;
+  border-top: 1px solid var(--md-border, #edf0e8);
+  border-bottom: 1px solid var(--md-border, #edf0e8);
   gap: 19px 4px;
   padding: 16px 0;
 }
 .detail-metrics > div {
   padding-left: 9px;
-  border-left: 1px solid #edf0e8;
+  border-left: 1px solid var(--md-border, #edf0e8);
 }
 .detail-metrics > div:nth-child(4n + 1) {
   padding-left: 0;
@@ -283,7 +283,7 @@ const date = (value: string) =>
 }
 .detail-metrics > div > span {
   font-size: 13px;
-  color: #9ba28e;
+  color: var(--md-muted, #9ba28e);
   display: block;
 }
 .detail-metrics strong {
@@ -294,7 +294,7 @@ const date = (value: string) =>
   font-family: Bahnschrift, sans-serif;
   font-size: 30px;
   font-weight: 500;
-  color: #345a3d;
+  color: var(--md-text, #345a3d);
   margin-top: 6px;
   line-height: 1;
 }
@@ -303,10 +303,10 @@ const date = (value: string) =>
     12px 'Microsoft YaHei',
     sans-serif;
   white-space: nowrap;
-  color: #9ba78d;
+  color: var(--md-muted, #9ba78d);
 }
 .detail-metrics .missing strong {
-  color: #c1c8b9;
+  color: var(--md-muted, #c1c8b9);
   font-size: 26px;
 }
 .defensive-note {
@@ -314,8 +314,8 @@ const date = (value: string) =>
   align-items: center;
   gap: 8px;
   font-size: 13px;
-  color: #829473;
-  background: #f4f7ef;
+  color: var(--md-secondary, #829473);
+  background: var(--md-soft, #f4f7ef);
   padding: 10px 9px;
   margin-top: 11px;
   border-radius: 5px;
@@ -325,7 +325,7 @@ const date = (value: string) =>
   white-space: nowrap;
 }
 .defensive-note b {
-  color: #3c6242;
+  color: var(--md-text, #3c6242);
   margin-left: 4px;
   font-size: 17px;
   font-weight: 500;
@@ -334,7 +334,7 @@ const date = (value: string) =>
   display: block;
   font-size: 11px;
   margin-top: 2px;
-  color: #9daa8d;
+  color: var(--md-muted, #9daa8d);
 }
 .recent-heading {
   display: flex;
@@ -344,25 +344,25 @@ const date = (value: string) =>
 }
 .recent-heading h3 {
   font-size: 15px;
-  color: #4d6846;
+  color: var(--md-text, #4d6846);
   font-weight: 500;
   margin: 0;
 }
 .recent-heading > span {
   font-size: 12px;
-  color: #a3aa99;
+  color: var(--md-muted, #a3aa99);
 }
 .recent-match {
   display: flex;
   align-items: center;
   gap: 9px;
   padding: 9px 0;
-  border-bottom: 1px solid #f0f2ec;
+  border-bottom: 1px solid var(--md-border, #f0f2ec);
   text-decoration: none;
   color: inherit;
 }
 .recent-match:hover {
-  background: #fafbf7;
+  background: var(--md-soft, #fafbf7);
 }
 .result-badge {
   display: grid;
@@ -374,16 +374,16 @@ const date = (value: string) =>
   border-radius: 4px;
 }
 .win {
-  color: #537e47;
-  background: #eef4e6;
+  color: var(--md-secondary, #537e47);
+  background: var(--md-soft, #eef4e6);
 }
 .loss {
-  color: #b26e64;
-  background: #faf0ec;
+  color: var(--md-danger, #b26e64);
+  background: var(--md-warning-soft, #faf0ec);
 }
 .draw {
-  color: #8c947f;
-  background: #f1f2ec;
+  color: var(--md-secondary, #8c947f);
+  background: var(--md-soft, #f1f2ec);
 }
 .recent-match > div {
   flex: 1;
@@ -392,7 +392,7 @@ const date = (value: string) =>
 .recent-match strong {
   display: block;
   font-size: 14px;
-  color: #536649;
+  color: var(--md-text, #536649);
   font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
@@ -401,21 +401,21 @@ const date = (value: string) =>
 .recent-match strong small {
   font-size: 11px;
   margin-left: 6px;
-  color: #9ca68e;
+  color: var(--md-muted, #9ca68e);
   font-weight: 400;
 }
 .recent-match > div > span {
   font-size: 12px;
-  color: #a3ab99;
+  color: var(--md-muted, #a3ab99);
 }
 .recent-match > div > span b {
   font-weight: 400;
-  color: #7b8e6c;
+  color: var(--md-secondary, #7b8e6c);
   margin-left: 7px;
 }
 .match-minutes {
   font-size: 20px;
-  color: #44633d;
+  color: var(--md-text, #44633d);
   text-align: right;
   font-family: Bahnschrift, sans-serif;
 }
@@ -425,15 +425,15 @@ const date = (value: string) =>
 .match-minutes i {
   display: block;
   font-size: 11px;
-  color: #a7ae9b;
+  color: var(--md-muted, #a7ae9b);
   font-style: normal;
 }
 .recent-match > svg {
-  color: #bbc3b1;
+  color: var(--md-muted, #bbc3b1);
 }
 .detail-footnote {
   font-size: 12px;
-  color: #a4ad98;
+  color: var(--md-muted, #a4ad98);
   line-height: 1.6;
   margin: 11px 0;
 }
@@ -441,11 +441,11 @@ const date = (value: string) =>
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #647c51;
+  color: var(--md-secondary, #647c51);
   font-size: 13px;
   text-decoration: none;
   padding-top: 9px;
-  border-top: 1px solid #edf0e7;
+  border-top: 1px solid var(--md-border, #edf0e7);
 }
 @keyframes profile-in {
   from {
