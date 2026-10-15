@@ -239,6 +239,7 @@ test('service maps stable official match codes, coalesces requests, persists dat
   let failAll = false
   let omitHistory = false
   const football: FootballFeed = {
+    scope: 'competitions',
     season: 2026,
     checkedAt: new Date(now).toISOString(),
     matches: [match('pl-101', '01'), match('pl-102', '02'), match('ucl-201', '03', 'ucl')],
@@ -368,6 +369,7 @@ test('a fresh install uses JSON APIs without scraping or inventing UEFA roster a
   const now = Date.parse('2026-10-13T00:00:00Z')
   const requests: string[] = []
   const football: FootballFeed = {
+    scope: 'competitions',
     season: 2026,
     checkedAt: new Date(now).toISOString(),
     matches: [match('ucl-201', '03', 'ucl')],

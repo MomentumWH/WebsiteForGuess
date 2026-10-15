@@ -6,20 +6,28 @@ import AppIcon from './AppIcon.vue'
 import TeamBadge from './TeamBadge.vue'
 import LeagueFilter from './LeagueFilter.vue'
 import { useListMotion } from '@/composables/useListMotion'
+import { useMatchWindow } from '@/composables/useMatchWindow'
 const props = defineProps<{
   matches: Match[]
   predictions: Record<string, Prediction>
   now: number
   loading: boolean
   total: number
+  preview?: boolean
+  query: string
 }>()
 const league = defineModel<League>('league', { required: true })
 const onlyArsenal = defineModel<boolean>('onlyArsenal', { required: true })
 defineEmits<{ predict: [match: Match]; viewAll: [] }>()
 const viewport = useTemplateRef<HTMLElement>('viewport')
+const { visibleMatches, hasMore, showMore } = useMatchWindow(
+  () => props.matches,
+  () => `${league.value}:${onlyArsenal.value}:${props.query}:${props.preview}`,
+  () => (props.preview ? 6 : 24),
+)
 const { beforeLeave, clearLeavingSize } = useListMotion(
   viewport,
-  () => `${league.value}:${props.matches.map((m) => m.id).join('|')}`,
+  () => `${league.value}:${visibleMatches.value.map((m) => m.id).join('|')}`,
 )
 </script>
 <template>
@@ -29,7 +37,10 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
         <h3>
           赛程安排 <span class="count-label">{{ total }}</span>
         </h3>
-        <p>下一次哨响之前，写下你的答案。</p>
+        <p>
+          {{ onlyArsenal ? '当前显示阿森纳赛程' : '当前显示全部球队赛程' }} ·
+          下一次哨响之前，写下你的答案。
+        </p>
       </div>
       <span class="muted tiny">北京时间 UTC+8</span>
     </div>
@@ -51,7 +62,7 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
         @leave-cancelled="clearLeavingSize"
       >
         <article
-          v-for="(match, index) in matches"
+          v-for="(match, index) in visibleMatches"
           :key="`${league}:${match.id}`"
           class="match-card"
           :style="{ '--fixture-delay': `${120 + Math.min(index, 5) * 45}ms` }"
@@ -101,8 +112,12 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
         </div>
       </TransitionGroup>
     </div>
-    <button v-if="total > matches.length" class="all-fixtures" @click="$emit('viewAll')">
+    <button v-if="preview && hasMore" class="all-fixtures" @click="$emit('viewAll')">
       查看全部 {{ total }} 场赛程 <AppIcon name="arrow" :size="13" />
+    </button>
+    <button v-else-if="hasMore" class="all-fixtures" @click="showMore">
+      加载更多赛程 · 已显示 {{ visibleMatches.length }} / {{ total }} 场
+      <AppIcon name="arrow" :size="13" />
     </button>
     <div class="schedule-note">
       <AppIcon name="info" :size="13" /><span>开赛前可随时修改，开赛后自动锁定预测。</span

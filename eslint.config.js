@@ -26,7 +26,9 @@ export default tseslint.config(
         window: 'readonly',
         document: 'readonly',
         HTMLElement: 'readonly',
+        HTMLCanvasElement: 'readonly',
         PointerEvent: 'readonly',
+        FocusEvent: 'readonly',
         HTMLDialogElement: 'readonly',
       },
       parserOptions: {

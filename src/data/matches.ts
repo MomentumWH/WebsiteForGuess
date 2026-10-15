@@ -4,6 +4,7 @@ export interface Team {
   name: string
   short: string
   color: string
+  badgeUrl?: string
 }
 export interface Match {
   id: string

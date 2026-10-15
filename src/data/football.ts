@@ -10,6 +10,7 @@ export interface FootballSource {
   message: string
 }
 export interface FootballFeed {
+  scope: 'competitions'
   season: number
   checkedAt: string
   sources: FootballSource[]
@@ -20,7 +21,10 @@ const validDate = (value: unknown): value is string =>
 function validTeam(value: unknown): boolean {
   if (!value || typeof value !== 'object') return false
   const team = value as Record<string, unknown>
-  return ['id', 'name', 'short', 'color'].every((key) => typeof team[key] === 'string')
+  return (
+    ['id', 'name', 'short', 'color'].every((key) => typeof team[key] === 'string') &&
+    (team.badgeUrl === undefined || typeof team.badgeUrl === 'string')
+  )
 }
 function validScore(value: unknown): boolean {
   return (
@@ -31,6 +35,7 @@ export function isFootballFeed(value: unknown): value is FootballFeed {
   if (!value || typeof value !== 'object') return false
   const feed = value as FootballFeed
   return (
+    feed.scope === 'competitions' &&
     Number.isInteger(feed.season) &&
     feed.season >= 1992 &&
     feed.season <= 2100 &&
@@ -62,7 +67,6 @@ export function isFootballFeed(value: unknown): value is FootballFeed {
         (m.kickoff === '' || validDate(m.kickoff)) &&
         validTeam(m.home) &&
         validTeam(m.away) &&
-        [m.home.id, m.away.id].includes('arsenal') &&
         ['upcoming', 'live', 'finished', 'postponed', 'cancelled'].includes(m.status ?? '') &&
         (m.actual === undefined || (m.status === 'finished' && validScore(m.actual))) &&
         (m.liveScore === undefined || validScore(m.liveScore)),

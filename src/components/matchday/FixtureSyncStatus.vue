@@ -17,7 +17,7 @@ const buttonLabel = computed(() => {
   return '同步赛程'
 })
 const feedbackTitle = computed(() => {
-  if (feedback.value === 'loading') return '正在更新阿森纳赛程'
+  if (feedback.value === 'loading') return '正在更新英超与欧冠赛程'
   if (feedback.value === 'success') return '赛程与赛果已同步'
   if (feedback.value === 'warning') return '部分赛事暂时无法更新'
   return '本次同步未完成'

@@ -21,6 +21,7 @@ import StatsPanel from './StatsPanel.vue'
 import ReviewTable from './ReviewTable.vue'
 import PredictionDialog from './PredictionDialog.vue'
 import LeagueFilter from './LeagueFilter.vue'
+import BackgroundSparkles from './BackgroundSparkles.vue'
 
 const SquadWorkspace = defineAsyncComponent(() => import('@/components/squad/SquadWorkspace.vue'))
 type Section = 'overview' | 'predict' | 'review' | 'stats' | 'squad'
@@ -230,6 +231,7 @@ function download() {
 </script>
 <template>
   <div class="matchday-app">
+    <BackgroundSparkles />
     <aside class="sidebar" aria-label="主导航">
       <a class="brand" href="/" aria-label="MATCHDAY 首页"
         ><span class="brand-mark"
@@ -357,12 +359,12 @@ function download() {
         <SquadWorkspace v-if="section === 'squad'" :query="query" />
         <p v-if="storageMessage" class="storage-warning" role="alert">{{ storageMessage }}</p>
         <MatchHero
-          v-if="section === 'overview' && focusMatch"
+          v-if="section === 'overview'"
           :match="focusMatch"
-          :prediction="predictions[focusMatch.id]"
-          :locked="isMatchLocked(focusMatch, now)"
+          :prediction="focusMatch ? predictions[focusMatch.id] : undefined"
+          :locked="focusMatch ? isMatchLocked(focusMatch, now) : false"
           @predict="openPrediction"
-          @navigate="navigate('predict')"
+          @navigate="navigate"
         />
         <section
           v-if="section === 'overview' || section === 'stats'"
@@ -393,7 +395,9 @@ function download() {
           <MatchList
             v-model:league="league"
             v-model:only-arsenal="onlyArsenal"
-            :matches="section === 'overview' ? upcoming.slice(0, 6) : upcoming"
+            :matches="upcoming"
+            :preview="section === 'overview'"
+            :query="query"
             :total="upcoming.length"
             :predictions="predictions"
             :now="now"
@@ -426,6 +430,7 @@ function download() {
           :matches="section === 'overview' ? completed.slice(0, 3) : completed"
           :predictions="predictions"
           :full="section === 'review'"
+          :scope="`${onlyArsenal}:${query}`"
           @detail="openPrediction"
           @navigate="navigate('review')"
         />
@@ -545,6 +550,8 @@ function download() {
 </template>
 <style scoped>
 .matchday-app {
+  position: relative;
+  isolation: isolate;
   --ink: var(--md-text, #283f32);
   --green: var(--md-accent, #2d6548);
   --muted: var(--md-muted, #929d91);

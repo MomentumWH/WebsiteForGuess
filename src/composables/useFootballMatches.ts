@@ -1,7 +1,7 @@
 import { computed, onMounted, onUnmounted, shallowRef } from 'vue'
 import { isFootballFeed, type FootballFeed, type FootballSource } from '@/data/football'
 
-const CACHE_KEY = 'matchday.official-fixtures.v1'
+const CACHE_KEY = 'matchday.official-fixtures.v2'
 export function useFootballMatches() {
   const feed = shallowRef<FootballFeed | null>(null)
   const loading = shallowRef(false)
@@ -35,9 +35,9 @@ export function useFootballMatches() {
     if (loading.value || disposed) return
     loading.value = true
     controller = new AbortController()
-    const timeout = window.setTimeout(() => controller?.abort(), 15_000)
+    const timeout = window.setTimeout(() => controller?.abort(), 30_000)
     try {
-      const response = await fetch('/api/football/arsenal', {
+      const response = await fetch('/api/football/matches', {
         signal: controller.signal,
         cache: 'no-store',
       })

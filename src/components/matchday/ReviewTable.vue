@@ -5,16 +5,23 @@ import { dateLabel, leagueName, outcome } from '@/data/matches'
 import TeamBadge from './TeamBadge.vue'
 import AppIcon from './AppIcon.vue'
 import { useListMotion } from '@/composables/useListMotion'
+import { useMatchWindow } from '@/composables/useMatchWindow'
 const props = defineProps<{
   matches: Match[]
   league: League
   predictions: Record<string, Prediction>
   full?: boolean
+  scope: string
 }>()
 const viewport = useTemplateRef<HTMLElement>('viewport')
+const { visibleMatches, hasMore, showMore } = useMatchWindow(
+  () => props.matches,
+  () => `${props.league}:${props.full}:${props.scope}`,
+  () => 25,
+)
 const { beforeLeave, clearLeavingSize } = useListMotion(
   viewport,
-  () => `${props.league}:${props.matches.map((m) => m.id).join('|')}`,
+  () => `${props.league}:${visibleMatches.value.map((m) => m.id).join('|')}`,
 )
 defineEmits<{ detail: [match: Match]; navigate: [] }>()
 </script>
@@ -50,7 +57,7 @@ defineEmits<{ detail: [match: Match]; navigate: [] }>()
           @leave-cancelled="clearLeavingSize"
         >
           <tr
-            v-for="(match, index) in matches"
+            v-for="(match, index) in visibleMatches"
             :key="`${league}:${match.id}`"
             :style="{ '--review-delay': `${120 + Math.min(index, 5) * 45}ms` }"
           >
@@ -107,9 +114,18 @@ defineEmits<{ detail: [match: Match]; navigate: [] }>()
       </table>
       <div v-if="!matches.length" class="review-empty">暂无符合条件的赛后记录，试试调整筛选。</div>
     </div>
+    <button v-if="full && hasMore" class="text-button load-more" @click="showMore">
+      加载更多赛果 · 已显示 {{ visibleMatches.length }} / {{ matches.length }} 场
+      <AppIcon name="arrow" :size="14" />
+    </button>
   </section>
 </template>
 <style scoped>
+.load-more {
+  justify-content: center;
+  width: 100%;
+  padding: 16px;
+}
 .review-panel {
   padding: 23px 23px 7px;
 }

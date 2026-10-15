@@ -2,7 +2,7 @@ import { mkdir, readFile, rename, writeFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import type { FootballFeed, FootballSource } from '../../src/data/football.ts'
 import { isFootballFeed } from '../../src/data/football.ts'
-import { normalizePremierLeague, normalizeUefa } from './adapters.ts'
+import { fetchCompetitionMatches } from './pagination.ts'
 
 export const PL_API = 'https://sdp-prem-prod.premier-league-prod.pulselive.com/api/v2/matches'
 export const UEFA_API = 'https://match.uefa.com/v5/matches'
@@ -19,8 +19,8 @@ export function currentSeason(now = new Date()): number {
 }
 export function sourceUrls(season: number) {
   return {
-    pl: `${PL_API}?${new URLSearchParams({ competition: '8', season: String(season), team: '3', _limit: '100' })}`,
-    ucl: `${UEFA_API}?${new URLSearchParams({ competitionId: '1', seasonYear: String(season + 1), teamId: '52280', limit: '100', offset: '0', order: 'ASC' })}`,
+    pl: `${PL_API}?${new URLSearchParams({ competition: '8', season: String(season), _limit: '100' })}`,
+    ucl: `${UEFA_API}?${new URLSearchParams({ competitionId: '1', seasonYear: String(season + 1), limit: '100', offset: '0', order: 'ASC' })}`,
   }
 }
 export interface ServiceOptions {
@@ -37,7 +37,7 @@ export function createFootballService(options: ServiceOptions = {}) {
   const urls = sourceUrls(season)
   const fetcher = options.fetcher ?? fetch
   const clock = options.clock ?? Date.now
-  const cacheFile = resolve(options.cacheDir ?? '.cache/football', `arsenal-${season}.json`)
+  const cacheFile = resolve(options.cacheDir ?? '.cache/football', `competitions-${season}-v2.json`)
   let feed: FootballFeed | undefined
   let pending: Promise<FootballFeed> | undefined
   let nextCheck = 0
@@ -62,24 +62,19 @@ export function createFootballService(options: ServiceOptions = {}) {
           url: urls[league],
         }
         try {
-          const response = await fetcher(urls[league], {
-            headers: {
-              Accept: 'application/json',
-              'User-Agent': 'MATCHDAY/1.0',
-              Origin: league === 'pl' ? 'https://www.premierleague.com' : 'https://www.uefa.com',
-            },
-            signal: AbortSignal.timeout(options.timeoutMs ?? 10_000),
-          })
-          if (!response.ok) throw new Error(`官网接口返回 HTTP ${response.status}`)
-          const raw: unknown = await response.json()
-          const matches =
-            league === 'pl' ? normalizePremierLeague(raw, season) : normalizeUefa(raw, season)
+          const matches = await fetchCompetitionMatches(
+            league,
+            urls[league],
+            season,
+            fetcher,
+            options.timeoutMs ?? 25_000,
+          )
           return {
             source: {
               ...base,
               state: 'success',
               updatedAt: checkedAt,
-              message: matches.length ? '' : '该赛季暂无已公布的阿森纳赛事',
+              message: matches.length ? '' : '该赛季暂无已公布的赛事',
             } satisfies FootballSource,
             matches,
           }
@@ -98,6 +93,7 @@ export function createFootballService(options: ServiceOptions = {}) {
       }),
     )
     const candidate: FootballFeed = {
+      scope: 'competitions',
       season,
       checkedAt,
       sources: results.map((r) => r.source),
