@@ -1,33 +1,46 @@
 <script setup lang="ts">
 import { useTemplateRef } from 'vue'
 import type { League, Match, Prediction } from '@/data/matches'
-import { dateLabel, timeLabel, leagueName, isMatchLocked, matchStatusLabel } from '@/data/matches'
 import AppIcon from './AppIcon.vue'
-import TeamBadge from './TeamBadge.vue'
+import MatchFixtureCard from './MatchFixtureCard.vue'
 import LeagueFilter from './LeagueFilter.vue'
 import { useListMotion } from '@/composables/useListMotion'
-import { useMatchWindow } from '@/composables/useMatchWindow'
+import { useFixtureTimeline } from '@/composables/useFixtureTimeline'
 const props = defineProps<{
   matches: Match[]
   predictions: Record<string, Prediction>
   now: number
   loading: boolean
-  total: number
   preview?: boolean
   query: string
 }>()
 const league = defineModel<League>('league', { required: true })
 const onlyArsenal = defineModel<boolean>('onlyArsenal', { required: true })
-defineEmits<{ predict: [match: Match]; viewAll: [] }>()
+defineEmits<{ predict: [match: Match]; detail: [match: Match]; viewAll: [] }>()
 const viewport = useTemplateRef<HTMLElement>('viewport')
-const { visibleMatches, hasMore, showMore } = useMatchWindow(
+const current = useTemplateRef<HTMLElement>('current')
+const {
+  past,
+  prepending,
+  future,
+  groups,
+  hasEarlier,
+  hasMore,
+  showEarlier,
+  showMore,
+  scrollToCurrent,
+  showPast,
+  onScroll,
+} = useFixtureTimeline(
   () => props.matches,
   () => `${league.value}:${onlyArsenal.value}:${props.query}:${props.preview}`,
   () => (props.preview ? 6 : 24),
+  viewport,
+  current,
 )
 const { beforeLeave, clearLeavingSize } = useListMotion(
   viewport,
-  () => `${league.value}:${visibleMatches.value.map((m) => m.id).join('|')}`,
+  () => `${league.value}:${[...past.value, ...future.value].map((m) => m.id).join('|')}`,
 )
 </script>
 <template>
@@ -35,114 +48,126 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
     <div class="section-heading">
       <div>
         <h3>
-          赛程安排 <span class="count-label">{{ total }}</span>
+          赛程安排 <span class="count-label">{{ matches.length }}</span>
         </h3>
         <p>
-          {{ onlyArsenal ? '当前显示阿森纳赛程' : '当前显示全部球队赛程' }} ·
-          下一次哨响之前，写下你的答案。
+          {{ onlyArsenal ? '当前显示阿森纳赛程' : '当前显示全部球队赛程' }} · 已完赛
+          {{ groups.past.length }} 场 · 未完赛 {{ groups.future.length }} 场
         </p>
       </div>
       <span class="muted tiny">北京时间 UTC+8</span>
     </div>
     <div class="match-filters">
-      <LeagueFilter v-model="league" />
-      <label class="arsenal-toggle"
+      <LeagueFilter v-model="league" /><label class="arsenal-toggle"
         ><input v-model="onlyArsenal" type="checkbox" /><span class="toggle-track"></span
         >只看阿森纳</label
       >
     </div>
-    <div ref="viewport" class="fixture-viewport">
-      <TransitionGroup
-        name="fixture"
-        tag="div"
-        class="match-cards"
-        @before-leave="beforeLeave"
-        @after-leave="clearLeavingSize"
-        @before-enter="clearLeavingSize"
-        @leave-cancelled="clearLeavingSize"
-      >
-        <article
-          v-for="(match, index) in visibleMatches"
-          :key="`${league}:${match.id}`"
-          class="match-card"
-          :style="{ '--fixture-delay': `${120 + Math.min(index, 5) * 45}ms` }"
-        >
-          <div class="card-top">
-            <span class="competition" :class="match.league"
-              ><AppIcon :name="match.league === 'pl' ? 'cup' : 'ball'" :size="13" />{{
-                leagueName(match.league)
-              }}<i>·</i>{{ match.round }}</span
-            ><span class="fixture-date"
-              >{{ dateLabel(match.kickoff) }}<b>{{ timeLabel(match.kickoff) }}</b></span
-            >
-          </div>
-          <div class="fixture-teams">
-            <div>
-              <TeamBadge :team="match.home" :size="38" /><span>{{ match.home.name }}</span
-              ><small>主</small>
-            </div>
-            <span class="fixture-vs">vs</span>
-            <div>
-              <TeamBadge :team="match.away" :size="38" /><span>{{ match.away.name }}</span
-              ><small>客</small>
-            </div>
-          </div>
-          <div class="card-bottom">
-            <span :class="{ predicted: predictions[match.id] }"
-              ><AppIcon :name="predictions[match.id] ? 'check' : 'clock'" :size="13" />{{
-                predictions[match.id]
-                  ? `我的预测 ${predictions[match.id]!.home} : ${predictions[match.id]!.away}`
-                  : matchStatusLabel(match, now)
-              }}</span
-            ><button
-              :class="{ 'already-predicted': predictions[match.id] }"
-              @click="$emit('predict', match)"
-            >
-              {{ isMatchLocked(match, now) ? '查看' : predictions[match.id] ? '修改' : '预测'
-              }}<AppIcon name="chevron" :size="12" />
-            </button>
-          </div>
-        </article>
-        <div v-if="!matches.length" :key="`${league}:empty`" class="empty-state">
-          <AppIcon name="calendar" :size="32" />
-          <h4>{{ loading ? '正在同步官方赛程' : '暂无符合条件的赛事' }}</h4>
-          <p>
-            {{ loading ? '同步完成后会自动显示。' : '试试切换联赛、清空搜索，或点击同步赛程。' }}
-          </p>
-        </div>
-      </TransitionGroup>
+    <div v-if="groups.past.length" class="timeline-controls">
+      <button class="past-shortcut" @click="showPast">
+        <AppIcon name="arrow" :size="13" />向上查看已完赛场次
+        <span>{{ groups.past.length }}</span></button
+      ><button v-if="groups.future.length" @click="scrollToCurrent">
+        回到近期赛程<AppIcon name="chevron" :size="12" />
+      </button>
     </div>
-    <button v-if="preview && hasMore" class="all-fixtures" @click="$emit('viewAll')">
-      查看全部 {{ total }} 场赛程 <AppIcon name="arrow" :size="13" />
+    <div
+      ref="viewport"
+      class="fixture-viewport"
+      role="region"
+      tabindex="0"
+      aria-label="比赛赛程，上方为已完赛场次，下方为近期赛程"
+      @scroll.passive="onScroll"
+    >
+      <div v-if="groups.past.length" class="history-section">
+        <button v-if="hasEarlier" class="earlier-fixtures" @click="showEarlier">
+          加载更早赛果 · 已显示 {{ past.length }} / {{ groups.past.length }} 场
+        </button>
+        <div class="timeline-heading">
+          <AppIcon name="history" :size="14" /><strong>已完赛</strong
+          ><span>{{ hasEarlier ? `最近 ${past.length} 场` : '本赛季已完赛场次' }}</span>
+        </div>
+        <TransitionGroup
+          name="fixture"
+          tag="div"
+          class="match-cards history-cards"
+          :class="{ 'is-prepending': prepending }"
+          @before-leave="beforeLeave"
+          @after-leave="clearLeavingSize"
+          @before-enter="clearLeavingSize"
+          @leave-cancelled="clearLeavingSize"
+        >
+          <MatchFixtureCard
+            v-for="(match, index) in past"
+            :key="`${league}:${match.id}`"
+            :match="match"
+            :prediction="predictions[match.id]"
+            :now="now"
+            :style="{ '--fixture-delay': `${120 + Math.min(index, 5) * 45}ms` }"
+            @predict="$emit('predict', $event)"
+            @detail="$emit('detail', $event)"
+          />
+        </TransitionGroup>
+      </div>
+      <div ref="current" class="current-section" :class="{ 'has-future': groups.future.length }">
+        <div
+          v-if="groups.past.length && groups.future.length"
+          class="timeline-heading current-heading"
+        >
+          <span class="current-dot"></span><strong>近期赛程</strong><span>向上滚动回看赛果</span>
+        </div>
+        <TransitionGroup
+          name="fixture"
+          tag="div"
+          class="match-cards upcoming-cards"
+          @before-leave="beforeLeave"
+          @after-leave="clearLeavingSize"
+          @before-enter="clearLeavingSize"
+          @leave-cancelled="clearLeavingSize"
+        >
+          <MatchFixtureCard
+            v-for="(match, index) in future"
+            :key="`${league}:${match.id}`"
+            :match="match"
+            :prediction="predictions[match.id]"
+            :now="now"
+            :style="{ '--fixture-delay': `${120 + Math.min(index, 5) * 45}ms` }"
+            @predict="$emit('predict', $event)"
+            @detail="$emit('detail', $event)"
+          />
+          <div v-if="!matches.length" :key="`${league}:empty`" class="empty-state">
+            <AppIcon name="calendar" :size="32" />
+            <h4>{{ loading ? '正在同步官方赛程' : '暂无符合条件的赛事' }}</h4>
+            <p>
+              {{ loading ? '同步完成后会自动显示。' : '试试切换联赛、清空搜索，或点击同步赛程。' }}
+            </p>
+          </div>
+        </TransitionGroup>
+      </div>
+    </div>
+    <button
+      v-if="preview && (hasMore || hasEarlier)"
+      class="all-fixtures"
+      @click="$emit('viewAll')"
+    >
+      查看全部 {{ matches.length }} 场赛程 <AppIcon name="arrow" :size="13" />
     </button>
     <button v-else-if="hasMore" class="all-fixtures" @click="showMore">
-      加载更多赛程 · 已显示 {{ visibleMatches.length }} / {{ total }} 场
-      <AppIcon name="arrow" :size="13" />
+      加载更多赛程 · 未完赛已显示 {{ future.length }} / {{ groups.future.length }} 场<AppIcon
+        name="arrow"
+        :size="13"
+      />
     </button>
     <div class="schedule-note">
-      <AppIcon name="info" :size="13" /><span>开赛前可随时修改，开赛后自动锁定预测。</span
+      <AppIcon name="info" :size="13" /><span>上方回看赛果，下方浏览赛程；开赛前可修改预测。</span
       ><span class="demo-note">英超 / UEFA 官网</span>
     </div>
   </section>
 </template>
 <style scoped>
-.all-fixtures {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 100%;
-  border: 0;
-  background: var(--md-soft, #f1f6ed);
-  color: var(--md-text, #315f49);
-  border-radius: 6px;
-  padding: 10px;
-  margin: 16px 0;
-  font-size: 15px;
-  cursor: pointer;
-}
 .matches-section {
   padding: 23px 23px 0;
+  min-width: 0;
 }
 .section-heading {
   display: flex;
@@ -221,34 +246,95 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
   outline: 2px solid var(--md-accent, #327557);
   outline-offset: 3px;
 }
+.timeline-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: -2px 0 12px;
+}
+.timeline-controls button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: 0;
+  padding: 5px 0;
+  color: var(--md-secondary, #748077);
+  font-size: 13px;
+  cursor: pointer;
+}
+.timeline-controls .past-shortcut {
+  color: var(--md-accent, #327557);
+}
+.past-shortcut svg {
+  transform: rotate(-90deg);
+}
+.past-shortcut > span {
+  font-size: 11px;
+  border-radius: 4px;
+  padding: 2px 5px;
+  background: var(--md-soft, #f0f3ef);
+}
+.fixture-viewport {
+  position: relative;
+  height: clamp(360px, 60vh, 620px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 3px 8px 3px 3px;
+  margin: -3px -8px -3px -3px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--md-accent, #a1b99c) transparent;
+  overflow-anchor: none;
+}
+.fixture-viewport:focus-visible {
+  outline: 2px solid var(--md-accent, #327557);
+  outline-offset: 4px;
+  border-radius: 5px;
+}
+.timeline-heading {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: var(--md-secondary, #748077);
+  padding: 11px 0 14px;
+}
+.timeline-heading > span:last-child {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--md-muted, #98a099);
+}
+.current-heading {
+  border-top: 1px dashed var(--md-border, #e1e8dc);
+  padding-top: 16px;
+}
+.current-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--md-accent, #327557);
+}
+.history-section {
+  padding-bottom: 18px;
+}
+.has-future {
+  min-height: 100%;
+}
 .match-cards {
   position: relative;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
-}
-.match-card {
-  border: 1px solid var(--md-border, #e9ede6);
-  border-radius: 9px;
-  overflow: hidden;
-  transition:
-    border-color 0.2s,
-    box-shadow 0.2s,
-    translate 0.2s;
-  background: var(--md-surface, white);
-}
-.match-card:hover {
-  border-color: var(--md-accent, #a3bcaa);
-  translate: 0 -2px;
-  box-shadow: 0 5px 16px #315e420b;
-}
-.fixture-viewport {
-  overflow: hidden;
-  padding: 3px;
-  margin: -3px;
+  align-items: stretch;
 }
 .fixture-move {
   transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.is-prepending :deep(.fixture-move),
+.is-prepending :deep(.fixture-enter-active) {
+  transition: none !important;
 }
 .fixture-enter-active {
   pointer-events: none;
@@ -272,99 +358,25 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
   opacity: 0;
   transform: translateY(-8px) scale(0.98);
 }
-.card-top {
-  padding: 13px 12px 0;
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-}
-.competition {
+.all-fixtures,
+.earlier-fixtures {
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 13px;
-  color: var(--md-purple, #76667c);
-  white-space: nowrap;
-}
-.competition.ucl {
-  color: var(--md-blue, #53648e);
-}
-.competition i {
-  font-style: normal;
-  color: var(--md-muted, #b0b6b0);
-}
-.fixture-date {
-  font-size: 13px;
-  color: var(--md-muted, #9ba39b);
-  display: flex;
-  gap: 7px;
-}
-.fixture-date b {
-  font-weight: 500;
-  color: var(--md-secondary, #69766c);
-}
-.fixture-teams {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  padding: 15px 6px;
-}
-.fixture-teams > div {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  gap: 7px;
-  min-width: 50px;
-}
-.fixture-teams > div > span:nth-child(2) {
-  font-size: 14px;
-  font-weight: 600;
-  white-space: nowrap;
-}
-.fixture-teams small {
-  color: var(--md-muted, #a4aaa4);
-  font-size: 12px;
-  margin-top: -4px;
-}
-.fixture-vs {
-  color: var(--md-muted, #b4bbb3);
-  font-size: 16px;
-  font-family: Georgia, serif;
-  font-style: italic;
-  align-self: flex-start;
-  margin-top: 12px;
-}
-.card-bottom {
-  border-top: 1px solid var(--md-border, #f0f2ed);
-  padding: 9px 10px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 4px;
-}
-.card-bottom > span {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 12px;
-  color: var(--md-muted, #9aa299);
-}
-.card-bottom > span.predicted {
-  color: var(--md-secondary, #39825e);
-}
-.card-bottom > button {
-  font-size: 13px;
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  color: var(--md-text, #276043);
-  background: var(--md-soft, #edf5e9);
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
   border: 0;
-  border-radius: 4px;
-  padding: 4px 6px;
+  background: var(--md-soft, #f1f6ed);
+  color: var(--md-text, #315f49);
+  border-radius: 6px;
+  padding: 10px;
+  margin: 16px 0;
+  font-size: 15px;
+  cursor: pointer;
 }
-.card-bottom > button:hover {
-  background: var(--md-soft, #dcecd4);
+.earlier-fixtures {
+  font-size: 13px;
+  margin-top: 0;
 }
 .schedule-note {
   border-top: 1px solid var(--md-border, #eff1ec);
@@ -375,6 +387,9 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
   align-items: center;
   color: var(--md-muted, #9aa199);
   font-size: 13px;
+}
+.schedule-note > svg {
+  flex-shrink: 0;
 }
 .demo-note {
   margin-left: auto;
@@ -404,52 +419,16 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
   .match-cards {
     gap: 8px;
   }
-  .card-bottom {
-    padding: 9px 6px;
-  }
-  .card-top {
-    padding: 12px 8px 0;
-  }
-  .competition {
-    font-size: 12px;
-  }
 }
 @media (max-width: 800px) {
   .match-cards {
     grid-template-columns: 1fr;
   }
-  .card-top {
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 15px;
+  .fixture-viewport {
+    height: clamp(320px, 65dvh, 570px);
   }
-  .fixture-teams {
-    padding: 15px 30px;
-  }
-  .fixture-teams > div {
-    flex-direction: row;
-    gap: 10px;
-  }
-  .card-bottom {
-    padding: 12px 15px;
-  }
-  .card-bottom > span,
-  .card-bottom > button {
-    font-size: 15px;
-  }
-  .fixture-teams > div > span:nth-child(2) {
-    font-size: 17px;
-  }
-  .fixture-vs {
-    align-self: center;
-    margin: 0;
-  }
-  .fixture-teams small {
-    margin: 0;
-  }
-  .competition,
-  .fixture-date {
-    font-size: 14px;
+  .demo-note {
+    display: none;
   }
 }
 @media (max-width: 420px) {
@@ -461,8 +440,6 @@ const { beforeLeave, clearLeavingSize } = useListMotion(
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  /* Keep the filter change visible without spatial motion. Override the global
-     reduced-motion reset only for these short opacity transitions. */
   .fixture-enter-active {
     transition: opacity 280ms ease !important;
     transition-delay: min(var(--fixture-delay, 0ms), 220ms) !important;

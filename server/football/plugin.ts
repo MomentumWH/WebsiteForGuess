@@ -1,6 +1,7 @@
 import type { Plugin } from 'vite'
 import { createFootballService } from './service.ts'
 import { footballMiddleware } from './middleware.ts'
+import { createMatchDetailsService } from './details.ts'
 import { createSquadService } from '../squad/service.ts'
 import { squadMiddleware } from '../squad/middleware.ts'
 
@@ -13,14 +14,17 @@ export function footballPlugin(env: Record<string, string>): Plugin {
     football: service,
     cacheDir: env.FOOTBALL_CACHE_DIR || undefined,
   })
+  const details = createMatchDetailsService(service, {
+    cacheDir: env.FOOTBALL_CACHE_DIR || undefined,
+  })
   return {
     name: 'matchday-official-football',
     configureServer(server) {
-      server.middlewares.use(footballMiddleware(service))
+      server.middlewares.use(footballMiddleware(service, details))
       server.middlewares.use(squadMiddleware(squad))
     },
     configurePreviewServer(server) {
-      server.middlewares.use(footballMiddleware(service))
+      server.middlewares.use(footballMiddleware(service, details))
       server.middlewares.use(squadMiddleware(squad))
     },
   }

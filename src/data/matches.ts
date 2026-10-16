@@ -5,6 +5,7 @@ export interface Team {
   short: string
   color: string
   badgeUrl?: string
+  officialId?: string
 }
 export interface Match {
   id: string
@@ -19,6 +20,9 @@ export interface Match {
   liveScore?: [number, number]
   sourceUrl?: string
   season?: number
+  halfTimeScore?: [number, number]
+  attendance?: number
+  finalScore?: [number, number]
 }
 export interface Prediction {
   home: number

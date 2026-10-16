@@ -18,6 +18,12 @@ export const constantRoutes: RouteRecordRaw[] = [
     component: () => import('@/views/MatchdayView.vue'),
     meta: { title: 'MATCHDAY · 球队阵容', requiresAuth: false, minimalLayout: true },
   },
+  {
+    path: '/matches/:matchId',
+    name: 'MatchDetails',
+    component: () => import('@/views/MatchdayView.vue'),
+    meta: { title: 'MATCHDAY · 比赛详情', requiresAuth: false, minimalLayout: true },
+  },
   { path: '/dashboard', redirect: '/', meta: { requiresAuth: false } },
   {
     path: '/login',

@@ -9,6 +9,9 @@
     "pnpm": ">=10"
   },
   "scripts": {
+    "test:events": "node --test tests/matchEvents.test.ts",
+    "test:statistics": "node --test tests/matchStatistics.test.ts",
+    "test:details": "node --test tests/matchDetails.test.ts",
     "test:lineup": "node --test tests/lineup.test.ts",
     "test:matchday": "node --test tests/matchday.test.ts",
     "test:football": "node --test tests/football.test.ts",

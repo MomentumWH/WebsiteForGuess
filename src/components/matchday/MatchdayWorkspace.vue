@@ -24,7 +24,10 @@ import LeagueFilter from './LeagueFilter.vue'
 import BackgroundSparkles from './BackgroundSparkles.vue'
 
 const SquadWorkspace = defineAsyncComponent(() => import('@/components/squad/SquadWorkspace.vue'))
-type Section = 'overview' | 'predict' | 'review' | 'stats' | 'squad'
+const MatchDetailsWorkspace = defineAsyncComponent(
+  () => import('@/components/match-details/MatchDetailsWorkspace.vue'),
+)
+type Section = 'overview' | 'predict' | 'review' | 'stats' | 'squad' | 'match'
 const route = useRoute()
 const router = useRouter()
 const appStore = useAppStore()
@@ -40,11 +43,19 @@ watch(
 onUnmounted(() => {
   delete document.documentElement.dataset.matchdayTheme
 })
-const section = shallowRef<Section>(route.path === '/squad' ? 'squad' : 'overview')
+const section = shallowRef<Section>(
+  route.name === 'MatchDetails' ? 'match' : route.path === '/squad' ? 'squad' : 'overview',
+)
+const previousSection = shallowRef<Section>('overview')
+const detailId = computed(() =>
+  typeof route.params.matchId === 'string' ? route.params.matchId : '',
+)
 watch(
   () => route.path,
   (path) => {
-    if (path === '/squad') section.value = 'squad'
+    if (route.name === 'MatchDetails') section.value = 'match'
+    else if (path === '/squad') section.value = 'squad'
+    else if (section.value === 'match') section.value = previousSection.value
     else if (section.value === 'squad') section.value = 'overview'
   },
 )
@@ -84,6 +95,7 @@ const titles = {
   review: ['预测复盘', '回看当时的判断，发现下一次的可能。'],
   stats: ['数据统计', '用比赛的答案，看见自己的判断力。'],
   squad: ['球队阵容', '认识每一位枪手，读懂每一场表现。'],
+  match: ['比赛详情', '从赛前的走势，到终场的答案。'],
 }
 const scopedMatches = computed(() =>
   matches.value.filter(
@@ -184,6 +196,14 @@ function navigate(id: Section) {
 function openPrediction(match: Match) {
   selected.value = match
   error.value = ''
+}
+function openMatchDetails(match: Match) {
+  if (section.value !== 'match') previousSection.value = section.value
+  void router.push({ name: 'MatchDetails', params: { matchId: match.id } })
+  window.scrollTo({ top: 0, behavior: 'instant' })
+}
+function closeMatchDetails() {
+  navigate(previousSection.value)
 }
 function showArsenal() {
   onlyArsenal.value = true
@@ -307,7 +327,7 @@ function download() {
           ><AppIcon name="chevron" :size="12" /><strong>{{ titles[section][0] }}</strong>
         </div>
         <div class="header-actions">
-          <label class="search-box"
+          <label v-if="section !== 'match'" class="search-box"
             ><AppIcon name="search" :size="16" /><input
               v-model="query"
               type="search"
@@ -357,6 +377,17 @@ function download() {
           @refresh="refresh"
         />
         <SquadWorkspace v-if="section === 'squad'" :query="query" />
+        <MatchDetailsWorkspace
+          v-if="section === 'match'"
+          :match-id="detailId"
+          :matches="matches"
+          :feed-loading="syncing"
+          :feed-error="syncError"
+          :predictions="predictions"
+          :now="now"
+          @back="closeMatchDetails"
+          @predict="openPrediction"
+        />
         <p v-if="storageMessage" class="storage-warning" role="alert">{{ storageMessage }}</p>
         <MatchHero
           v-if="section === 'overview'"
@@ -364,6 +395,7 @@ function download() {
           :prediction="focusMatch ? predictions[focusMatch.id] : undefined"
           :locked="focusMatch ? isMatchLocked(focusMatch, now) : false"
           @predict="openPrediction"
+          @detail="openMatchDetails"
           @navigate="navigate"
         />
         <section
@@ -395,14 +427,14 @@ function download() {
           <MatchList
             v-model:league="league"
             v-model:only-arsenal="onlyArsenal"
-            :matches="upcoming"
+            :matches="scopedMatches"
             :preview="section === 'overview'"
             :query="query"
-            :total="upcoming.length"
             :predictions="predictions"
             :now="now"
             :loading="syncing"
             @predict="openPrediction"
+            @detail="openMatchDetails"
             @view-all="navigate('predict')"
           /><StatsPanel
             :stats="stats"
@@ -431,7 +463,7 @@ function download() {
           :predictions="predictions"
           :full="section === 'review'"
           :scope="`${onlyArsenal}:${query}`"
-          @detail="openPrediction"
+          @detail="openMatchDetails"
           @navigate="navigate('review')"
         />
         <div v-if="section === 'predict'" class="prediction-explainer">

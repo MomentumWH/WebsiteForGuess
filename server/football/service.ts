@@ -29,6 +29,7 @@ export interface ServiceOptions {
   fetcher?: typeof fetch
   clock?: () => number
   timeoutMs?: number
+  maxAgeMs?: number
 }
 export function createFootballService(options: ServiceOptions = {}) {
   const season = options.season ?? currentSeason()
@@ -51,6 +52,16 @@ export function createFootballService(options: ServiceOptions = {}) {
       } catch {
         /* A missing or damaged cache must not prevent fresh data. */
       }
+    }
+    if (
+      feed &&
+      options.maxAgeMs &&
+      feed.sources.every((s) => s.state === 'success') &&
+      clock() - Date.parse(feed.checkedAt) >= 0 &&
+      clock() - Date.parse(feed.checkedAt) < options.maxAgeMs
+    ) {
+      nextCheck = Date.parse(feed.checkedAt) + options.maxAgeMs
+      return feed
     }
     const checkedAt = new Date(clock()).toISOString()
     const results = await Promise.all(
@@ -112,7 +123,7 @@ export function createFootballService(options: ServiceOptions = {}) {
       (feed.sources.some((s) => s.state !== 'success') ||
       feed.matches.some((m) => m.status === 'live')
         ? 60_000
-        : 300_000)
+        : (options.maxAgeMs ?? 300_000))
     try {
       await mkdir(resolve(cacheFile, '..'), { recursive: true })
       await writeFile(`${cacheFile}.tmp`, JSON.stringify(feed), 'utf8')

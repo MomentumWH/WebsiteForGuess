@@ -103,7 +103,7 @@ defineEmits<{ detail: [match: Match]; navigate: [] }>()
             <td>
               <button
                 class="detail-button"
-                :aria-label="`查看${match.home.name}对${match.away.name}复盘`"
+                :aria-label="`查看${match.home.name}对${match.away.name}比赛详情`"
                 @click="$emit('detail', match)"
               >
                 <AppIcon name="chevron" :size="15" />

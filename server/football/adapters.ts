@@ -6,6 +6,7 @@ interface PlTeam {
   name: string
   abbr: string
   score?: number
+  halfTimeScore?: number
 }
 interface PlMatch {
   matchId: string
@@ -17,6 +18,7 @@ interface PlMatch {
   kickoffTimezoneString?: string
   period: string
   ground?: string
+  attendance?: number
   homeTeam: PlTeam
   awayTeam: PlTeam
 }
@@ -41,6 +43,7 @@ interface UefaMatch {
   round?: { translations?: { name?: { ZH?: string; EN?: string } } }
   stadium?: { translations?: { name?: { ZH?: string; EN?: string } } }
   score?: { regular?: { home: number; away: number }; total?: { home: number; away: number } }
+  matchAttendance?: number
 }
 const knownTeams: Record<string, string> = {
   ARS: 'arsenal',
@@ -94,6 +97,7 @@ function makeTeam(
       short,
       color: '#315f49',
     }),
+    officialId: String(id),
     ...(badgeUrl ? { badgeUrl } : {}),
   }
 }
@@ -169,7 +173,16 @@ export function normalizePremierLeague(payload: unknown, season: number): Match[
       kickoff: londonKickoff(m.kickoff, m.kickoffTimezoneString),
       venue: m.ground || '球场待定',
       ...(status === 'finished'
-        ? { actual: scores }
+        ? {
+            actual: scores,
+            halfTimeScore: score({
+              home: m.homeTeam.halfTimeScore,
+              away: m.awayTeam.halfTimeScore,
+            }),
+            ...(Number.isInteger(m.attendance) && m.attendance! >= 0
+              ? { attendance: m.attendance }
+              : {}),
+          }
         : status === 'live'
           ? { liveScore: scores }
           : {}),
@@ -227,7 +240,13 @@ export function normalizeUefa(payload: unknown, season: number): Match[] {
       kickoff,
       venue: m.stadium?.translations?.name?.ZH || m.stadium?.translations?.name?.EN || '球场待定',
       ...(status === 'finished'
-        ? { actual }
+        ? {
+            actual,
+            finalScore: score(m.score?.total),
+            ...(Number.isInteger(m.matchAttendance) && m.matchAttendance! >= 0
+              ? { attendance: m.matchAttendance }
+              : {}),
+          }
         : status === 'live'
           ? { liveScore: score(m.score?.total) }
           : {}),

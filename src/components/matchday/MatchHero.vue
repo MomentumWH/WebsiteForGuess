@@ -6,7 +6,11 @@ import TeamBadge from './TeamBadge.vue'
 import MatchdayCarousel from './MatchdayCarousel.vue'
 import type { HeroDestination } from '@/data/heroSlides'
 defineProps<{ match?: Match; prediction?: Prediction; locked: boolean }>()
-defineEmits<{ predict: [match: Match]; navigate: [destination: HeroDestination] }>()
+defineEmits<{
+  predict: [match: Match]
+  detail: [match: Match]
+  navigate: [destination: HeroDestination]
+}>()
 function setInert(element: unknown, inert: boolean) {
   if (element instanceof HTMLElement) element.inert = inert
 }
@@ -42,7 +46,10 @@ function setInert(element: unknown, inert: boolean) {
           ><span>北京时间</span>
         </div>
         <div class="next-venue">{{ match.venue }} <span>·</span> {{ match.round }}</div>
-        <button class="primary-button next-button" @click="$emit('predict', match)">
+        <button
+          class="primary-button next-button"
+          @click="locked ? $emit('detail', match) : $emit('predict', match)"
+        >
           {{
             locked
               ? '查看赛事详情'
@@ -51,11 +58,26 @@ function setInert(element: unknown, inert: boolean) {
                 : '预测这场比赛'
           }}<AppIcon name="arrow" :size="17" />
         </button>
+        <button v-if="!locked" class="focus-details" @click="$emit('detail', match)">
+          查看比赛详情<AppIcon name="chevron" :size="12" />
+        </button>
       </div>
     </Transition>
   </section>
 </template>
 <style scoped>
+.focus-details {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  background: none;
+  border: 0;
+  color: var(--md-secondary, #5f6d64);
+  font-size: 14px;
+  padding: 10px 0 0;
+  cursor: pointer;
+}
 .focus-match-enter-active {
   transition:
     opacity 240ms ease,

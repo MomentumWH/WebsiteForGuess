@@ -5,6 +5,7 @@ import process from 'node:process'
 import console from 'node:console'
 import { createFootballService } from './football/service.ts'
 import { footballMiddleware } from './football/middleware.ts'
+import { createMatchDetailsService } from './football/details.ts'
 import { createSquadService } from './squad/service.ts'
 import { squadMiddleware } from './squad/middleware.ts'
 
@@ -13,7 +14,12 @@ const football = createFootballService({
   season: process.env.FOOTBALL_SEASON ? Number(process.env.FOOTBALL_SEASON) : undefined,
   cacheDir: process.env.FOOTBALL_CACHE_DIR || undefined,
 })
-const handleFootball = footballMiddleware(football)
+const handleFootball = footballMiddleware(
+  football,
+  createMatchDetailsService(football, {
+    cacheDir: process.env.FOOTBALL_CACHE_DIR || undefined,
+  }),
+)
 const handleSquad = squadMiddleware(
   createSquadService({ football, cacheDir: process.env.FOOTBALL_CACHE_DIR || undefined }),
 )
