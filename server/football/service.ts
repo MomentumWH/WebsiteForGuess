@@ -1,4 +1,4 @@
-import { mkdir, readFile, rename, writeFile } from 'node:fs/promises'
+import { fileCache, type JsonCache } from './cache.ts'
 import { resolve } from 'node:path'
 import type { FootballFeed, FootballSource } from '../../src/data/football.ts'
 import { isFootballFeed } from '../../src/data/football.ts'
@@ -26,6 +26,7 @@ export function sourceUrls(season: number) {
 export interface ServiceOptions {
   season?: number
   cacheDir?: string
+  cache?: JsonCache
   fetcher?: typeof fetch
   clock?: () => number
   timeoutMs?: number
@@ -47,7 +48,7 @@ export function createFootballService(options: ServiceOptions = {}) {
     if (!diskLoaded) {
       diskLoaded = true
       try {
-        const cached: unknown = JSON.parse(await readFile(cacheFile, 'utf8'))
+        const cached: unknown = await (options.cache ?? fileCache()).read(cacheFile)
         if (isFootballFeed(cached) && cached.season === season) feed = cached
       } catch {
         /* A missing or damaged cache must not prevent fresh data. */
@@ -125,9 +126,7 @@ export function createFootballService(options: ServiceOptions = {}) {
         ? 60_000
         : (options.maxAgeMs ?? 300_000))
     try {
-      await mkdir(resolve(cacheFile, '..'), { recursive: true })
-      await writeFile(`${cacheFile}.tmp`, JSON.stringify(feed), 'utf8')
-      await rename(`${cacheFile}.tmp`, cacheFile)
+      await (options.cache ?? fileCache()).write(cacheFile, feed)
     } catch {
       /* Keep the in-memory cache if disk is read-only. */
     }

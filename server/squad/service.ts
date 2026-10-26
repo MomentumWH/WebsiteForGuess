@@ -1,4 +1,4 @@
-import { mkdir, readFile, rename, writeFile } from 'node:fs/promises'
+import { fileCache, type JsonCache } from '../football/cache.ts'
 import { resolve } from 'node:path'
 import {
   isSquadFeed,
@@ -24,6 +24,7 @@ export const UEFA_PLAYER_STATS = 'https://matchstats.uefa.com/v2/player-statisti
 interface Options {
   football: FootballService
   cacheDir?: string
+  cache?: JsonCache
   fetcher?: typeof fetch
   clock?: () => number
   timeoutMs?: number
@@ -243,9 +244,7 @@ export function createSquadService(options: Options) {
     nextCheck =
       clock() + (sources.some((s) => s.id !== 'roster' && s.state !== 'success') ? 60_000 : 600_000)
     try {
-      await mkdir(resolve(file, '..'), { recursive: true })
-      await writeFile(`${file}.tmp`, JSON.stringify(candidate), 'utf8')
-      await rename(`${file}.tmp`, file)
+      await (options.cache ?? fileCache()).write(file, candidate)
     } catch {
       /* A read-only cache must not prevent live statistics. */
     }
@@ -255,7 +254,7 @@ export function createSquadService(options: Options) {
     async getFeed(force = false): Promise<SquadFeed> {
       diskLoad ??= (async () => {
         try {
-          const cached: unknown = JSON.parse(await readFile(file, 'utf8'))
+          const cached: unknown = await (options.cache ?? fileCache()).read(file)
           if (isSquadFeed(cached) && cached.season === season) {
             feed = cached
             nextCheck =

@@ -393,3 +393,46 @@ test('concurrent requests share one upstream fetch; partial failure preserves on
     await rm(cacheDir, { recursive: true, force: true })
   }
 })
+
+test('external cache survives service restarts and preserves last successful data during outages', async () => {
+  const entries = new Map<string, unknown>()
+  const cache = {
+    async read(key: string) {
+      return entries.get(key)
+    },
+    async write(key: string, value: unknown) {
+      entries.set(key, structuredClone(value))
+    },
+  }
+  let now = Date.parse('2026-10-15T00:00:00Z')
+  const first = await createFootballService({
+    season: 2026,
+    cache,
+    clock: () => now,
+    fetcher: async (url) =>
+      Response.json(String(url).includes('match.uefa.com') ? [ucl] : plPage()),
+  }).getFeed()
+  assert.equal(first.matches.length, 2)
+  assert.equal(entries.size, 1)
+  const offline: typeof fetch = async () => {
+    throw new Error('offline')
+  }
+  const fresh = await createFootballService({
+    season: 2026,
+    cache,
+    clock: () => now,
+    maxAgeMs: 60_000,
+    fetcher: offline,
+  }).getFeed()
+  assert.deepEqual(fresh, first)
+  now += 60_001
+  const stale = await createFootballService({
+    season: 2026,
+    cache,
+    clock: () => now,
+    maxAgeMs: 60_000,
+    fetcher: offline,
+  }).getFeed()
+  assert.deepEqual(stale.matches, first.matches)
+  assert.ok(stale.sources.every((source) => source.state === 'stale'))
+})
