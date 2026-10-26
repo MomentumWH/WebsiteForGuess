@@ -5,6 +5,8 @@ import PlayerPortrait from './PlayerPortrait.vue'
 const formation = defineModel<'433' | '4231'>('formation', { default: '433' })
 const props = defineProps<{ players: PlayerSummary[]; selected: string }>()
 defineEmits<{ select: [id: string] }>()
+// 注释修改时间：2026-10-22
+// 用途与逻辑：生成推荐阵容行，按当前球员表现和所选阵型调用统一推荐工具。
 const rows = computed(() => recommendLineup(props.players, formation.value))
 </script>
 <template>

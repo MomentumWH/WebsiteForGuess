@@ -15,24 +15,35 @@ const titleId = useId()
 const descriptionId = useId()
 // Keep the last result visible while the native dialog fades out.
 const content = shallowRef({ ...props })
+// 注释修改时间：2026-10-22
+// 用途与逻辑：保存最近一次同步内容，仅在反馈非空闲时更新快照，避免退场期间内容跳变。
 watch(
   () => [props.phase, props.title, props.description, props.sources],
   () => {
+    // 空闲阶段保留最后结果快照，让关闭动画期间仍显示完整反馈。
     if (props.phase !== 'idle') content.value = { ...props }
   },
 )
 let previousOverflow: string | undefined
 
+// 注释修改时间：2026-10-22
+// 用途与逻辑：恢复页面滚动，确认存在旧值后写回原状态并清除保存标记。
 function unlockScroll() {
+  // 未持有滚动快照时不处理，避免重复清理覆盖页面状态。
   if (previousOverflow === undefined) return
+  // 写回打开弹层之前的 overflow，并释放已保存状态。
   document.body.style.overflow = previousOverflow
   previousOverflow = undefined
 }
+// 注释修改时间：2026-10-22
+// 用途与逻辑：协调同步弹层与滚动锁，等待视图更新后按反馈状态打开或关闭原生对话框。
 watch(
   [() => props.phase !== 'idle', dialog],
   ([visible]) => {
+    // 等待对话框引用就绪，再处理展示状态变化。
     const element = dialog.value
     if (!element) return
+    // 打开前先保存并锁定页面滚动；关闭后成对恢复滚动状态。
     if (visible && !element.open) {
       previousOverflow = document.body.style.overflow
       document.body.style.overflow = 'hidden'
@@ -44,13 +55,20 @@ watch(
   },
   { flush: 'post' },
 )
+// 注释修改时间：2026-10-22
+// 用途与逻辑：卸载同步弹层时关闭对话框并恢复滚动，避免页面残留滚动锁。
 onUnmounted(() => {
+  // 组件卸载也执行关闭与解锁，覆盖弹层展示中离开页面的情况。
   dialog.value?.close()
   unlockScroll()
 })
 
+// 注释修改时间：2026-10-22
+// 用途与逻辑：生成联赛同步标签，优先提示核对中，再根据来源状态区分更新、缓存或缺失。
 function sourceLabel(league: 'pl' | 'ucl') {
+  // 加载阶段直接显示核对中，避免旧来源结果被误认为本次结果。
   if (content.value.phase === 'loading') return '核对中'
+  // 按联赛查找来源，再区分成功更新、可用缓存和未取得数据。
   const source = content.value.sources.find((item) => item.league === league)
   if (source?.state === 'success') return '已更新'
   return source?.updatedAt ? '保留缓存' : '暂未获取'

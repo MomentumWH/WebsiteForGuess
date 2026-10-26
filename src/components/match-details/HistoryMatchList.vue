@@ -5,6 +5,8 @@ import { formResult, historyDate } from '@/data/matchDetails'
 import TeamBadge from '@/components/matchday/TeamBadge.vue'
 const props = defineProps<{ matches: Match[]; team?: Team }>()
 const labels = { win: '胜', draw: '平', loss: '负' }
+// 注释修改时间：2026-10-22
+// 用途与逻辑：生成历史比赛列表，将每场比赛与指定球队的胜平负结果配对。
 const rows = computed(() =>
   props.matches.map((match) => ({
     match,

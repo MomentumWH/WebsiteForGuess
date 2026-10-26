@@ -3,9 +3,12 @@ import { shallowRef, watch } from 'vue'
 import type { SquadPlayer } from '@/data/squad'
 const props = defineProps<{ player: SquadPlayer }>()
 const failed = shallowRef(false)
+// 注释修改时间：2026-10-22
+// 用途与逻辑：重置头像加载失败标记，监听头像地址变化以允许新图片重新尝试加载。
 watch(
   () => props.player.image,
   () => {
+    // 头像地址更新后允许重新加载，避免沿用旧图片的失败状态。
     failed.value = false
   },
 )

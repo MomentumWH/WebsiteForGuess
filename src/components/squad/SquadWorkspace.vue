@@ -24,23 +24,34 @@ const sort = shallowRef<'minutes' | 'goals' | 'appearances'>('minutes')
 const firstTeam = shallowRef(true)
 const selectedId = shallowRef('fpl-223340')
 const detail = useTemplateRef<HTMLElement>('detail')
+// 注释修改时间：2026-10-22
+// 用途与逻辑：获取近期比赛范围，使用当前数据中的比赛与所选联赛生成近期赛程。
 const matches = computed(() => recentSquadMatches(feed.value?.matches ?? [], league.value))
+// 注释修改时间：2026-10-22
+// 用途与逻辑：筛选赛事注册球员，英超检查 FPL 编号，欧冠检查 UEFA 编号，全部模式保留全员。
 const registered = computed(() =>
   (feed.value?.players ?? []).filter((p) =>
     league.value === 'pl' ? p.fplId !== null : league.value === 'ucl' ? p.uefaId !== null : true,
   ),
 )
+// 注释修改时间：2026-10-22
+// 用途与逻辑：汇总球员近期表现，逐个结合选定比赛和已取得的个人统计生成摘要。
 const summaries = computed(() =>
   registered.value.map((p) => summarizePlayer(p, matches.value, feed.value?.performances ?? [])),
 )
+// 注释修改时间：2026-10-22
+// 用途与逻辑：选择详情球员，优先保留当前选择，其次匹配默认球员，最后使用首位可用球员。
 const selected = computed(
   () =>
     summaries.value.find((s) => s.player.id === selectedId.value) ??
     summaries.value.find((s) => s.player.shortName === 'Saka') ??
     summaries.value[0],
 )
+// 注释修改时间：2026-10-22
+// 用途与逻辑：生成球员表格数据，叠加位置、一线队和搜索条件，再按统计指标与姓名排序。
 const tablePlayers = computed(() =>
   summaries.value
+    // 先叠加位置、一线队与姓名号码搜索条件，得到当前表格范围。
     .filter(
       (s) =>
         (position.value === 'all' || s.player.position === position.value) &&
@@ -49,13 +60,17 @@ const tablePlayers = computed(() =>
           .toLowerCase()
           .includes(props.query.trim().toLowerCase()),
     )
+    // 按选定表现指标倒序排列，数值相同时使用姓名保持排序稳定。
     .sort(
       (a, b) =>
         (b.metrics[sort.value] ?? -1) - (a.metrics[sort.value] ?? -1) ||
         a.player.name.localeCompare(b.player.name),
     ),
 )
+// 注释修改时间：2026-10-22
+// 用途与逻辑：生成统计日期范围，提取近期比赛首尾日期并格式化，无比赛时显示缺失说明。
 const dateRange = computed(() => {
+  // 提取当前近期比赛的首尾时间，空范围不执行日期格式化。
   const dates = matches.value.map((m) => m.kickoff)
   return dates.length
     ? `${shortDate(dates[dates.length - 1]!)} — ${shortDate(dates[0]!)}`
@@ -66,20 +81,28 @@ const leagueOptions: { id: League; label: string }[] = [
   { id: 'pl', label: '英超' },
   { id: 'ucl', label: '欧冠' },
 ]
+// 注释修改时间：2026-10-22
+// 用途与逻辑：统计各位置人数，以注册球员名单为基准逐项计算位置分布。
 const positionCounts = computed(() =>
   positions.map((p) => ({
     ...p,
     count: registered.value.filter((player) => player.position === p.id).length,
   })),
 )
+// 注释修改时间：2026-10-22
+// 用途与逻辑：格式化简短比赛日期，按上海时区输出两位数月日。
 function shortDate(value: string) {
+  // 固定使用上海时区，避免不同浏览器本地时区造成日期差异。
   return new Intl.DateTimeFormat('zh-CN', {
     timeZone: 'Asia/Shanghai',
     month: '2-digit',
     day: '2-digit',
   }).format(new Date(value))
 }
+// 注释修改时间：2026-10-22
+// 用途与逻辑：生成数据源时间说明，有更新时间时按上海时区格式化，否则提示尚未取得。
 function sourceDate(s: SquadSource) {
+  // 来源没有更新时间时明确展示缺失状态，不使用当前时间替代。
   return s.updatedAt
     ? new Intl.DateTimeFormat('zh-CN', {
         timeZone: 'Asia/Shanghai',
@@ -91,7 +114,10 @@ function sourceDate(s: SquadSource) {
       }).format(new Date(s.updatedAt))
     : '尚未取得'
 }
+// 注释修改时间：2026-10-22
+// 用途与逻辑：响应表格选人，更新详情编号并按减少动效偏好滚动到球员详情区域。
 function selectFromTable(id: string) {
+  // 先更新详情球员，再依据用户动效偏好滚动到详情容器。
   selectedId.value = id
   detail.value?.scrollIntoView({
     block: 'start',

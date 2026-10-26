@@ -10,37 +10,58 @@ let fadeTimer: number | undefined
 let closeTimer: number | undefined
 let previousOverflow: string | undefined
 
+// 注释修改时间：2026-10-22
+// 用途与逻辑：清理欢迎弹层，取消定时器并关闭对话框，再恢复弹层打开前的页面滚动。
 function cleanup() {
+  // 取消等待与退场计时，并关闭可能仍打开的原生对话框。
   window.clearTimeout(fadeTimer)
   window.clearTimeout(closeTimer)
   dialog.value?.close()
+  // 仅在保存过旧状态时恢复滚动，并清空标记以支持重复清理。
   if (previousOverflow !== undefined) {
     document.body.style.overflow = previousOverflow
     previousOverflow = undefined
   }
 }
+// 注释修改时间：2026-10-22
+// 用途与逻辑：结束欢迎展示，先释放弹层资源，再将组件可见状态设为隐藏。
 function finish() {
+  // 先释放弹层资源，再隐藏欢迎组件，保持退出顺序一致。
   cleanup()
   visible.value = false
 }
+// 注释修改时间：2026-10-22
+// 用途与逻辑：启动退场动画，防止重复执行，取消等待计时并设置动画结束的兜底定时器。
 function beginLeave() {
+  // 忽略重复退场和已经隐藏的状态，避免多次安排关闭。
   if (leaving.value || !visible.value) return
   window.clearTimeout(fadeTimer)
   leaving.value = true
   // Normally animationend closes the dialog; keep a fallback for interrupted animations.
+  // 保留动画被中断时的关闭兜底，避免对话框一直阻塞页面。
   closeTimer = window.setTimeout(finish, fadeDuration + 250)
 }
+// 注释修改时间：2026-10-22
+// 用途与逻辑：响应动画结束，仅在已进入退场阶段时执行最终关闭流程。
 function onAnimationEnd() {
+  // 只有退场动画结束才关闭，不响应其他阶段的动画事件。
   if (leaving.value) finish()
 }
+// 注释修改时间：2026-10-22
+// 用途与逻辑：挂载欢迎弹层，打开原生对话框并锁定滚动，再按展示时长启动退场计时。
 onMounted(() => {
+  // 模板引用尚未就绪时跳过打开，避免访问不存在的对话框。
   if (!dialog.value) return
+  // 打开模态对话框并保存原滚动状态，再锁定背景页面。
   dialog.value.showModal()
   previousOverflow = document.body.style.overflow
   document.body.style.overflow = 'hidden'
   // The fade is part of the three-second intro, independent of data requests.
+  // 按总展示时长扣除退场时长安排动画，不等待数据请求。
   fadeTimer = window.setTimeout(beginLeave, 3000 - fadeDuration)
 })
+// 注释修改时间：2026-10-22
+// 用途与逻辑：卸载时复用清理方法，确保定时器、原生对话框与滚动状态均被恢复。
 onUnmounted(cleanup)
 </script>
 

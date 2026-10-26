@@ -20,16 +20,24 @@ const props = defineProps<{
   now: number
 }>()
 defineEmits<{ back: []; predict: [match: Match] }>()
+// 注释修改时间：2026-10-22
+// 用途与逻辑：初始化比赛详情数据，通过响应式回调按编号查找当前比赛并提供完整赛程。
 const { match, details, history, loading, error, refresh } = useMatchDetails(
   () => props.matches.find((m) => m.id === props.matchId),
   () => props.matches,
 )
+// 注释修改时间：2026-10-22
+// 用途与逻辑：控制历史信息展示，仅在比赛存在且尚未结束或取消时显示。
 const showHistory = computed(
   () => match.value && !['finished', 'cancelled'].includes(match.value.status ?? ''),
 )
+// 注释修改时间：2026-10-22
+// 用途与逻辑：汇总数据源异常，从详情来源中过滤未成功的条目，缺失时返回空列表。
 const sourceProblems = computed(
   () => details.value?.sources.filter((s) => s.state !== 'success') ?? [],
 )
+// 注释修改时间：2026-10-22
+// 用途与逻辑：生成历史数据范围说明，优先展示详情赛季，缺失时使用当前比赛缓存赛季。
 const scope = computed(() =>
   details.value
     ? details.value.seasons.map(seasonText).join('、')

@@ -19,35 +19,48 @@ const dialog = useDialog()
 const appStore = useAppStore()
 const userStore = useUserStore()
 
+// 注释修改时间：2026-10-22
+// 用途与逻辑：生成面包屑，只保留当前匹配路由中配置了标题的记录。
 const breadcrumbs = computed(() => route.matched.filter((item) => item.meta?.title))
 
 const dropdownOptions: DropdownOption[] = [
   {
     label: '个人中心',
     key: 'profile',
+    // 注释修改时间：2026-10-22
+    // 用途与逻辑：渲染个人中心菜单图标，通过图标容器插槽创建用户图标节点。
     icon: () => h(NIcon, null, { default: () => h(PersonOutline) }),
   },
   { type: 'divider', key: 'divider' },
   {
     label: '退出登录',
     key: 'logout',
+    // 注释修改时间：2026-10-22
+    // 用途与逻辑：渲染退出菜单图标，通过图标容器插槽创建退出图标节点。
     icon: () => h(NIcon, null, { default: () => h(LogOutOutline) }),
   },
 ]
 
+// 注释修改时间：2026-10-22
+// 用途与逻辑：处理用户菜单，退出时先确认并统一清理会话，选择个人中心时跳转对应页面。
 function handleDropdownSelect(key: string): void {
+  // 退出操作先显示确认弹窗，只有确认后才真正清除登录状态。
   if (key === 'logout') {
     dialog.warning({
       title: '提示',
       content: '确定要退出登录吗？',
       positiveText: '确定',
       negativeText: '取消',
+      // 注释修改时间：2026-10-22
+      // 用途与逻辑：确认退出后清理会话，通过统一重置方法移除登录与权限状态，再返回登录页。
       onPositiveClick: () => {
+        // 通过统一会话服务清除 Token、用户信息与动态路由，再返回登录入口。
         resetSession()
         void router.replace(appConfig.loginPath)
       },
     })
   } else if (key === 'profile') {
+    // 个人中心选项只负责路由导航，不触发会话清理。
     router.push('/profile')
   }
 }

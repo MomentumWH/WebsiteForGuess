@@ -15,6 +15,8 @@ import TeamBadge from './TeamBadge.vue'
 const props = defineProps<{ match: Match; prediction?: Prediction; now: number; error: string }>()
 const emit = defineEmits<{ save: [value: Omit<Prediction, 'savedAt'>]; close: []; remove: [] }>()
 const dialog = useTemplateRef<HTMLDialogElement>('dialog')
+// 注释修改时间：2026-10-22
+// 用途与逻辑：判断预测是否锁定，依据当前比赛与时刻复用统一开赛限制规则。
 const locked = computed(() => isMatchLocked(props.match, props.now))
 const confirmRemoval = shallowRef(false)
 const form = reactive({
@@ -24,21 +26,34 @@ const form = reactive({
   note: props.prediction?.note ?? '',
 })
 const validation = shallowRef('')
+// 注释修改时间：2026-10-22
+// 用途与逻辑：计算已存预测结果，将比赛正式赛果与现有预测交给统一结果工具比较。
 const result = computed(() => outcome(props.match, props.prediction))
 let previousFocus: HTMLElement | null = null
+// 注释修改时间：2026-10-22
+// 用途与逻辑：挂载预测弹窗，记住打开前的焦点元素，再展示原生模态对话框。
 onMounted(() => {
+  // 记录弹窗打开前的焦点，关闭后可返回原操作位置。
   previousFocus = document.activeElement as HTMLElement
   dialog.value?.showModal()
 })
+// 注释修改时间：2026-10-22
+// 用途与逻辑：卸载预测弹窗时恢复原焦点，保持键盘操作的上下文连续性。
 onUnmounted(() => {
+  // 使用可选调用恢复焦点，原元素未记录时不执行操作。
   previousFocus?.focus()
 })
+// 注释修改时间：2026-10-22
+// 用途与逻辑：提交比分预测，先检查锁定状态和比分整数范围，再清除校验提示并发送表单副本。
 function submit() {
+  // 比赛已经锁定时禁止提交，避免绕过开赛后的编辑限制。
   if (locked.value) return
+  // 主客队比分必须同时满足整数和零至二十范围，否则只显示校验提示。
   if (![form.home, form.away].every((n) => Number.isInteger(n) && n >= 0 && n <= 20)) {
     validation.value = '比分必须是 0–20 的整数。'
     return
   }
+  // 校验通过后清除旧提示，并发送表单副本，避免直接共享可变对象。
   validation.value = ''
   emit('save', { ...form })
 }

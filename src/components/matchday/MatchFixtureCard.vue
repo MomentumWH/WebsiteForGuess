@@ -13,6 +13,8 @@ import AppIcon from './AppIcon.vue'
 import TeamBadge from './TeamBadge.vue'
 const props = defineProps<{ match: Match; prediction?: Prediction; now: number }>()
 defineEmits<{ predict: [match: Match]; detail: [match: Match] }>()
+// 注释修改时间：2026-10-22
+// 用途与逻辑：判断赛程卡片是否完赛，比赛状态已结束或存在正式赛果时均视为完赛。
 const finished = computed(() => props.match.status === 'finished' || !!props.match.actual)
 </script>
 <template>

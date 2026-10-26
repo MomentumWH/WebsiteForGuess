@@ -10,10 +10,17 @@ const route = useRoute()
 const router = useRouter()
 const appStore = useAppStore()
 const permissionStore = usePermissionStore()
+// 注释修改时间：2026-10-22
+// 用途与逻辑：生成侧栏菜单，将权限过滤后的路由转换为菜单选项并随路由集合变化更新。
 const menuOptions = computed(() => buildMenuOptions(permissionStore.routes))
+// 注释修改时间：2026-10-22
+// 用途与逻辑：获取当前菜单选中项，直接使用活动路由路径匹配菜单键。
 const activeKey = computed(() => route.path)
 
+// 注释修改时间：2026-10-22
+// 用途与逻辑：处理侧栏选择，以菜单键作为目标路径调用路由导航。
 function handleSelect(key: string): void {
+  // 直接使用菜单中已经解析好的完整路径进行导航。
   void router.push(key)
 }
 </script>

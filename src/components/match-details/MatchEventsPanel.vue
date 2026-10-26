@@ -13,13 +13,20 @@ const props = defineProps<{
 }>()
 defineEmits<{ refresh: [] }>()
 const filter = shallowRef<'all' | 'goal' | 'substitution'>('all')
+// 注释修改时间：2026-10-22
+// 用途与逻辑：切换比赛时重置赛况筛选，通过监听比赛编号避免沿用上一场的筛选条件。
 watch(
   () => props.match.id,
   () => {
+    // 比赛编号变化后恢复全部赛况，防止筛选条件跨比赛残留。
     filter.value = 'all'
   },
 )
+// 注释修改时间：2026-10-22
+// 用途与逻辑：读取比赛事件列表，时间线尚未提供时使用空列表保持渲染稳定。
 const events = computed(() => props.timeline?.events ?? [])
+// 注释修改时间：2026-10-22
+// 用途与逻辑：按赛况类别过滤事件，分别保留全部、进球与助攻或换人记录。
 const visible = computed(() =>
   events.value.filter(
     (e) =>
@@ -29,9 +36,17 @@ const visible = computed(() =>
         : e.type === 'substitution'),
   ),
 )
+// 注释修改时间：2026-10-22
+// 用途与逻辑：统计进球事件数量，过滤时间线中类型为进球的记录后计数。
 const goalCount = computed(() => events.value.filter((e) => e.type === 'goal').length)
+// 注释修改时间：2026-10-22
+// 用途与逻辑：统计换人事件数量，过滤时间线中类型为换人的记录后计数。
 const subCount = computed(() => events.value.filter((e) => e.type === 'substitution').length)
+// 注释修改时间：2026-10-22
+// 用途与逻辑：读取赛况数据源信息，直接派生当前时间线的来源状态。
 const source = computed(() => props.timeline?.source)
+// 注释修改时间：2026-10-22
+// 用途与逻辑：生成赛况提示，优先展示请求错误，再提示旧缓存状态或数据源说明。
 const notice = computed(
   () =>
     props.error ||
@@ -40,6 +55,8 @@ const notice = computed(
       : source.value?.message) ||
     '',
 )
+// 注释修改时间：2026-10-22
+// 用途与逻辑：格式化赛况更新时间，存在时间时按上海时区显示月日时分，否则留空。
 const updated = computed(() =>
   source.value?.updatedAt
     ? new Intl.DateTimeFormat('zh-CN', {

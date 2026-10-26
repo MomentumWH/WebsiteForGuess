@@ -23,7 +23,11 @@ import PredictionDialog from './PredictionDialog.vue'
 import LeagueFilter from './LeagueFilter.vue'
 import BackgroundSparkles from './BackgroundSparkles.vue'
 
+// 注释修改时间：2026-10-22
+// 用途与逻辑：按需加载阵容工作区，通过异步组件将阵容功能独立为延迟加载模块。
 const SquadWorkspace = defineAsyncComponent(() => import('@/components/squad/SquadWorkspace.vue'))
+// 注释修改时间：2026-10-22
+// 用途与逻辑：按需加载比赛详情工作区，通过异步导入延后加载详情相关组件。
 const MatchDetailsWorkspace = defineAsyncComponent(
   () => import('@/components/match-details/MatchDetailsWorkspace.vue'),
 )
@@ -31,28 +35,41 @@ type Section = 'overview' | 'predict' | 'review' | 'stats' | 'squad' | 'match'
 const route = useRoute()
 const router = useRouter()
 const appStore = useAppStore()
+// 注释修改时间：2026-10-22
+// 用途与逻辑：派生深色模式标记，以全局主题状态驱动前台主题展示。
 const isDark = computed(() => appStore.theme === 'dark')
 // Document-level tokens also reach the sync dialog and player drag preview teleported to body.
+// 注释修改时间：2026-10-22
+// 用途与逻辑：同步文档级主题标记，立即监听主题变化，使传送到页面根部的弹层也能匹配主题。
 watch(
   () => appStore.theme,
   (theme) => {
+    // 将主题写入文档根节点，使传送到 body 的弹层和拖动预览共享样式。
     document.documentElement.dataset.matchdayTheme = theme
   },
   { immediate: true, flush: 'sync' },
 )
+// 注释修改时间：2026-10-22
+// 用途与逻辑：卸载时删除文档主题标记，避免前台样式状态影响后续页面。
 onUnmounted(() => {
+  // 移除当前工作区写入的主题属性，避免状态泄漏到其他页面。
   delete document.documentElement.dataset.matchdayTheme
 })
 const section = shallowRef<Section>(
   route.name === 'MatchDetails' ? 'match' : route.path === '/squad' ? 'squad' : 'overview',
 )
 const previousSection = shallowRef<Section>('overview')
+// 注释修改时间：2026-10-22
+// 用途与逻辑：读取详情比赛编号，仅接受字符串路由参数，其余情况返回空编号。
 const detailId = computed(() =>
   typeof route.params.matchId === 'string' ? route.params.matchId : '',
 )
+// 注释修改时间：2026-10-22
+// 用途与逻辑：同步路由与工作区栏目，按详情和阵容路径切换页面，离开时恢复适当栏目。
 watch(
   () => route.path,
   (path) => {
+    // 按比赛详情、球队阵容和普通工作区路径分别恢复栏目状态。
     if (route.name === 'MatchDetails') section.value = 'match'
     else if (path === '/squad') section.value = 'squad'
     else if (section.value === 'match') section.value = previousSection.value
@@ -77,6 +94,8 @@ const {
 } = useFootballMatches()
 const { predictions, personal, storageMessage, now, save, remove, exportRecords } =
   usePredictions(matches)
+// 注释修改时间：2026-10-22
+// 用途与逻辑：获取当前选中比赛，优先使用最新赛程中的同编号记录，未找到时保留选中快照。
 const selectedMatch = computed(() =>
   selected.value
     ? (matches.value.find((m) => m.id === selected.value!.id) ?? selected.value)
@@ -97,7 +116,10 @@ const titles = {
   squad: ['球队阵容', '认识每一位枪手，读懂每一场表现。'],
   match: ['比赛详情', '从赛前的走势，到终场的答案。'],
 }
+// 注释修改时间：2026-10-22
+// 用途与逻辑：生成当前范围赛程，结合联赛、阿森纳开关和规范化搜索文本筛选比赛。
 const scopedMatches = computed(() =>
+  // 一次性叠加联赛、球队和文本条件，让赛程与后续统计使用同一范围。
   matches.value.filter(
     (match) =>
       (league.value === 'all' || match.league === league.value) &&
@@ -107,39 +129,58 @@ const scopedMatches = computed(() =>
         .includes(query.value.trim().toLowerCase()),
   ),
 )
+// 注释修改时间：2026-10-22
+// 用途与逻辑：生成未结算比赛列表，筛除已有正式赛果的比赛，再按开球时间由近到远排序。
 const upcoming = computed(() =>
   scopedMatches.value
+    // 先保留尚无正式赛果的比赛，再按开球时间排序，缺失时间放在末尾。
     .filter((m) => !m.actual)
     .sort((a, b) => (Date.parse(a.kickoff) || Infinity) - (Date.parse(b.kickoff) || Infinity)),
 )
+// 注释修改时间：2026-10-22
+// 用途与逻辑：生成已完赛列表，仅保留已有正式赛果的比赛，并按开球时间倒序排列。
 const completed = computed(() =>
+  // 正式赛果存在才进入复盘列表，并优先展示最近开球的比赛。
   scopedMatches.value
     .filter((m) => m.actual)
     .sort((a, b) => Date.parse(b.kickoff) - Date.parse(a.kickoff)),
 )
+// 注释修改时间：2026-10-22
+// 用途与逻辑：汇总当前范围的预测表现，将筛选后的比赛与全部预测交给统计工具处理。
 const stats = computed(() => summarize(scopedMatches.value, predictions.value))
+// 注释修改时间：2026-10-22
+// 用途与逻辑：汇总英超预测表现，从当前范围中过滤英超比赛后计算统计数据。
 const plStats = computed(() =>
   summarize(
     scopedMatches.value.filter((m) => m.league === 'pl'),
     predictions.value,
   ),
 )
+// 注释修改时间：2026-10-22
+// 用途与逻辑：汇总欧冠预测表现，从当前范围中过滤欧冠比赛后计算统计数据。
 const uclStats = computed(() =>
   summarize(
     scopedMatches.value.filter((m) => m.league === 'ucl'),
     predictions.value,
   ),
 )
+// 注释修改时间：2026-10-22
+// 用途与逻辑：选择焦点比赛，依次优先可预测场次、进行中场次、最近赛果和剩余赛程。
 const focusMatch = computed(
   () =>
+    // 按可预测、进行中、最近完赛和剩余赛程依次回退，减少空白展示。
     upcoming.value.find((m) => !isMatchLocked(m, now.value)) ??
     upcoming.value.find((m) => m.status === 'live') ??
     completed.value[0] ??
     upcoming.value[0],
 )
+// 注释修改时间：2026-10-22
+// 用途与逻辑：统计可预测场次，在完整赛程中按当前时刻排除已经锁定的比赛。
 const pendingCount = computed(
   () => matches.value.filter((m) => !isMatchLocked(m, now.value)).length,
 )
+// 注释修改时间：2026-10-22
+// 用途与逻辑：生成工作台日期，依据当前时刻按上海时区展示中文年月日和星期。
 const date = computed(() =>
   new Intl.DateTimeFormat('zh-CN', {
     timeZone: 'Asia/Shanghai',
@@ -149,6 +190,8 @@ const date = computed(() =>
     weekday: 'long',
   }).format(new Date(now.value)),
 )
+// 注释修改时间：2026-10-22
+// 用途与逻辑：构建统计卡片，将预测总量、方向命中率、精确比分和待开赛数量映射为展示项。
 const statCards = computed(() => [
   {
     title: '已记录预测',
@@ -183,68 +226,109 @@ const statCards = computed(() => [
     tone: 'blue',
   },
 ])
+// 注释修改时间：2026-10-22
+// 用途与逻辑：切换工作区栏目，必要时清空搜索，同步栏目与路由，并按动效偏好回到页首。
 function navigate(id: Section) {
+  // 跨阵容工作区切换时清空搜索，避免不同页面沿用不适用的筛选词。
   if (section.value !== id && (id === 'squad' || section.value === 'squad')) query.value = ''
+  // 先同步当前栏目，再根据目标栏目决定是否需要更新路由。
   section.value = id
   const path = id === 'squad' ? '/squad' : '/'
   if (route.path !== path) void router.push(path)
+  // 回到页首时遵循用户的减少动效偏好，避免强制播放滚动动画。
   window.scrollTo({
     top: 0,
     behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
   })
 }
+// 注释修改时间：2026-10-22
+// 用途与逻辑：打开预测编辑，将目标比赛设为选中状态，同时清除上一次的操作错误。
 function openPrediction(match: Match) {
+  // 保存目标比赛并清除旧错误，由选中状态驱动预测弹窗展示。
   selected.value = match
   error.value = ''
 }
+// 注释修改时间：2026-10-22
+// 用途与逻辑：打开比赛详情，先记录返回栏目，再按比赛编号导航并立即滚动到页首。
 function openMatchDetails(match: Match) {
+  // 进入详情前记住原栏目，使返回按钮可以恢复用户的浏览上下文。
   if (section.value !== 'match') previousSection.value = section.value
+  // 通过命名路由携带比赛编号，再将详情页面定位到顶部。
   void router.push({ name: 'MatchDetails', params: { matchId: match.id } })
   window.scrollTo({ top: 0, behavior: 'instant' })
 }
+// 注释修改时间：2026-10-22
+// 用途与逻辑：关闭比赛详情，通过统一导航方法返回进入详情前的工作区栏目。
 function closeMatchDetails() {
+  // 复用统一导航方法，确保返回时路由、栏目和滚动行为保持一致。
   navigate(previousSection.value)
 }
+// 注释修改时间：2026-10-22
+// 用途与逻辑：展示阿森纳总览，启用球队筛选并重置联赛与搜索，再切换到总览栏目。
 function showArsenal() {
+  // 恢复球队专属总览条件，清除联赛和搜索造成的范围限制。
   onlyArsenal.value = true
   league.value = 'all'
   query.value = ''
+  // 通过统一导航入口切换栏目，避免单独修改路由遗漏滚动处理。
   navigate('overview')
 }
+// 注释修改时间：2026-10-22
+// 用途与逻辑：切换预测赛事范围，更新联赛并清空搜索，再导航到比分预测栏目。
 function selectCompetition(value: League) {
+  // 更新赛事范围后清空旧搜索，再切换到预测列表。
   league.value = value
   query.value = ''
   navigate('predict')
 }
+// 注释修改时间：2026-10-22
+// 用途与逻辑：打开待开赛预测，先关闭信息弹窗，再切换到比分预测栏目。
 function showUpcoming() {
+  // 先关闭模态信息窗口，再展示可继续操作的预测工作区。
   infoDialog.value?.close()
   navigate('predict')
 }
+// 注释修改时间：2026-10-22
+// 用途与逻辑：保存当前比赛预测，校验选中比赛并处理保存错误，成功后关闭编辑并显示反馈。
 function savePrediction(value: Omit<Prediction, 'savedAt'>) {
+  // 没有选中比赛时不写入，防止把预测保存到不明确的目标。
   if (!selected.value) return
+  // 委托统一保存逻辑处理时刻限制与存储，并检查返回的错误信息。
   const message = save(selected.value.id, value)
   if (message) {
     error.value = message
     return
   }
+  // 只有保存成功才关闭编辑，并展示本次操作反馈。
   selected.value = null
   toast.value = '预测已保存，期待终场的答案。'
 }
+// 注释修改时间：2026-10-22
+// 用途与逻辑：打开指定信息面板，先更新面板类型，再调用原生对话框展示。
 function openInfo(kind: typeof infoKind.value) {
+  // 先更新弹窗内容类型，再打开原生模态窗口。
   infoKind.value = kind
   infoDialog.value?.showModal()
 }
+// 注释修改时间：2026-10-22
+// 用途与逻辑：撤回当前比赛预测，校验选中状态并处理移除错误，成功后关闭编辑并提示结果。
 function removePrediction() {
+  // 没有选中比赛时停止撤回，避免操作未知记录。
   if (!selected.value) return
+  // 由统一移除逻辑检查限制，失败时保留弹窗以展示错误。
   const message = remove(selected.value.id)
   if (message) {
     error.value = message
     return
   }
+  // 撤回成功后清除选中比赛，再提示可以于开赛前重新填写。
   selected.value = null
   toast.value = '已撤回本场预测，可以在开赛前重新填写。'
 }
+// 注释修改时间：2026-10-22
+// 用途与逻辑：导出个人预测记录，调用导出工具后根据个人记录数量生成操作提示。
 function download() {
+  // 先执行记录导出，再使用当前个人记录数量生成结果提示。
   exportRecords()
   toast.value = `已导出 ${Object.keys(personal.value).length} 条个人预测记录。`
 }

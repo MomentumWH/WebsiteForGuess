@@ -4,6 +4,8 @@ import type { Match } from '@/data/matches'
 import { summarizeForm } from '@/data/matchDetails'
 import HistoryMatchList from './HistoryMatchList.vue'
 const props = defineProps<{ match: Match; matches: Match[]; loading: boolean }>()
+// 注释修改时间：2026-10-22
+// 用途与逻辑：汇总双方交锋表现，以当前主队为观察对象计算历史胜平负数据。
 const summary = computed(() => summarizeForm(props.matches, props.match.home))
 </script>
 <template>

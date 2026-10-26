@@ -17,8 +17,12 @@ defineEmits<{
   remove: [id: string]
   pointerStart: [event: PointerEvent, id: string]
 }>()
+// 注释修改时间：2026-10-22
+// 用途与逻辑：构建球场位置展示，先索引球员信息，再将阵型位置与已安排球员关联。
 const slots = computed(() => {
+  // 先建立编号到球员的索引，避免为每个位置重复遍历完整名单。
   const index = new Map(props.players.map((p) => [p.id, p]))
+  // 将阵型槽位与安排编号关联，并保留未安排位置的空状态。
   return props.template.slots.map((s) => ({
     ...s,
     playerId: props.assignments[s.id],

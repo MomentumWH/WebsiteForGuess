@@ -19,15 +19,21 @@ const columns: { key: Metric; label: string }[] = [
   { key: 'recoveries', label: '夺回球权' },
   { key: 'cbi', label: '英超防守合计' },
 ]
+// 注释修改时间：2026-10-22
+// 用途与逻辑：生成球员比赛日志，按比赛关联个人统计，并根据主客身份确定对手。
 const rows = computed(() =>
   props.matches.map((match) => {
+    // 使用球员与比赛编号匹配个人统计，避免关联到其他球员的表现。
     const metrics = props.performances.find(
       (p) => p.playerId === props.player.id && p.matchId === match.id,
     )?.metrics
+    // 识别阿森纳所在一方，再将对手和统计信息附加到比赛记录。
     const home = match.home.id === 'arsenal'
     return { match, metrics, home, opponent: home ? match.away : match.home }
   }),
 )
+// 注释修改时间：2026-10-22
+// 用途与逻辑：格式化比赛日志日期，使用上海时区输出两位数月日。
 const date = (value: string) =>
   new Intl.DateTimeFormat('zh-CN', {
     timeZone: 'Asia/Shanghai',

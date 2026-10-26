@@ -4,6 +4,8 @@ import { darkTheme, dateZhCN, zhCN } from 'naive-ui'
 import { useAppStore } from '@/stores/modules/app'
 
 const appStore = useAppStore()
+// 注释修改时间：2026-10-22
+// 用途与逻辑：根据全局主题选择 Naive UI 深色配置，浅色模式返回默认主题。
 const theme = computed(() => (appStore.theme === 'dark' ? darkTheme : null))
 </script>
 

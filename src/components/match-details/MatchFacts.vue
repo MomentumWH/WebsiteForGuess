@@ -4,13 +4,19 @@ import { outcome, type Match, type Prediction } from '@/data/matches'
 import AppIcon from '@/components/matchday/AppIcon.vue'
 const props = defineProps<{ match: Match; prediction?: Prediction }>()
 defineEmits<{ predict: [match: Match] }>()
+// 注释修改时间：2026-10-22
+// 用途与逻辑：生成赛果说明，缺少正式比分时提示缺失，否则比较主客队比分确定结果。
 const winner = computed(() => {
+  // 正式比分缺失时明确提示，不根据实时数据推断最终赛果。
   if (!props.match.actual) return '官方比分暂未提供'
+  // 正式比分可用后，再比较主客队得分生成结果说明。
   const [home, away] = props.match.actual
   return home === away
     ? '双方战平'
     : `${home > away ? props.match.home.name : props.match.away.name}获胜`
 })
+// 注释修改时间：2026-10-22
+// 用途与逻辑：判断是否存在额外赛果差异，同时具备终场比分与正式比分时逐项比较。
 const hasExtraTime = computed(
   () =>
     props.match.finalScore &&

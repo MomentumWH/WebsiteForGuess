@@ -5,7 +5,11 @@ import { formResult, summarizeForm } from '@/data/matchDetails'
 import TeamBadge from '@/components/matchday/TeamBadge.vue'
 import HistoryMatchList from './HistoryMatchList.vue'
 const props = defineProps<{ team: Team; matches: Match[]; side: string; loading: boolean }>()
+// 注释修改时间：2026-10-22
+// 用途与逻辑：汇总球队近期表现，使用当前比赛列表和球队信息计算胜平负概况。
 const summary = computed(() => summarizeForm(props.matches, props.team))
+// 注释修改时间：2026-10-22
+// 用途与逻辑：生成近期战绩标记，将每场比赛编号与当前球队的比赛结果对应。
 const results = computed(() =>
   props.matches.map((m) => ({ id: m.id, result: formResult(m, props.team) })),
 )

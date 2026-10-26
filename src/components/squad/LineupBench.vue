@@ -16,7 +16,11 @@ const emit = defineEmits<{
 const search = shallowRef('')
 const position = shallowRef<Position | 'all'>('all')
 const firstTeam = shallowRef(true)
+// 注释修改时间：2026-10-22
+// 用途与逻辑：构建已上场球员集合，便于候选名单排序时快速判断球员是否已经安排。
 const assigned = computed(() => new Set(props.assigned))
+// 注释修改时间：2026-10-22
+// 用途与逻辑：生成候选球员名单，结合一线队、位置与搜索筛选，并将未安排球员优先排序。
 const visible = computed(() =>
   props.players
     .filter(
@@ -33,7 +37,10 @@ const visible = computed(() =>
         a.name.localeCompare(b.name),
     ),
 )
+// 注释修改时间：2026-10-22
+// 用途与逻辑：启动候选球员拖动，仅在非触摸指针操作时向父组件转发拖动起始事件。
 function start(event: PointerEvent, id: string) {
+  // 非触摸操作才转发指针起点，触摸设备保留现有点击选择流程。
   if (event.pointerType !== 'touch') emit('pointerStart', event, id)
 }
 </script>

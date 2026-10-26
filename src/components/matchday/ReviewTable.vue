@@ -14,11 +14,15 @@ const props = defineProps<{
   scope: string
 }>()
 const viewport = useTemplateRef<HTMLElement>('viewport')
+// 注释修改时间：2026-10-22
+// 用途与逻辑：初始化复盘分页窗口，以比赛及筛选范围为数据源，每批展示二十五场。
 const { visibleMatches, hasMore, showMore } = useMatchWindow(
   () => props.matches,
   () => `${props.league}:${props.full}:${props.scope}`,
   () => 25,
 )
+// 注释修改时间：2026-10-22
+// 用途与逻辑：初始化复盘列表动画，组合联赛和可见比赛编号作为列表变化标识。
 const { beforeLeave, clearLeavingSize } = useListMotion(
   viewport,
   () => `${props.league}:${visibleMatches.value.map((m) => m.id).join('|')}`,

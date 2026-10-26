@@ -11,11 +11,16 @@ const props = defineProps<{
   error: string
 }>()
 defineEmits<{ refresh: [] }>()
+// 注释修改时间：2026-10-22
+// 用途与逻辑：生成技术统计行，按指标定义读取主客队数值，计算可用状态和对比占比。
 const rows = computed(() =>
   statisticDefinitions.map((definition) => {
+    // 按指标读取主客队原始数值，未提供的指标保留为空。
     const values = props.statistics?.metrics[definition.key] ?? [null, null]
+    // 只有双方数值齐全才允许比较，并计算总量供占比使用。
     const available = values.every((value) => value !== null)
     const sum = (values[0] ?? 0) + (values[1] ?? 0)
+    // 统一格式化显示值；数值缺失或总量为零时不生成有效占比。
     return {
       ...definition,
       home: formatStatistic(definition.key, values[0]!),
@@ -28,7 +33,11 @@ const rows = computed(() =>
     }
   }),
 )
+// 注释修改时间：2026-10-22
+// 用途与逻辑：读取技术统计来源，随传入统计数据变化同步派生来源状态。
 const source = computed(() => props.statistics?.source)
+// 注释修改时间：2026-10-22
+// 用途与逻辑：生成统计提示，优先显示错误，其次说明旧缓存状态或数据源信息。
 const notice = computed(
   () =>
     props.error ||
@@ -37,6 +46,8 @@ const notice = computed(
       : source.value?.message) ||
     '',
 )
+// 注释修改时间：2026-10-22
+// 用途与逻辑：格式化统计更新时间，使用上海时区显示月日时分，缺失时返回空文本。
 const updatedAt = computed(() =>
   source.value?.updatedAt
     ? new Intl.DateTimeFormat('zh-CN', {

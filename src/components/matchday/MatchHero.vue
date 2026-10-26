@@ -11,7 +11,10 @@ defineEmits<{
   detail: [match: Match]
   navigate: [destination: HeroDestination]
 }>()
+// 注释修改时间：2026-10-22
+// 用途与逻辑：设置轮播内容的交互隔离状态，仅对有效 HTML 元素更新 inert 属性。
 function setInert(element: unknown, inert: boolean) {
+  // 仅修改真实 HTML 节点，避免过渡钩子传入其他类型时访问无效属性。
   if (element instanceof HTMLElement) element.inert = inert
 }
 </script>

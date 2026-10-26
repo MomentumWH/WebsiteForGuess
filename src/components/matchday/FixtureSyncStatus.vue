@@ -8,21 +8,32 @@ const emit = defineEmits<{ refresh: [] }>()
 type Feedback = 'idle' | 'loading' | 'success' | 'warning' | 'error'
 const feedback = shallowRef<Feedback>('idle')
 const syncButton = useTemplateRef<HTMLElement>('syncButton')
+// 注释修改时间：2026-10-22
+// 用途与逻辑：合并同步忙碌状态，外部请求或手动反馈仍在加载时均视为忙碌。
 const busy = computed(() => props.loading || feedback.value === 'loading')
+// 注释修改时间：2026-10-22
+// 用途与逻辑：生成同步按钮文案，按忙碌、成功、部分更新或错误状态依次选择提示。
 const buttonLabel = computed(() => {
+  // 忙碌状态优先于历史反馈，避免请求过程中出现可再次同步的提示。
   if (busy.value) return '正在同步'
   if (feedback.value === 'success') return '同步完成'
   if (feedback.value === 'warning') return '部分已更新'
   if (feedback.value === 'error') return '重新同步'
   return '同步赛程'
 })
+// 注释修改时间：2026-10-22
+// 用途与逻辑：生成同步反馈标题，将加载、成功和部分更新状态映射为对应说明。
 const feedbackTitle = computed(() => {
+  // 根据手动同步阶段选择标题，未完成状态统一使用默认说明。
   if (feedback.value === 'loading') return '正在更新英超与欧冠赛程'
   if (feedback.value === 'success') return '赛程与赛果已同步'
   if (feedback.value === 'warning') return '部分赛事暂时无法更新'
   return '本次同步未完成'
 })
+// 注释修改时间：2026-10-22
+// 用途与逻辑：生成同步反馈描述，按同步结果与已有来源时间区分完成、保留数据或缺失。
 const feedbackDescription = computed(() => {
+  // 加载与成功直接反馈，其余情况根据已有时间区分缓存与数据缺失。
   if (feedback.value === 'loading') return '正在核对英超、欧冠的赛程与赛果，请稍候。'
   if (feedback.value === 'success') return '已核对英超与欧冠数据，可以继续记录你的预测。'
   return props.sources.some((source) => source.updatedAt)
@@ -31,36 +42,51 @@ const feedbackDescription = computed(() => {
 })
 let startedAt = 0
 let feedbackTimer: number | undefined
+// 注释修改时间：2026-10-22
+// 用途与逻辑：关闭同步反馈，取消反馈计时并切回空闲，视图更新后按需恢复按钮焦点。
 function dismissFeedback() {
+  // 先停止反馈计时并关闭提示，避免旧定时器再次改写状态。
   window.clearTimeout(feedbackTimer)
   feedback.value = 'idle'
+  // 等待视图更新后，在外部请求已经结束时恢复同步按钮焦点。
   void nextTick(() => {
+    // 只在没有同步请求进行时恢复焦点，避免聚焦不可操作的按钮。
     if (!props.loading) syncButton.value?.focus({ preventScroll: true })
   })
 }
+// 注释修改时间：2026-10-22
+// 用途与逻辑：请求手动同步，拦截重复操作，记录开始时间并进入加载反馈，再向上通知刷新。
 function requestRefresh() {
+  // 忙碌期间拒绝再次刷新，避免重复请求和重叠反馈。
   if (busy.value) return
+  // 重置计时起点并进入加载阶段，再通知父组件执行实际同步。
   window.clearTimeout(feedbackTimer)
   startedAt = Date.now()
   feedback.value = 'loading'
   emit('refresh')
 }
+// 注释修改时间：2026-10-22
+// 用途与逻辑：监听请求结束，仅处理手动同步反馈，保证最短展示时间后计算结果并安排关闭。
 watch(
   () => props.loading,
   (loading) => {
     // Background refreshes stay quiet; this feedback follows the user's click.
+    // 只跟踪用户主动触发的反馈，不让后台自动刷新弹出提示。
     if (feedback.value !== 'loading') return
     window.clearTimeout(feedbackTimer)
+    // 请求仍进行时继续等待，结束后再安排结果反馈。
     if (loading) return
     // Keep fast cached responses readable without delaying the actual data update.
     feedbackTimer = window.setTimeout(
       () => {
+        // 结合请求错误和两个联赛的来源状态，判定失败、成功或部分更新。
         feedback.value = props.error
           ? 'error'
           : props.sources.length === 2 &&
               props.sources.every((source) => source.state === 'success')
             ? 'success'
             : 'warning'
+        // 按结果类型设置关闭延迟，成功提示较短，异常提示留出阅读时间。
         feedbackTimer = window.setTimeout(
           dismissFeedback,
           feedback.value === 'success' ? 1200 : 2600,
@@ -70,8 +96,13 @@ watch(
     )
   },
 )
+// 注释修改时间：2026-10-22
+// 用途与逻辑：卸载时取消反馈定时器，防止组件销毁后仍更新提示状态。
 onUnmounted(() => window.clearTimeout(feedbackTimer))
+// 注释修改时间：2026-10-22
+// 用途与逻辑：格式化来源更新时间，按上海时区显示月日时分，缺失时说明尚未同步。
 function updatedLabel(value: string | null) {
+  // 只格式化已存在的来源时间，缺失时保留明确的尚未同步说明。
   return value
     ? new Intl.DateTimeFormat('zh-CN', {
         timeZone: 'Asia/Shanghai',

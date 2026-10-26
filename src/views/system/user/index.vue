@@ -28,6 +28,8 @@ const columns: DataTableColumns<UserRow> = [
     title: '状态',
     key: 'status',
     width: 100,
+    // 注释修改时间：2026-10-22
+    // 用途与逻辑：渲染用户状态单元格，根据启用状态选择标签颜色和对应显示文本。
     render: (row) =>
       h(
         NTag,
@@ -39,6 +41,8 @@ const columns: DataTableColumns<UserRow> = [
     title: '操作',
     key: 'actions',
     width: 120,
+    // 注释修改时间：2026-10-22
+    // 用途与逻辑：渲染用户操作单元格，创建编辑按钮并绑定当前行的提示事件。
     render: (row) =>
       h(
         NButton,
@@ -46,6 +50,8 @@ const columns: DataTableColumns<UserRow> = [
           size: 'small',
           type: 'primary',
           quaternary: true,
+          // 注释修改时间：2026-10-22
+          // 用途与逻辑：响应示例编辑操作，根据当前行用户名显示提示，不提交真实数据修改。
           onClick: () => message.info(`编辑：${row.username}`),
         },
         { default: () => '编辑' },

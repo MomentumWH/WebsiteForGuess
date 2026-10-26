@@ -15,6 +15,8 @@ const props = defineProps<{
   matches: Match[]
   performances: PlayerPerformance[]
 }>()
+// 注释修改时间：2026-10-22
+// 用途与逻辑：读取球员位置说明，按当前球员位置编号匹配预设位置配置。
 const role = computed(() => positions.find((p) => p.id === props.summary.player.position))
 const statusLabels = {
   available: '可出场',
@@ -33,14 +35,19 @@ const stats: { key: Metric; label: string; unit?: string }[] = [
   { key: 'saves', label: '扑救' },
   { key: 'tackles', label: '抢断' },
 ]
+// 注释修改时间：2026-10-22
+// 用途与逻辑：生成球员近期比赛明细，关联个人统计并按阿森纳主客身份计算对手与胜平负。
 const recent = computed(() =>
   props.matches.map((match) => {
+    // 按球员与比赛双编号查找统计，缺失值保持缺失，不补造个人数据。
     const metrics = props.performances.find(
       (p) => p.playerId === props.summary.player.id && p.matchId === match.id,
     )?.metrics
+    // 以阿森纳的主客身份选择双方比分，再计算该队视角下的胜平负。
     const home = match.home.id === 'arsenal'
     const us = match.actual?.[home ? 0 : 1] ?? 0
     const them = match.actual?.[home ? 1 : 0] ?? 0
+    // 将比赛、个人统计、对手与比分组成详情行，供界面统一展示。
     return {
       match,
       metrics,
@@ -51,6 +58,8 @@ const recent = computed(() =>
     }
   }),
 )
+// 注释修改时间：2026-10-22
+// 用途与逻辑：格式化球员比赛日期，按上海时区将开球时间显示为月日。
 const date = (value: string) =>
   new Intl.DateTimeFormat('zh-CN', {
     timeZone: 'Asia/Shanghai',

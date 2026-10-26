@@ -21,7 +21,10 @@ const {
   toggleAutoplay,
 } = useHeroCarousel(root, heroSlides.length)
 
+// 注释修改时间：2026-10-22
+// 用途与逻辑：处理轮播焦点离开，仅在新焦点不属于轮播容器时解除聚焦状态。
 function onFocusOut(event: FocusEvent) {
+  // 检查下一个焦点是否仍位于轮播内部，只有真正离开容器才解除聚焦。
   if (!(event.relatedTarget instanceof HTMLElement) || !root.value?.contains(event.relatedTarget)) {
     focused.value = false
   }

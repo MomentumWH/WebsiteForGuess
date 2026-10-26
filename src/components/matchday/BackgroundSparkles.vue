@@ -2,9 +2,13 @@
 import { onMounted, onScopeDispose, shallowRef, type CSSProperties } from 'vue'
 
 const visible = shallowRef(true)
+// 注释修改时间：2026-10-22
+// 用途与逻辑：生成背景粒子，通过固定索引分布和偏移参数构建位置、颜色与动画样式。
 const particles = Array.from({ length: 108 }, (_, index) => {
+  // 使用确定性的网格序号和扰动值分散粒子，保持每次渲染的布局一致。
   const cell = (index * 31) % 108
   const jitter = ((index * 37 + 11) % 97) / 97
+  // 将位置、色彩、运动幅度与动画延迟组合为各粒子的独立样式。
   return {
     id: index,
     star: index % 9 === 0,
@@ -22,13 +26,21 @@ const particles = Array.from({ length: 108 }, (_, index) => {
   }
 })
 
+// 注释修改时间：2026-10-22
+// 用途与逻辑：同步背景可见状态，依据页面是否可见控制粒子动画的显示。
 function onVisibilityChange() {
+  // 以浏览器页面可见性为准更新显示开关，隐藏页面不继续展示动画。
   visible.value = document.visibilityState === 'visible'
 }
+// 注释修改时间：2026-10-22
+// 用途与逻辑：初始化可见状态并注册页面可见性监听，使后台页面能够暂停展示。
 onMounted(() => {
+  // 先同步一次当前状态，再监听后续页面可见性变化。
   onVisibilityChange()
   document.addEventListener('visibilitychange', onVisibilityChange)
 })
+// 注释修改时间：2026-10-22
+// 用途与逻辑：释放页面可见性监听，在组件作用域销毁时移除对应事件处理器。
 onScopeDispose(() => document.removeEventListener('visibilitychange', onVisibilityChange))
 </script>
 

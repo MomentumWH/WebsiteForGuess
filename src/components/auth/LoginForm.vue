@@ -16,13 +16,18 @@ const rules: FormRules = {
   password: { required: true, message: '请输入密码', trigger: 'blur' },
 }
 
+// 注释修改时间：2026-10-22
+// 用途与逻辑：提交登录表单，先阻止重复请求并完成校验，再规范用户名并调用登录流程。
 async function handleSubmit(): Promise<void> {
+  // 登录进行中或表单尚未挂载时停止处理，避免重复提交和空引用。
   if (loading.value || !formRef.value) return
   try {
+    // 先执行表单规则校验，校验失败直接返回，不发起登录请求。
     await formRef.value.validate()
   } catch {
     return
   }
+  // 仅规范用户名首尾空格，保持密码原样传给统一登录流程。
   await login({ username: model.username.trim(), password: model.password })
 }
 </script>

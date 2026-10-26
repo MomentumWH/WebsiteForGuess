@@ -19,6 +19,8 @@ const onlyArsenal = defineModel<boolean>('onlyArsenal', { required: true })
 defineEmits<{ predict: [match: Match]; detail: [match: Match]; viewAll: [] }>()
 const viewport = useTemplateRef<HTMLElement>('viewport')
 const current = useTemplateRef<HTMLElement>('current')
+// 注释修改时间：2026-10-22
+// 用途与逻辑：初始化赛程时间线，传入响应式比赛、筛选标识与预览数量，协调分页和当前位置。
 const {
   past,
   prepending,
@@ -38,6 +40,8 @@ const {
   viewport,
   current,
 )
+// 注释修改时间：2026-10-22
+// 用途与逻辑：初始化列表离场动画，使用联赛及当前比赛编号序列标识列表变化。
 const { beforeLeave, clearLeavingSize } = useListMotion(
   viewport,
   () => `${league.value}:${[...past.value, ...future.value].map((m) => m.id).join('|')}`,
