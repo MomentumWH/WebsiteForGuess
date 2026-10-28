@@ -4,6 +4,7 @@ import { setupRouter } from './router'
 import { setupStore } from './stores'
 import './assets/styles/index.scss'
 import './assets/styles/matchday.scss'
+import './assets/styles/liquid-glass.scss'
 
 function bootstrap() {
   const app = createApp(App)

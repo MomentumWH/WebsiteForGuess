@@ -2,11 +2,18 @@
 import { metricText, positions, type PlayerSummary, type Position, type Metric } from '@/data/squad'
 import PlayerPortrait from './PlayerPortrait.vue'
 import AppIcon from '@/components/matchday/AppIcon.vue'
+import LiquidGlassTabs from '@/components/matchday/LiquidGlassTabs.vue'
 defineProps<{ players: PlayerSummary[]; selected: string; emptyMessage: string }>()
 defineEmits<{ select: [id: string] }>()
 const position = defineModel<Position | 'all'>('position', { default: 'all' })
 const sort = defineModel<'minutes' | 'goals' | 'appearances'>('sort', { default: 'minutes' })
 const firstTeam = defineModel<boolean>('firstTeam', { default: true })
+// 创建时间：2026-10-28；调用记录：GPT-20261028-002
+// 用途与逻辑：为位置筛选生成玻璃控件选项，复用原位置编号与标签，不改变筛选条件。
+const positionOptions: { value: Position | 'all'; label: string }[] = [
+  { value: 'all', label: '全部位置' },
+  ...positions.map((position) => ({ value: position.id, label: position.label })),
+]
 const columns: { key: Metric; label: string }[] = [
   { key: 'appearances', label: '出场' },
   { key: 'minutes', label: '分钟' },
@@ -36,17 +43,12 @@ const columns: { key: Metric; label: string }[] = [
       >
     </div>
     <div class="table-filters">
-      <div class="position-filters" aria-label="按球员位置筛选">
-        <button :aria-pressed="position === 'all'" @click="position = 'all'">全部位置</button
-        ><button
-          v-for="role in positions"
-          :key="role.id"
-          :aria-pressed="position === role.id"
-          @click="position = role.id"
-        >
-          {{ role.label }}
-        </button>
-      </div>
+      <LiquidGlassTabs
+        v-model="position"
+        :items="positionOptions"
+        label="按球员位置筛选"
+        variant="wrap"
+      />
       <label class="first-team-filter"
         ><input v-model="firstTeam" type="checkbox" />仅英超名单球员</label
       >
@@ -183,26 +185,6 @@ const columns: { key: Metric; label: string }[] = [
   align-items: center;
   gap: 12px;
   margin: 23px 0 16px;
-}
-.position-filters {
-  display: flex;
-  gap: 5px;
-  background: var(--md-soft, #f5f7f0);
-  padding: 4px;
-  border-radius: 6px;
-}
-.position-filters button {
-  background: transparent;
-  border: 0;
-  padding: 6px 12px;
-  border-radius: 4px;
-  font-size: 14px;
-  color: var(--md-muted, #9aa28b);
-}
-.position-filters button[aria-pressed='true'] {
-  color: var(--md-text, #46683a);
-  background: var(--md-surface, #fff);
-  box-shadow: 0 1px 4px #263f1810;
 }
 .first-team-filter {
   display: flex;
@@ -397,14 +379,6 @@ const columns: { key: Metric; label: string }[] = [
   .table-filters {
     flex-wrap: wrap;
     margin: 18px 0 12px;
-  }
-  .position-filters {
-    width: 100%;
-    justify-content: space-between;
-    gap: 0;
-  }
-  .position-filters button {
-    padding: 6px 9px;
   }
   .table-caption {
     font-size: 11px;

@@ -22,6 +22,8 @@ import ReviewTable from './ReviewTable.vue'
 import PredictionDialog from './PredictionDialog.vue'
 import LeagueFilter from './LeagueFilter.vue'
 import BackgroundSparkles from './BackgroundSparkles.vue'
+import WorkspaceNavigation from './WorkspaceNavigation.vue'
+import { useGlassSurfaces } from '@/composables/useGlassSurfaces'
 
 // 注释修改时间：2026-10-22
 // 用途与逻辑：按需加载阵容工作区，通过异步组件将阵容功能独立为延迟加载模块。
@@ -59,6 +61,13 @@ const section = shallowRef<Section>(
   route.name === 'MatchDetails' ? 'match' : route.path === '/squad' ? 'squad' : 'overview',
 )
 const previousSection = shallowRef<Section>('overview')
+const glassRoot = useTemplateRef<HTMLElement>('glassRoot')
+// 创建时间：2026-10-28；调用记录：GPT-20261028-002
+// 用途与逻辑：向公共界面动效提供栏目状态，切换后仅更新装饰动画，不重置数据组件。
+function currentGlassScene() {
+  return section.value
+}
+useGlassSurfaces(glassRoot, currentGlassScene)
 // 注释修改时间：2026-10-22
 // 用途与逻辑：读取详情比赛编号，仅接受字符串路由参数，其余情况返回空编号。
 const detailId = computed(() =>
@@ -101,13 +110,6 @@ const selectedMatch = computed(() =>
     ? (matches.value.find((m) => m.id === selected.value!.id) ?? selected.value)
     : null,
 )
-const navigation: { id: Section; name: string; icon: string }[] = [
-  { id: 'overview', name: '赛事总览', icon: 'grid' },
-  { id: 'predict', name: '比分预测', icon: 'target' },
-  { id: 'squad', name: '球队阵容', icon: 'squad' },
-  { id: 'review', name: '预测复盘', icon: 'history' },
-  { id: 'stats', name: '数据统计', icon: 'chart' },
-]
 const titles = {
   overview: ['赛事总览', '每一份预测，都值得被认真对待。'],
   predict: ['比分预测', '在哨声响起前，把你的直觉变成答案。'],
@@ -334,7 +336,7 @@ function download() {
 }
 </script>
 <template>
-  <div class="matchday-app">
+  <div ref="glassRoot" class="matchday-app glass-workspace">
     <BackgroundSparkles />
     <aside class="sidebar" aria-label="主导航">
       <a class="brand" href="/" aria-label="MATCHDAY 首页"
@@ -350,19 +352,7 @@ function download() {
         ><span>MATCHDAY<small>让热爱，有迹可循</small></span></a
       >
       <div class="workspace-label">我的工作台<span>PERSONAL</span></div>
-      <nav class="nav-list">
-        <button
-          v-for="item in navigation"
-          :key="item.id"
-          :class="{ active: section === item.id }"
-          :aria-current="section === item.id ? 'page' : undefined"
-          @click="navigate(item.id)"
-        >
-          <AppIcon :name="item.icon" :size="19" /><span>{{ item.name }}</span
-          ><span v-if="item.id === 'predict'" class="nav-count">{{ pendingCount }}</span
-          ><span v-if="section === item.id" class="nav-active-dot"></span>
-        </button>
-      </nav>
+      <WorkspaceNavigation :active="section" :pending-count="pendingCount" @select="navigate" />
       <div class="sidebar-divider"></div>
       <div class="following-label">我的关注<span>01</span></div>
       <button class="followed-team" @click="showArsenal">
@@ -740,53 +730,6 @@ function download() {
   font-size: 11px;
   letter-spacing: 1px;
   color: var(--md-muted, #b5bcb1);
-}
-.nav-list {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-}
-.nav-list > button {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  border: 0;
-  background: transparent;
-  min-height: 43px;
-  border-radius: 7px;
-  padding: 0 13px;
-  color: var(--md-secondary, #87917f);
-  font-family: inherit;
-  font-size: 16px;
-  text-align: left;
-  position: relative;
-}
-.nav-list > button:hover {
-  background: var(--md-soft, #f5f8ef);
-  color: var(--md-text, #3a6340);
-}
-.nav-list > button.active {
-  background: var(--md-soft, #eaf2df);
-  color: var(--md-text, #446b37);
-  font-weight: 650;
-}
-.nav-active-dot {
-  margin-left: auto;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: #5c823f;
-}
-.nav-count {
-  margin-left: auto;
-  font-size: 13px;
-  background: var(--md-soft, #f0f3eb);
-  padding: 1px 6px;
-  border-radius: 4px;
-  color: var(--md-muted, #9fa88f);
-}
-.nav-list > button.active .nav-count {
-  display: none;
 }
 .sidebar-divider {
   height: 1px;
@@ -1562,7 +1505,6 @@ function download() {
   }
   .brand > span:last-child,
   .workspace-label,
-  .nav-list > button > span,
   .following-label,
   .followed-team > span:nth-child(2),
   .following-dot,
@@ -1572,16 +1514,6 @@ function download() {
   .profile-button > span:nth-child(2),
   .profile-button > svg {
     display: none;
-  }
-  .nav-list {
-    width: 100%;
-    gap: 12px;
-  }
-  .nav-list > button {
-    padding: 0;
-    justify-content: center;
-    width: 45px;
-    height: 45px;
   }
   .sidebar-divider {
     width: 28px;
@@ -1659,27 +1591,6 @@ function download() {
   .followed-team,
   .sidebar-bottom {
     display: none;
-  }
-  .nav-list {
-    flex-direction: row;
-    justify-content: space-around;
-    gap: 0;
-  }
-  .nav-list > button {
-    width: 70px;
-    height: 52px;
-    flex-direction: column;
-    gap: 4px;
-    background: transparent !important;
-    font-size: 13px;
-    color: var(--md-muted, #9ca98b);
-  }
-  .nav-list > button > span:nth-child(2) {
-    display: block;
-    font-size: 12px;
-  }
-  .nav-list > button.active {
-    color: var(--md-text, #315b3a);
   }
   .workspace {
     margin-left: 0;

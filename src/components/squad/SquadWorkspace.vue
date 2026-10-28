@@ -15,6 +15,7 @@ import PlayerDetail from './PlayerDetail.vue'
 import SquadTable from './SquadTable.vue'
 import PlayerMatchLog from './PlayerMatchLog.vue'
 import AppIcon from '@/components/matchday/AppIcon.vue'
+import LeagueFilter from '@/components/matchday/LeagueFilter.vue'
 const props = defineProps<{ query: string }>()
 const { feed, loading, error, sources, refresh } = useArsenalSquad()
 const league = shallowRef<League>('all')
@@ -76,11 +77,6 @@ const dateRange = computed(() => {
     ? `${shortDate(dates[dates.length - 1]!)} — ${shortDate(dates[0]!)}`
     : '尚无已完赛比赛'
 })
-const leagueOptions: { id: League; label: string }[] = [
-  { id: 'all', label: '英超 + 欧冠' },
-  { id: 'pl', label: '英超' },
-  { id: 'ucl', label: '欧冠' },
-]
 // 注释修改时间：2026-10-22
 // 用途与逻辑：统计各位置人数，以注册球员名单为基准逐项计算位置分布。
 const positionCounts = computed(() =>
@@ -133,16 +129,7 @@ function selectFromTable(id: string) {
         <p>读懂场上的每一个位置，让下一次判断更有依据。</p>
       </div>
       <div class="squad-actions">
-        <div class="squad-leagues" aria-label="球员统计赛事">
-          <button
-            v-for="option in leagueOptions"
-            :key="option.id"
-            :aria-pressed="league === option.id"
-            @click="league = option.id"
-          >
-            {{ option.label }}
-          </button>
-        </div>
+        <LeagueFilter v-model="league" label="球员统计赛事" />
         <button class="squad-refresh" :disabled="loading" @click="refresh">
           <AppIcon name="history" :size="14" :class="{ spinning: loading }" />{{
             loading ? '同步中' : '同步球员'
@@ -288,26 +275,6 @@ function selectFromTable(id: string) {
   align-items: center;
   gap: 10px;
   flex-shrink: 0;
-}
-.squad-leagues {
-  display: flex;
-  gap: 3px;
-  background: var(--md-soft, #edf2e5);
-  padding: 4px;
-  border-radius: 6px;
-}
-.squad-leagues button {
-  font-size: 14px;
-  border: 0;
-  background: transparent;
-  color: var(--md-secondary, #8c997d);
-  padding: 7px 11px;
-  border-radius: 4px;
-}
-.squad-leagues button[aria-pressed='true'] {
-  color: var(--md-text, #456b38);
-  background: var(--md-surface, #fff);
-  box-shadow: 0 2px 4px #233f1810;
 }
 .squad-refresh {
   display: inline-flex;

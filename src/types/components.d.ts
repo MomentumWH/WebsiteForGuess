@@ -23,6 +23,7 @@ declare module 'vue' {
     LeagueFilter: typeof import('./../components/matchday/LeagueFilter.vue')['default']
     LineupBench: typeof import('./../components/squad/LineupBench.vue')['default']
     LineupPitch: typeof import('./../components/squad/LineupPitch.vue')['default']
+    LiquidGlassTabs: typeof import('./../components/matchday/LiquidGlassTabs.vue')['default']
     LoginForm: typeof import('./../components/auth/LoginForm.vue')['default']
     MatchdayCarousel: typeof import('./../components/matchday/MatchdayCarousel.vue')['default']
     MatchdayWorkspace: typeof import('./../components/matchday/MatchdayWorkspace.vue')['default']
@@ -82,5 +83,6 @@ declare module 'vue' {
     StatsPanel: typeof import('./../components/matchday/StatsPanel.vue')['default']
     TeamBadge: typeof import('./../components/matchday/TeamBadge.vue')['default']
     TeamRecentForm: typeof import('./../components/match-details/TeamRecentForm.vue')['default']
+    WorkspaceNavigation: typeof import('./../components/matchday/WorkspaceNavigation.vue')['default']
   }
 }

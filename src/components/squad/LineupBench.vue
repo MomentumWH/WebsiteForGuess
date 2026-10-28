@@ -3,6 +3,7 @@ import { computed, shallowRef } from 'vue'
 import { positions, type Position, type SquadPlayer } from '@/data/squad'
 import PlayerPortrait from './PlayerPortrait.vue'
 import AppIcon from '@/components/matchday/AppIcon.vue'
+import LiquidGlassTabs from '@/components/matchday/LiquidGlassTabs.vue'
 const props = defineProps<{
   players: SquadPlayer[]
   assigned: string[]
@@ -15,6 +16,12 @@ const emit = defineEmits<{
 }>()
 const search = shallowRef('')
 const position = shallowRef<Position | 'all'>('all')
+// 创建时间：2026-10-28；调用记录：GPT-20261028-002
+// 用途与逻辑：将候选席的原位置枚举映射为玻璃筛选选项，选人和拖放仍使用原球员编号。
+const positionOptions: { value: Position | 'all'; label: string }[] = [
+  { value: 'all', label: '全部' },
+  ...positions.map((position) => ({ value: position.id, label: position.label })),
+]
 const firstTeam = shallowRef(true)
 // 注释修改时间：2026-10-22
 // 用途与逻辑：构建已上场球员集合，便于候选名单排序时快速判断球员是否已经安排。
@@ -64,17 +71,12 @@ function start(event: PointerEvent, id: string) {
         aria-label="搜索阵容候选球员"
         placeholder="搜索姓名或号码"
     /></label>
-    <div class="bench-filters" aria-label="候选球员位置">
-      <button :aria-pressed="position === 'all'" @click="position = 'all'">全部</button
-      ><button
-        v-for="role in positions"
-        :key="role.id"
-        :aria-pressed="position === role.id"
-        @click="position = role.id"
-      >
-        {{ role.label }}
-      </button>
-    </div>
+    <LiquidGlassTabs
+      v-model="position"
+      :items="positionOptions"
+      label="候选球员位置"
+      variant="wrap"
+    />
     <label class="bench-first-team"
       ><input v-model="firstTeam" type="checkbox" />仅英超名单球员</label
     >
@@ -190,24 +192,6 @@ function start(event: PointerEvent, id: string) {
 }
 .bench-search input::placeholder {
   color: var(--md-muted, #a2ac91);
-}
-.bench-filters {
-  display: flex;
-  gap: 3px;
-  margin: 12px 0 9px;
-}
-.bench-filters button {
-  flex: 1;
-  border: 0;
-  padding: 6px 2px;
-  font-size: 14px;
-  color: var(--md-muted, #94a07f);
-  border-radius: 4px;
-  background: transparent;
-}
-.bench-filters button[aria-pressed='true'] {
-  color: var(--md-text, #506d3b);
-  background: var(--md-soft, #e9f0dc);
 }
 .bench-first-team {
   font-size: 13px;

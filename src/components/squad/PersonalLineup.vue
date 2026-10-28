@@ -8,7 +8,14 @@ import LineupPitch from './LineupPitch.vue'
 import LineupBench from './LineupBench.vue'
 import PlayerPortrait from './PlayerPortrait.vue'
 import AppIcon from '@/components/matchday/AppIcon.vue'
+import LiquidGlassTabs from '@/components/matchday/LiquidGlassTabs.vue'
 const props = defineProps<{ players: SquadPlayer[] }>()
+// 创建时间：2026-10-28；调用记录：GPT-20261028-002
+// 用途与逻辑：将既有阵型模板映射为通用玻璃选项，保持阵型编号与切换方法契约一致。
+const formationOptions = formations.map((formation) => ({
+  value: formation.id,
+  label: formation.label,
+}))
 const root = useTemplateRef<HTMLElement>('root')
 const { draft, template, storageError, place, remove, change, clear } = usePersonalLineup()
 const selected = shallowRef('')
@@ -140,16 +147,13 @@ function cancelSelection() {
       </div>
     </div>
     <div class="lineup-toolbar">
-      <div class="lineup-templates" aria-label="我的阵容模板">
-        <button
-          v-for="formation in formations"
-          :key="formation.id"
-          :aria-pressed="draft.formation === formation.id"
-          @click="switchFormation(formation.id)"
-        >
-          {{ formation.label }}
-        </button>
-      </div>
+      <LiquidGlassTabs
+        :model-value="draft.formation"
+        :items="formationOptions"
+        label="我的阵容模板"
+        variant="wrap"
+        @update:model-value="switchFormation"
+      />
       <button
         class="lineup-clear"
         :disabled="!assigned.length"
@@ -275,32 +279,6 @@ function cancelSelection() {
   gap: 12px;
   margin-top: 23px;
 }
-.lineup-templates {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  padding: 4px;
-  background: var(--md-soft, #eff3e8);
-  border: 1px solid var(--md-border, #e5eadc);
-  border-radius: 7px;
-}
-.lineup-templates button {
-  border: 0;
-  border-radius: 4px;
-  background: transparent;
-  color: var(--md-secondary, #8b9b76);
-  font-size: 15px;
-  padding: 8px 14px;
-  font-variant-numeric: tabular-nums;
-  transition:
-    background 0.2s,
-    color 0.2s;
-}
-.lineup-templates button[aria-pressed='true'] {
-  color: var(--md-text, #476637);
-  background: var(--md-surface, #fff);
-  box-shadow: 0 1px 4px #30451d0e;
-}
 .lineup-clear {
   display: flex;
   align-items: center;
@@ -423,9 +401,6 @@ function cancelSelection() {
     grid-template-columns: minmax(0, 1.3fr) minmax(260px, 1fr);
     gap: 13px;
   }
-  .lineup-templates button {
-    padding: 8px 10px;
-  }
 }
 @media (max-width: 850px) {
   .personal-lineup {
@@ -443,13 +418,6 @@ function cancelSelection() {
   .lineup-toolbar {
     align-items: flex-start;
     gap: 6px;
-  }
-  .lineup-templates {
-    gap: 2px;
-  }
-  .lineup-templates button {
-    padding: 8px;
-    font-size: 14px;
   }
   .lineup-clear {
     font-size: 13px;

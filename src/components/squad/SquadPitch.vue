@@ -2,7 +2,12 @@
 import { computed } from 'vue'
 import { recommendLineup, type PlayerSummary } from '@/data/squad'
 import PlayerPortrait from './PlayerPortrait.vue'
+import LiquidGlassTabs from '@/components/matchday/LiquidGlassTabs.vue'
 const formation = defineModel<'433' | '4231'>('formation', { default: '433' })
+const formationOptions = [
+  { value: '433', label: '4–3–3' },
+  { value: '4231', label: '4–2–3–1' },
+] as const
 const props = defineProps<{ players: PlayerSummary[]; selected: string }>()
 defineEmits<{ select: [id: string] }>()
 // 注释修改时间：2026-10-22
@@ -20,10 +25,7 @@ const rows = computed(() => recommendLineup(props.players, formation.value))
     </div>
     <div class="pitch-toolbar">
       <span><i></i>按近五场出场时间排列</span>
-      <div class="formation-control" aria-label="参考阵型">
-        <button :aria-pressed="formation === '433'" @click="formation = '433'">4–3–3</button
-        ><button :aria-pressed="formation === '4231'" @click="formation = '4231'">4–2–3–1</button>
-      </div>
+      <LiquidGlassTabs v-model="formation" :items="formationOptions" label="参考阵型" />
     </div>
     <div class="football-pitch" :class="{ 'five-lines': formation === '4231' }">
       <div class="pitch-markings" aria-hidden="true">
@@ -122,27 +124,6 @@ const rows = computed(() => recommendLineup(props.players, formation.value))
   height: 5px;
   background: #bbd495;
   border-radius: 50%;
-}
-.formation-control {
-  display: flex;
-  background: #092b2044;
-  border: 1px solid #acc99b26;
-  padding: 3px;
-  border-radius: 6px;
-  gap: 2px;
-}
-.formation-control button {
-  border: 0;
-  background: transparent;
-  color: #a7bb99;
-  padding: 5px 9px;
-  font-size: 14px;
-  border-radius: 4px;
-  font-variant-numeric: tabular-nums;
-}
-.formation-control button[aria-pressed='true'] {
-  color: #183d2a;
-  background: #d9e6b6;
 }
 .football-pitch {
   position: relative;
@@ -355,9 +336,6 @@ const rows = computed(() => recommendLineup(props.players, formation.value))
   }
   .pitch-toolbar {
     font-size: 12px;
-  }
-  .formation-control button {
-    padding: 5px 6px;
   }
 }
 </style>

@@ -16,7 +16,7 @@ const theme = computed(() => (appStore.theme === 'dark' ? darkTheme : null))
       <n-dialog-provider>
         <n-notification-provider>
           <n-loading-bar-provider>
-            <n-element class="admin-root"><slot /></n-element>
+            <n-element class="admin-root" :data-glass-theme="appStore.theme"><slot /></n-element>
           </n-loading-bar-provider>
         </n-notification-provider>
       </n-dialog-provider>

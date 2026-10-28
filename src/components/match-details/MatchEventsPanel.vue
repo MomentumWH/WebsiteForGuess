@@ -4,6 +4,7 @@ import type { Match } from '@/data/matches'
 import { eventTime, type MatchEvents } from '@/data/matchEvents'
 import AppIcon from '@/components/matchday/AppIcon.vue'
 import TeamBadge from '@/components/matchday/TeamBadge.vue'
+import LiquidGlassTabs from '@/components/matchday/LiquidGlassTabs.vue'
 
 const props = defineProps<{
   match: Match
@@ -70,9 +71,9 @@ const updated = computed(() =>
     : '',
 )
 const filters = [
-  { key: 'all', label: '全部赛况' },
-  { key: 'goal', label: '进球与助攻' },
-  { key: 'substitution', label: '换人记录' },
+  { value: 'all', label: '全部赛况' },
+  { value: 'goal', label: '进球与助攻' },
+  { value: 'substitution', label: '换人记录' },
 ] as const
 </script>
 
@@ -97,16 +98,7 @@ const filters = [
         >已记录 <b>{{ goalCount }}</b> 次进球 · <b>{{ subCount }}</b> 次换人</span
       >
     </div>
-    <div class="events-filters" role="group" aria-label="筛选赛况">
-      <button
-        v-for="item in filters"
-        :key="item.key"
-        :aria-pressed="filter === item.key"
-        @click="filter = item.key"
-      >
-        {{ item.label }}
-      </button>
-    </div>
+    <LiquidGlassTabs v-model="filter" :items="filters" label="筛选赛况" />
     <p v-if="notice" class="events-notice" role="status">
       <AppIcon name="info" :size="16" />{{ notice }}
     </p>
@@ -225,29 +217,6 @@ const filters = [
 .events-intro b {
   color: var(--md-text, #315f49);
   font-variant-numeric: tabular-nums;
-}
-.events-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid var(--md-border, #e6ebe3);
-}
-.events-filters button {
-  border: 1px solid transparent;
-  border-radius: 6px;
-  padding: 8px 13px;
-  background: transparent;
-  color: var(--md-secondary, #758077);
-  font-size: 13px;
-  transition:
-    background 0.2s,
-    color 0.2s;
-}
-.events-filters button[aria-pressed='true'] {
-  color: var(--md-text, #315f49);
-  background: var(--md-selected, #eaf2e2);
-  border-color: var(--md-border, #e1e8dc);
 }
 .events-notice {
   display: flex;

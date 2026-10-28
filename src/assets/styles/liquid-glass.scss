@@ -1,0 +1,789 @@
+// 统一材质只负责界面表现；球队、预测和官方数据状态继续由原组件管理。
+:root,
+[data-glass-theme='light'],
+html[data-matchday-theme='light'] {
+  --lg-canvas: #edf2e8;
+  --lg-surface: #ffffffa8;
+  --lg-inset: #eff5e5a6;
+  --lg-shell: #f8fcf0b8;
+  --lg-dialog: #f6faf0ed;
+  --lg-edge: #ffffffd9;
+  --lg-rim: #536a3926;
+  --lg-shine: #ffffffb8;
+  --lg-glow: #ffffff80;
+  --lg-shadow: #30492a10;
+  --lg-selected: #d2e8bb8c;
+  --lg-ink: #263e33;
+  --lg-secondary: #4d6655;
+  --lg-muted: #637462;
+  --lg-mesh-green: #a5c79c70;
+  --lg-mesh-blue: #bbdcd969;
+  --lg-mesh-gold: #ecd9b466;
+  --lg-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --lg-shadow-panel:
+    inset 0 1px 0 var(--lg-shine), inset 0 -1px 0 var(--lg-rim), 0 8px 28px var(--lg-shadow);
+}
+
+[data-glass-theme='dark'],
+html[data-matchday-theme='dark'] {
+  --lg-canvas: #0c1917;
+  --lg-surface: #1b302ac2;
+  --lg-inset: #243d3269;
+  --lg-shell: #182c26b8;
+  --lg-dialog: #1b302af2;
+  --lg-edge: #d5f2d32b;
+  --lg-rim: #d7efd816;
+  --lg-shine: #e1ffdf21;
+  --lg-glow: #d9f9c51c;
+  --lg-shadow: #00000029;
+  --lg-selected: #a7cd7830;
+  --lg-ink: #e5efdd;
+  --lg-secondary: #c2d3be;
+  --lg-muted: #a0b5a2;
+  --lg-mesh-green: #41684152;
+  --lg-mesh-blue: #20565b45;
+  --lg-mesh-gold: #7b663726;
+}
+
+html[data-matchday-theme] {
+  --md-canvas: var(--lg-canvas);
+  --md-surface: var(--lg-surface);
+  --md-glass: var(--lg-shell);
+  --md-soft: var(--lg-inset);
+  --md-selected: var(--lg-selected);
+  --md-border: var(--lg-rim);
+  --md-text: var(--lg-ink);
+  --md-secondary: var(--lg-secondary);
+  --md-muted: var(--lg-muted);
+}
+
+.matchday-app.glass-workspace {
+  background: var(--lg-canvas);
+
+  // 静态环境光透过玻璃形成层次，不运行大面积常驻模糊动画。
+  &::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse at 17% 5%, var(--lg-mesh-green), transparent 48%),
+      radial-gradient(ellipse at 95% 42%, var(--lg-mesh-blue), transparent 44%),
+      radial-gradient(ellipse at 45% 94%, var(--lg-mesh-gold), transparent 55%);
+  }
+
+  .sidebar,
+  .topbar {
+    border: 1px solid var(--lg-edge);
+    background: var(--lg-shell);
+    box-shadow: var(--lg-shadow-panel);
+    backdrop-filter: blur(24px) saturate(1.35);
+    -webkit-backdrop-filter: blur(24px) saturate(1.35);
+  }
+
+  .sidebar {
+    inset: 14px auto 14px 14px;
+    width: 202px;
+    border-radius: 23px;
+    padding-inline: 14px;
+  }
+
+  .topbar {
+    position: sticky;
+    top: 14px;
+    z-index: 15;
+    height: 62px;
+    margin: 14px 24px 0 18px;
+    padding-inline: 22px;
+    border-radius: 19px;
+  }
+
+  .main-content {
+    padding-top: 30px;
+  }
+
+  .brand-mark {
+    border: 1px solid #c4e5b642;
+    background: linear-gradient(140deg, #60885d, #224a37);
+    box-shadow:
+      inset 0 1px 0 #ffffff48,
+      0 5px 14px #23412c24;
+  }
+
+  .page-heading h1 {
+    letter-spacing: 1.3px;
+  }
+
+  :is(.panel, .personal-lineup, .lineup-bench, .squad-loading, .squad-empty, .fan-card) {
+    --surface-glow: transparent;
+    border: 1px solid var(--lg-edge);
+    border-radius: 20px;
+    background:
+      radial-gradient(
+        ellipse 360px 200px at var(--surface-x, 50%) var(--surface-y, 0%),
+        var(--surface-glow),
+        transparent 80%
+      ),
+      linear-gradient(135deg, var(--lg-shine), transparent 36%, transparent 75%, var(--lg-rim)),
+      var(--lg-surface);
+    box-shadow: var(--lg-shadow-panel);
+    backdrop-filter: blur(18px) saturate(1.25);
+    -webkit-backdrop-filter: blur(18px) saturate(1.25);
+    transition:
+      border-color 260ms ease,
+      box-shadow 320ms ease;
+  }
+
+  [data-glass-lit] {
+    --surface-glow: var(--lg-glow);
+  }
+
+  .panel:focus-within {
+    border-color: var(--lg-rim);
+  }
+
+  .match-card,
+  .bench-card {
+    --surface-glow: transparent;
+    border: 1px solid var(--lg-edge);
+    border-radius: 14px;
+    background:
+      radial-gradient(
+        ellipse 220px 150px at var(--surface-x, 50%) var(--surface-y, 0%),
+        var(--surface-glow),
+        transparent 80%
+      ),
+      linear-gradient(125deg, var(--lg-shine), transparent 70%), var(--lg-inset);
+    box-shadow:
+      inset 0 1px 0 var(--lg-shine),
+      0 3px 12px var(--lg-shadow);
+    // 列表内层复用父面板模糊，避免每个赛程格子都建立模糊合成层。
+    backdrop-filter: none;
+    transition:
+      translate 300ms var(--lg-ease),
+      box-shadow 300ms ease,
+      border-color 240ms ease;
+  }
+
+  .bench-card.picked,
+  .lineup-bench.targeted {
+    border-color: var(--md-accent, #6d935b);
+    box-shadow:
+      inset 0 0 0 1px var(--lg-rim),
+      0 0 0 3px var(--lg-selected);
+  }
+
+  .summary-card {
+    transition:
+      translate 320ms var(--lg-ease),
+      box-shadow 320ms ease;
+  }
+
+  .summary-icon,
+  .avatar,
+  .season-pill,
+  .league-pill {
+    border: 1px solid var(--lg-rim);
+    box-shadow: inset 0 1px 0 var(--lg-shine);
+    border-radius: 9px;
+  }
+
+  .avatar {
+    border-radius: 50%;
+  }
+
+  .profile-button {
+    background: transparent;
+    border-radius: 12px;
+  }
+
+  .fan-card {
+    border-radius: 15px;
+  }
+
+  .search-box {
+    padding: 7px 10px;
+    border: 1px solid var(--lg-edge);
+    border-radius: 12px;
+    background: var(--lg-inset);
+    box-shadow: inset 0 1px 0 var(--lg-shine);
+  }
+
+  .search-box:focus-within {
+    outline: 2px solid var(--md-accent, #7d9b5d);
+    outline-offset: 2px;
+    border-radius: 12px;
+  }
+
+  :is(.theme-toggle, .export-button, .squad-refresh, .sync-button, .events-refresh) {
+    border: 1px solid var(--lg-edge);
+    border-radius: 12px;
+    background: linear-gradient(130deg, var(--lg-shine), transparent 80%), var(--lg-inset);
+    box-shadow:
+      inset 0 1px 0 var(--lg-shine),
+      0 3px 9px var(--lg-shadow);
+    transition:
+      translate 250ms var(--lg-ease),
+      background-color 200ms ease,
+      box-shadow 250ms ease;
+  }
+
+  .sync-button {
+    padding: 8px 12px;
+  }
+
+  .primary-button {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    border: 1px solid #b8e0a65c;
+    border-radius: 12px;
+    color: #f2fae9;
+    background: linear-gradient(125deg, #577f55e6, #28553eea 65%, #356644e6);
+    box-shadow:
+      inset 0 1px 0 #ebffdb52,
+      inset 0 -1px 0 #132a2626,
+      0 5px 15px #163d2c20;
+    transition:
+      translate 250ms var(--lg-ease),
+      box-shadow 250ms ease;
+  }
+
+  .primary-button::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(105deg, transparent 28%, #f1ffdd42 50%, transparent 72%);
+    transform: translateX(-120%);
+    transition: transform 650ms var(--lg-ease);
+  }
+
+  .primary-button:hover::before {
+    transform: translateX(120%);
+  }
+
+  :is(.icon-button, .header-avatar, .sidebar-help) {
+    border-radius: 11px;
+    transition:
+      background-color 200ms ease,
+      box-shadow 220ms ease;
+  }
+
+  :is(.icon-button, .header-avatar, .sidebar-help):hover {
+    background: var(--lg-selected);
+    box-shadow: inset 0 1px 0 var(--lg-shine);
+  }
+
+  .hero-carousel {
+    border: 1px solid #e8f7d349;
+    border-radius: 22px;
+    box-shadow:
+      inset 0 1px 0 #f1ffe333,
+      0 10px 32px #143b2a26;
+  }
+
+  .carousel-backdrop {
+    background:
+      radial-gradient(ellipse at 15% 0%, #a4d78d26, transparent 65%),
+      linear-gradient(105deg, #0c2e24ef, #10392bd6 52%, #123c2873),
+      url('/images/stadium.webp') 70% 53% / cover;
+  }
+
+  .carousel-navigation {
+    border-top: 1px solid #e0f6d226;
+    background: #bddbaa0a;
+    backdrop-filter: blur(12px);
+  }
+
+  .carousel-control,
+  .slide-link {
+    border: 1px solid #e5f7d53b;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #f4ffe01c, #dcf6c608);
+    box-shadow: inset 0 1px 0 #ffffff1f;
+  }
+
+  .slide-link {
+    color: #e8f5dc;
+  }
+
+  .slide-art {
+    filter: drop-shadow(0 0 14px #d6f8b526);
+  }
+
+  :is(
+    .prediction-explainer,
+    .squad-window,
+    .info-notice,
+    .detail-preview-heading,
+    .detail-prediction
+  ) {
+    border: 1px solid var(--lg-edge);
+    border-radius: 15px;
+    background: linear-gradient(120deg, var(--lg-shine), transparent), var(--lg-inset);
+    box-shadow: inset 0 1px 0 var(--lg-shine);
+  }
+
+  .match-details .detail-scoreboard {
+    background:
+      radial-gradient(ellipse at 50% 100%, var(--lg-selected), transparent 75%),
+      linear-gradient(135deg, var(--lg-shine), transparent 50%), var(--lg-surface);
+  }
+
+  :is(.pitch-panel, .personal-pitch-panel) {
+    border: 1px solid #cee8be3d;
+    border-radius: 19px;
+    color: #e8ecdb;
+    background:
+      radial-gradient(ellipse at 10% 5%, #9fcb7240, transparent 65%),
+      linear-gradient(145deg, #214a38e8, #0f3027f2);
+    box-shadow:
+      inset 0 1px 0 #e4ffd82e,
+      inset 0 -1px 0 #071a1d44,
+      0 8px 24px var(--lg-shadow);
+  }
+
+  .pitch-panel .glass-tabs {
+    --lg-inset: #dcf5bc12;
+    --lg-selected: #bbd9a32b;
+    --lg-edge: #d8eecf33;
+    --lg-shine: #eeffdf26;
+    --lg-ink: #eff7df;
+    --lg-secondary: #c6d9bb;
+  }
+
+  :is(.slot-main, .pitch-player) {
+    transition:
+      scale 260ms var(--lg-ease),
+      background-color 220ms ease,
+      box-shadow 220ms ease;
+  }
+
+  .slot-empty {
+    border-color: #d8efc258;
+    background: linear-gradient(135deg, #eeffdd17, #deffd20a);
+    box-shadow: inset 0 1px 0 #e4ffd12b;
+  }
+
+  .source-grid a,
+  .detail-metrics > div {
+    border-radius: 12px;
+    background: var(--lg-inset);
+    border: 1px solid var(--lg-edge);
+    box-shadow: inset 0 1px 0 var(--lg-shine);
+  }
+
+  :is(.sort-control select, .bench-search, textarea, .score-inputs input) {
+    border: 1px solid var(--lg-rim);
+    border-radius: 11px;
+    background: var(--lg-inset);
+    box-shadow:
+      inset 0 2px 6px var(--lg-shadow),
+      0 1px 0 var(--lg-shine);
+    color: var(--lg-ink);
+  }
+
+  :is(.review-panel th, .squad-table-panel thead th) {
+    background: var(--lg-inset);
+    color: var(--lg-secondary);
+  }
+
+  :is(.player-row, .review-row, .event-row) {
+    transition: background-color 220ms ease;
+  }
+
+  :is(.player-row, .review-row, .event-row):hover {
+    background-color: var(--lg-inset);
+  }
+
+  .toast {
+    border: 1px solid #e5f7cb3d;
+    border-radius: 16px;
+    background: #234c3ade;
+    box-shadow:
+      inset 0 1px 0 #e5ffdc30,
+      0 12px 40px #0b292d38;
+    backdrop-filter: blur(20px);
+    animation: glass-notice-in 350ms var(--lg-ease) both;
+  }
+
+  // 栏目整体入场由公共交互协调，列表自身的 FLIP 动画保持原有逻辑。
+  :is(.hero-grid, .summary-grid, .content-columns, .review-panel) {
+    animation: none;
+  }
+}
+
+// 通用控件复用导航测量逻辑，支持横排和阵型换行后的二维滑动。
+.matchday-app.glass-workspace .glass-tabs {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  padding: 4px;
+  gap: 2px;
+  border: 1px solid var(--lg-edge);
+  border-radius: 14px;
+  background: var(--lg-inset);
+  box-shadow:
+    inset 0 1px 3px var(--lg-shadow),
+    0 1px 0 var(--lg-shine);
+
+  &.wrap {
+    flex-wrap: wrap;
+  }
+
+  button {
+    position: relative;
+    z-index: 1;
+    flex: 1 0 auto;
+    border: 0;
+    border-radius: 10px;
+    padding: 7px 12px;
+    background: transparent;
+    color: var(--lg-secondary);
+    font-size: 14px;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    touch-action: manipulation;
+    transition: color 220ms ease;
+  }
+
+  &.toolbar button {
+    padding: 9px 15px;
+    font-size: 15px;
+  }
+
+  button[aria-pressed='true'] {
+    color: var(--lg-ink);
+    font-weight: 650;
+  }
+
+  .nav-glass {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    border-radius: 10px;
+  }
+
+  .nav-glass-active {
+    z-index: 0;
+    transition:
+      transform 560ms var(--lg-ease),
+      width 280ms ease,
+      height 280ms ease;
+  }
+
+  .nav-glass-lens {
+    position: absolute;
+    inset: 0;
+    border: 1px solid var(--lg-edge);
+    border-radius: inherit;
+    background: linear-gradient(125deg, var(--lg-shine), transparent 65%), var(--lg-selected);
+    box-shadow:
+      inset 0 1px 0 var(--lg-shine),
+      inset 0 -1px 0 var(--lg-rim),
+      0 3px 9px var(--lg-shadow);
+    backdrop-filter: blur(12px) saturate(1.5);
+    -webkit-backdrop-filter: blur(12px) saturate(1.5);
+  }
+
+  .nav-glass-hover {
+    z-index: 0;
+    opacity: 0;
+    transition:
+      transform 260ms var(--lg-ease),
+      width 220ms ease,
+      height 220ms ease,
+      opacity 220ms ease;
+  }
+
+  .nav-glass-hover .nav-glass-lens {
+    background: radial-gradient(
+      ellipse 100px 65px at var(--glass-pointer-x, 50%) var(--glass-pointer-y, 50%),
+      var(--lg-shine),
+      transparent 80%
+    );
+    transform: perspective(420px) rotateX(var(--glass-tilt-x, 0deg))
+      rotateY(var(--glass-tilt-y, 0deg));
+    transition: transform 160ms ease-out;
+  }
+}
+
+// 原生顶层对话框与传送到 body 的同步层共享同一材质。
+html[data-matchday-theme] :is(.prediction-dialog, .info-dialog, .sync-overlay) {
+  border: 1px solid var(--lg-edge);
+  border-radius: 24px;
+  background: linear-gradient(130deg, var(--lg-shine), transparent 40%), var(--lg-dialog);
+  box-shadow:
+    inset 0 1px 0 var(--lg-shine),
+    inset 0 -1px 0 var(--lg-rim),
+    0 25px 90px #071e2945;
+  backdrop-filter: blur(28px) saturate(1.35);
+  -webkit-backdrop-filter: blur(28px) saturate(1.35);
+}
+
+html[data-matchday-theme] :is(.prediction-dialog, .info-dialog)[open] {
+  animation: glass-dialog-in 380ms var(--lg-ease) both;
+}
+
+html[data-matchday-theme] :is(.prediction-dialog, .info-dialog, .sync-overlay)::backdrop {
+  background: #102b264f;
+  backdrop-filter: blur(9px) saturate(0.75);
+}
+
+html[data-matchday-theme] .arsenal-welcome {
+  background:
+    radial-gradient(ellipse at 50% 40%, #80aa5542, transparent 52%),
+    linear-gradient(135deg, #10251ce8, #091b17ed);
+  backdrop-filter: blur(24px) saturate(1.3);
+}
+
+html[data-matchday-theme] .lineup-ghost {
+  border: 1px solid var(--lg-edge);
+  background: var(--lg-dialog);
+  box-shadow: var(--lg-shadow-panel);
+  backdrop-filter: blur(14px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .matchday-app.glass-workspace {
+    :is(.summary-card, .match-card):hover {
+      translate: 0 -3px;
+      border-color: var(--lg-shine);
+      box-shadow:
+        inset 0 1px 0 var(--lg-shine),
+        0 10px 25px var(--lg-shadow);
+    }
+    :is(.primary-button, .theme-toggle, .export-button, .squad-refresh, .sync-button):not(
+        :disabled
+      ):hover {
+      translate: 0 -1px;
+      box-shadow:
+        inset 0 1px 0 var(--lg-shine),
+        0 6px 18px var(--lg-shadow);
+    }
+    :is(.slot-main, .pitch-player):hover {
+      scale: 1.035;
+    }
+  }
+}
+
+@keyframes glass-dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.975);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes glass-notice-in {
+  from {
+    opacity: 0;
+    translate: 0 10px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@media (min-width: 1500px) {
+  .matchday-app.glass-workspace .sidebar {
+    width: 222px;
+  }
+}
+@media (max-width: 1200px) {
+  .matchday-app.glass-workspace .sidebar {
+    width: 176px;
+    padding-inline: 10px;
+  }
+  .matchday-app.glass-workspace .topbar {
+    padding-inline: 17px;
+    margin-right: 20px;
+  }
+}
+@media (max-width: 800px) {
+  .matchday-app.glass-workspace .sidebar {
+    inset: 10px auto 10px 10px;
+    width: 62px;
+    padding-inline: 7px;
+    border-radius: 19px;
+  }
+  .matchday-app.glass-workspace .topbar {
+    margin-left: 14px;
+    margin-right: 16px;
+  }
+}
+@media (max-width: 550px) {
+  .matchday-app.glass-workspace {
+    .sidebar {
+      inset: auto 10px calc(10px + env(safe-area-inset-bottom, 0px));
+      width: calc(100% - 20px);
+      height: 68px;
+      border-radius: 22px;
+      padding: 0 5px;
+    }
+    .topbar {
+      top: 8px;
+      height: 58px;
+      margin: 8px 10px 0;
+      padding-inline: 12px;
+      gap: 7px;
+      border-radius: 17px;
+    }
+    .main-content {
+      padding-top: 23px;
+      padding-bottom: calc(105px + env(safe-area-inset-bottom, 0px));
+    }
+    .header-actions {
+      gap: 6px;
+    }
+    .search-box {
+      gap: 4px;
+      padding: 6px;
+    }
+    .search-box input {
+      width: 86px;
+    }
+    .glass-tabs button {
+      padding: 7px 9px;
+      font-size: 13px;
+    }
+    .glass-tabs.wrap button {
+      padding: 7px 9px;
+    }
+    .glass-tabs.toolbar button {
+      padding: 8px 10px;
+    }
+    :is(.panel, .personal-lineup, .lineup-bench) {
+      border-radius: 17px;
+      backdrop-filter: blur(12px);
+    }
+    .toast {
+      bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+    }
+  }
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .matchday-app.glass-workspace :is(.panel, .sidebar, .topbar, .personal-lineup, .lineup-bench),
+  html[data-matchday-theme] :is(.prediction-dialog, .info-dialog, .sync-overlay) {
+    background: var(--lg-dialog);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .matchday-app.glass-workspace *,
+  .matchday-app.glass-workspace *::before,
+  .matchday-app.glass-workspace *::after,
+  html[data-matchday-theme] :is(.prediction-dialog, .info-dialog, .sync-overlay, .lineup-ghost) {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+  .matchday-app.glass-workspace
+    :is(
+      .summary-card,
+      .match-card,
+      .primary-button,
+      .theme-toggle,
+      .export-button,
+      .squad-refresh,
+      .sync-button
+    ):hover {
+    translate: none;
+  }
+  .matchday-app.glass-workspace :is(.slot-main, .pitch-player):hover {
+    scale: none;
+  }
+  .matchday-app.glass-workspace .glass-tabs .nav-glass-hover .nav-glass-lens {
+    transform: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .matchday-app.glass-workspace {
+    &::before,
+    .background-sparkles,
+    .glass-tabs .nav-glass {
+      display: none;
+    }
+    .glass-tabs button[aria-pressed='true'] {
+      outline: 2px solid Highlight;
+      outline-offset: -2px;
+    }
+    :is(.panel, .match-card, .sidebar, .topbar, .personal-lineup, .lineup-bench) {
+      border-color: CanvasText;
+      background: Canvas;
+      box-shadow: none;
+      backdrop-filter: none;
+    }
+  }
+}
+
+// 登录和已有管理入口沿用同一材质，不调整权限、表单验证与数据请求。
+.admin-root[data-glass-theme] {
+  color: var(--lg-ink);
+  background: var(--lg-canvas);
+
+  .login-page,
+  .layout,
+  .layout-content {
+    background:
+      radial-gradient(ellipse at 10% 0%, var(--lg-mesh-green), transparent 55%),
+      radial-gradient(ellipse at 95% 90%, var(--lg-mesh-blue), transparent 55%), var(--lg-canvas);
+  }
+
+  .layout > .n-layout,
+  .layout .n-layout-content,
+  .layout .n-layout-scroll-container {
+    background: transparent;
+  }
+
+  .n-card,
+  .n-layout-sider,
+  .layout-header {
+    border: 1px solid var(--lg-edge);
+    background: linear-gradient(135deg, var(--lg-shine), transparent 60%), var(--lg-surface);
+    box-shadow: var(--lg-shadow-panel);
+    backdrop-filter: blur(20px) saturate(1.25);
+  }
+
+  .n-card {
+    border-radius: 20px;
+  }
+
+  .login-card {
+    padding: 12px;
+    border-radius: 26px;
+    box-shadow:
+      inset 0 1px 0 var(--lg-shine),
+      0 24px 80px var(--lg-shadow);
+    animation: glass-dialog-in 450ms var(--lg-ease) both;
+  }
+
+  .n-button,
+  .n-input,
+  .n-alert {
+    border-radius: 11px;
+  }
+
+  .n-menu-item-content {
+    border-radius: 12px;
+    transition: background-color 240ms ease;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-root[data-glass-theme] .login-card {
+    animation: none;
+  }
+}
