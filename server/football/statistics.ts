@@ -1,4 +1,4 @@
-import { mkdir, readFile, rename, writeFile } from 'node:fs/promises'
+import { fileCache } from './cache.ts'
 import { resolve } from 'node:path'
 import {
   emptyStatistics,
@@ -30,7 +30,7 @@ export function createMatchStatisticsService(
     if (previous && !isMatchStatistics(previous, match)) previous = undefined
     if (!previous) {
       try {
-        const cached: unknown = JSON.parse(await readFile(file, 'utf8'))
+        const cached: unknown = await (options.cache ?? fileCache()).read(file)
         if (isMatchStatistics(cached, match)) previous = cached
       } catch {
         /* A missing cache does not block official data. */
@@ -86,9 +86,7 @@ export function createMatchStatisticsService(
       }
       if (!isMatchStatistics(data, match)) throw new Error('技术统计数据校验失败')
       try {
-        await mkdir(resolve(file, '..'), { recursive: true })
-        await writeFile(`${file}.tmp`, JSON.stringify(data), 'utf8')
-        await rename(`${file}.tmp`, file)
+        await (options.cache ?? fileCache()).write(file, data)
       } catch {
         /* Valid in-memory statistics remain usable without disk storage. */
       }

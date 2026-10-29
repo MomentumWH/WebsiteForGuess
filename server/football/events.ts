@@ -1,4 +1,4 @@
-import { mkdir, readFile, rename, writeFile } from 'node:fs/promises'
+import { fileCache } from './cache.ts'
 import { resolve } from 'node:path'
 import { isMatchEvents, type MatchEvents, type MatchEvent } from '../../src/data/matchEvents.ts'
 import type { Match } from '../../src/data/matches.ts'
@@ -110,7 +110,7 @@ export function createMatchEventsService(
     if (previous && !isMatchEvents(previous, match)) previous = undefined
     if (!previous)
       try {
-        const cached: unknown = JSON.parse(await readFile(file, 'utf8'))
+        const cached: unknown = await (options.cache ?? fileCache()).read(file)
         if (isMatchEvents(cached, match)) previous = cached
       } catch {
         /* A missing cache must not prevent an official request. */
@@ -164,9 +164,7 @@ export function createMatchEventsService(
       )
         throw new Error('本次官方赛况不完整')
       try {
-        await mkdir(resolve(file, '..'), { recursive: true })
-        await writeFile(`${file}.tmp`, JSON.stringify(data), 'utf8')
-        await rename(`${file}.tmp`, file)
+        await (options.cache ?? fileCache()).write(file, data)
       } catch {
         /* Valid memory data remains usable without disk storage. */
       }
